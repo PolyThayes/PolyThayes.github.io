@@ -1,0 +1,92 @@
+baseURL = "https://yourusername.github.io/"
+languageCode = "en-us"
+title = "Nikhil Gupta"
+theme = "congo"
+
+enableRobotsTXT = true
+summaryLength = 30
+
+[pagination]
+  pagerSize = 15
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[params]
+  colorScheme = "editorial"
+  defaultAppearance = "dark"
+  autoSwitchAppearance = false
+
+  enableSearch = false
+  enableCodeCopy = false
+  enableImageLazyLoading = true
+  enableImageWebp = true
+
+  description = "Photographs, writing, and a bit about me."
+
+  [params.author]
+    name = "Nikhil Gupta"
+    headline = "Photographer. Writer. Occasional professional."
+    bio = "I take photos on trips, write when something's worth saying, and this is where both live."
+
+  [params.header]
+    layout = "basic"
+    showTitle = true
+
+  [params.footer]
+    showCopyright = true
+    showThemeAttribution = false
+    showAppearanceSwitcher = false
+    showScrollToTop = true
+
+  [params.homepage]
+    layout = "custom"
+    showRecent = false
+
+  [params.article]
+    showDate = true
+    showAuthor = false
+    showBreadcrumbs = false
+    showEdit = false
+    showHeadingAnchors = false
+    showPagination = true
+    showReadingTime = true
+    showTableOfContents = false
+    showWordCount = false
+    showComments = false
+
+  [params.list]
+    showBreadcrumbs = false
+    showSummary = true
+    showTableOfContents = false
+    groupByYear = false
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = false
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[[menu.main]]
+  name = "About"
+  pageRef = "about"
+  weight = 10
+
+[[menu.main]]
+  name = "Writing"
+  pageRef = "writing"
+  weight = 20
+
+[[menu.main]]
+  name = "Gallery"
+  pageRef = "gallery"
+  weight = 30
+
+[[menu.main]]
+  name = "Résumé"
+  pageRef = "resume"
+  weight = 40
