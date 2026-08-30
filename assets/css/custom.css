@@ -1,0 +1,227 @@
+/* ---------------------------------------------------------------
+   Editorial type system
+   Display: Fraunces (characterful serif, used with restraint)
+   Body:    Newsreader (calm reading serif for long-form writing)
+   Utility: IBM Plex Mono (labels, dates, captions, frame numbers)
+----------------------------------------------------------------*/
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Newsreader", ui-serif, Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  position: relative;
+}
+
+/* Subtle darkroom grain — ambient texture, not decoration for its own sake */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* Nav, labels, captions, dates read like darkroom index cards */
+nav a, .font-mono-label, time, .text-sm.uppercase {
+  font-family: var(--font-mono);
+}
+
+/* ---------------------------------------------------------------
+   Masthead (used on the homepage)
+----------------------------------------------------------------*/
+.masthead {
+  position: relative;
+  z-index: 1;
+  padding: 4rem 0 3rem;
+}
+
+.masthead .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(var(--color-primary-400), 1);
+}
+
+.masthead h1 {
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  font-weight: 600;
+  line-height: 1.02;
+  margin: 0.4rem 0 0.9rem;
+}
+
+.masthead .tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: rgba(var(--color-neutral-300), 1);
+  max-width: 42ch;
+}
+
+.brass-rule {
+  height: 1px;
+  width: 100%;
+  margin: 2rem 0;
+  background: linear-gradient(
+    to right,
+    rgba(var(--color-primary-500), 0.9) 0%,
+    rgba(var(--color-primary-500), 0.15) 40%,
+    transparent 100%
+  );
+}
+
+/* ---------------------------------------------------------------
+   Section index (homepage table-of-contents style links)
+----------------------------------------------------------------*/
+.section-index {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid rgba(var(--color-neutral-600), 0.4);
+}
+
+.section-index a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 0.25rem;
+  border-bottom: 1px solid rgba(var(--color-neutral-600), 0.4);
+  text-decoration: none;
+  transition: padding-left 0.25s ease, color 0.25s ease;
+}
+
+.section-index a:hover {
+  padding-left: 0.75rem;
+  color: rgba(var(--color-primary-400), 1);
+}
+
+.section-index .index-no {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: rgba(var(--color-primary-500), 1);
+  min-width: 2.5rem;
+}
+
+.section-index .index-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 500;
+  flex: 1;
+}
+
+.section-index .index-desc {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: rgba(var(--color-neutral-400), 1);
+  text-align: right;
+  max-width: 28ch;
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .section-index .index-desc {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Contact-sheet photo gallery
+----------------------------------------------------------------*/
+.contact-sheet {
+  columns: 1;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .contact-sheet { columns: 2; }
+}
+@media (min-width: 1024px) {
+  .contact-sheet { columns: 3; }
+}
+
+.frame {
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
+  position: relative;
+  display: block;
+  border: 1px solid rgba(var(--color-neutral-600), 0.3);
+  background: rgba(var(--color-neutral-900), 1);
+  padding: 0.6rem 0.6rem 0.9rem;
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.frame:hover {
+  border-color: rgba(var(--color-primary-500), 0.8);
+  transform: translateY(-2px);
+}
+
+.frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.96);
+}
+
+.frame .frame-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: rgba(var(--color-neutral-400), 1);
+}
+
+.frame .frame-caption .frame-no {
+  color: rgba(var(--color-primary-400), 1);
+}
+
+/* Album / download callout */
+.album-callout {
+  border: 1px dashed rgba(var(--color-primary-500), 0.5);
+  padding: 1.5rem;
+  margin: 2.5rem 0;
+  font-family: var(--font-body);
+}
+
+.album-callout .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(var(--color-primary-400), 1);
+}
+
+/* ---------------------------------------------------------------
+   Editorial drop cap for writing pieces
+----------------------------------------------------------------*/
+.prose > p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-weight: 600;
+  float: left;
+  font-size: 3.4em;
+  line-height: 0.85;
+  padding-right: 0.08em;
+  padding-top: 0.03em;
+  color: rgba(var(--color-primary-400), 1);
+}
+
+.prose :where(h1, h2, h3, h4) {
+  font-family: var(--font-display);
+}

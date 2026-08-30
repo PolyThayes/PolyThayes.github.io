@@ -1,0 +1,40 @@
+<section class="masthead">
+  <p class="eyebrow">Photographer &middot; Writer &middot; This Site's Only Author</p>
+  <h1>{{ site.Params.author.name | default site.Title }}</h1>
+  {{ with site.Params.author.bio }}
+    <p class="tagline">{{ . }}</p>
+  {{ end }}
+</section>
+
+<div class="brass-rule"></div>
+
+<nav class="section-index" aria-label="Site sections">
+  {{ with site.GetPage "about" }}
+    <a href="{{ .RelPermalink }}">
+      <span class="index-no">About</span>
+      <span class="index-title">Who's behind the camera</span>
+      <span class="index-desc">A short introduction</span>
+    </a>
+  {{ end }}
+  {{ with site.GetPage "writing" }}
+    <a href="{{ .RelPermalink }}">
+      <span class="index-no">Writing</span>
+      <span class="index-title">Things worth putting down</span>
+      <span class="index-desc">Essays &amp; short pieces</span>
+    </a>
+  {{ end }}
+  {{ with site.GetPage "gallery" }}
+    <a href="{{ .RelPermalink }}">
+      <span class="index-no">Gallery</span>
+      <span class="index-title">A running contact sheet</span>
+      <span class="index-desc">Photos from the road</span>
+    </a>
+  {{ end }}
+  {{ with site.GetPage "resume" }}
+    <a href="{{ .RelPermalink }}">
+      <span class="index-no">Résumé</span>
+      <span class="index-title">The professional version</span>
+      <span class="index-desc">Experience &amp; background</span>
+    </a>
+  {{ end }}
+</nav>

@@ -1,0 +1,48 @@
+{{ define "main" }}
+  <article class="prose max-w-full dark:prose-invert">
+    <header>
+      <h1>{{ .Title | emojify }}</h1>
+    </header>
+    <section>{{ .Content | emojify }}</section>
+  </article>
+
+  {{ with .Params.album_url }}
+    <div class="album-callout not-prose">
+      <p class="eyebrow">Full-resolution &amp; downloads</p>
+      <p style="margin-top:0.5rem;">
+        These are low-res previews. For the full album — and to download originals —
+        <a href="{{ . }}" target="_blank" rel="noopener">{{ $.Params.album_label | default "see the shared album →" }}</a>.
+      </p>
+    </div>
+  {{ else }}
+    <div class="album-callout not-prose">
+      <p class="eyebrow">Full-resolution &amp; downloads</p>
+      <p style="margin-top:0.5rem;">
+        Add an <code>album_url</code> to this page's front matter to link out to a downloadable
+        album (a Synology Photos share link, a Google Photos album, etc). It'll show up here.
+      </p>
+    </div>
+  {{ end }}
+
+  {{ $images := .Resources.ByType "image" }}
+  {{ if $images }}
+    <div class="contact-sheet not-prose">
+      {{ range $i, $img := $images }}
+        <a class="frame" href="{{ $img.RelPermalink }}" target="_blank" rel="noopener">
+          {{ $thumb := $img.Fill "800x800 q85" }}
+          <img src="{{ $thumb.RelPermalink }}" loading="lazy" alt="{{ $img.Title | default $img.Name }}" />
+          <span class="frame-caption">
+            <span>{{ $img.Title | default $img.Name }}</span>
+            <span class="frame-no">No. {{ printf "%02d" (add $i 1) }}</span>
+          </span>
+        </a>
+      {{ end }}
+    </div>
+  {{ else }}
+    <div class="not-prose" style="margin-top:2rem; padding:2rem; border:1px dashed rgba(var(--color-neutral-600),0.5); font-family:var(--font-mono); font-size:0.85rem; color:rgba(var(--color-neutral-400),1);">
+      No photos yet. Drop image files (.jpg, .png) directly into <code>content/gallery/</code>
+      alongside <code>_index.md</code>, rebuild, and they'll appear here automatically —
+      no need to edit this page or any template.
+    </div>
+  {{ end }}
+{{ end }}
