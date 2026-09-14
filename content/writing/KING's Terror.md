@@ -1,6 +1,6 @@
 ---
 title: "WEST OF EDEN, IN KING's NIGHT SHIFT"
-date: 2025-20-11
+date: 2025-11-20
 summary: "ESSAY FROM ENGLISH: TERROR IN LITERATURE"
 ---
 Nikhil Gupta
