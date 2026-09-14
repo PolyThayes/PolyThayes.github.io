@@ -1,6 +1,6 @@
 ---
 title: "THE DEPOSITION OF IVAN ILLYICH"
-date: 2026-03-10
+date: 2026-05-10
 summary: "An essay from English: Existentialism in Literature"
 ---
 ## Pt. 1: The Death of Ivan Illyich
