@@ -1,6 +1,6 @@
 ---
-title: ""JUST BELIEVE. OKAY?..."" "OKAY.": ON THE BOY's LEAP OF FAITH IN THE ROAD
-date: 2026
+title: '"Just Believe. Okay?..." "Okay.": On the Boy''s Leap of Faith in The Road'
+date: 2026-05-10
 summary: "An essay from English: Existentialism in Literature"
 ---
 Nikhil Gupta
