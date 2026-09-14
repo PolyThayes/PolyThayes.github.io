@@ -3,4 +3,4 @@ title: "Writing"
 description: "Essays and short pieces."
 ---
 
-A running collection — mostly essays, occasionally something shorter.
+My writing, including essays, poems, short stories, and journal entries.
