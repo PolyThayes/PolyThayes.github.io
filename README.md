@@ -18,10 +18,9 @@ content/
 │   └── *.md             ← one file per essay
 └── gallery/
     ├── _index.md        ← intro text at the top of the Gallery page
-    ├── coast/           ← one folder per album…
-    │   ├── album.md     ← …with an optional title/description/captions file
-    │   └── *.jpg        ← …and the photos themselves
-    └── on-the-road/
+    └── iceland-2026/    ← one folder per album…
+        ├── album.md     ← …with its settings (title, cover, favourite…)
+        └── *.jpg        ← …and the photos themselves
 public/files/            ← downloadable files (e.g. your résumé PDF)
 ```
 
@@ -101,54 +100,97 @@ Each essay automatically gets:
 - **Downloads:** PDF (via the browser's "Save as PDF"), EPUB for e-readers,
   and Markdown/plain text.
 
-## Gallery & albums
+## Gallery (the contact sheet)
 
-**To add an album:** create a new folder inside `content/gallery/` and
-upload your photos into it. That's all: the album appears with its own
-page, a full-screen viewer, per-photo download buttons, and a
-**Download all** (.zip) button.
+The Gallery page is laid out like a film contact sheet. **Each album is one
+frame on the sheet**, shown as its cover photo with a frame number (1, 1A,
+2, 2A …). Click a frame to open that album's page, with a photo grid, a
+full-screen viewer, a download button on each photo, and an optional
+"Download full album" link.
 
-- On GitHub: open `content/gallery`, choose **Add file → Upload files**,
-  and drag the whole folder (e.g. `iceland-2026`) from your computer onto
-  the page. GitHub keeps it as a folder.
-- The folder name becomes the album's address (`/gallery/iceland-2026/`)
-  and, until you give it a title, its name.
-- Photos appear in **file-name order**, so number them if order matters
-  (`01-…`, `02-…`).
-- Formats: **JPG, PNG, WebP, AVIF**. iPhone **HEIC** photos must be
-  exported as JPG first (Photos app → File → Export).
+### Add an album
 
-**To add a title, date, description and captions,** add a file called
-`album.md` in the album's folder. Copy the one from `content/gallery/coast/`
-as a starting point:
+1. Make a new folder inside `content/gallery/`, e.g. `content/gallery/iceland-2026/`.
+   The folder name becomes the web address (`/gallery/iceland-2026/`).
+2. Drop your photos into it (JPG, PNG, WebP or AVIF; export iPhone HEIC
+   photos as JPG first). Photos show in file-name order, so number them
+   if order matters: `01-…`, `02-…`.
+3. Add a text file called `album.md` in the same folder. Copy one from a
+   sample album and change the words:
 
 ```markdown
 ---
 title: "Iceland"
 date: 2026-07-01
-location: "Reykjavík to Vík"
 description: "Ten days of weather."
 cover: "04-glacier.jpg"
-captions:
-  01-arrival.jpg: "Landing at 2am, still light out."
-  04-glacier.jpg: "Sólheimajökull."
+mode: color
+favorite: true
+album_url: "https://your-nas.quickconnect.to/mo/sharing/AbCdEf"
 ---
 
-Optional longer intro shown on the album page.
+Optional: a few sentences about the trip, shown on the album page.
 ```
 
-Other optional lines: `download: false` turns off downloads for that
-album, and `hidden: true` hides the album entirely.
+That's all. The album appears on the contact sheet automatically, in date
+order (newest first). On GitHub you can drag the whole folder onto
+**Add file → Upload files** inside `content/gallery`.
 
-**About photo sizes:** visitors see automatically resized, fast-loading
-copies, but the *download* buttons serve your original files. GitHub has
-limits: keep single photos under ~25 MB and the whole site under ~1 GB.
-Exporting at "high quality JPG, 3000–4000 px on the long side" is a good
-balance.
+Every line is optional except that the folder needs at least one photo.
+`cover` is the file name of the photo to show on the sheet; leave it out
+to use the first photo. `location:` and per-photo `captions:` also work;
+see `sample-color-harbour/album.md` for an example.
 
-**Replace the sample photos:** the six images in `coast/` and
-`on-the-road/` are placeholders. Delete them, or the folders, whenever
-you like.
+### Colour or black-and-white
+
+On the sheet, colour albums sit on warm orange-brown film marked
+"PORTRA 400". Black-and-white albums sit on silver-grey film marked
+"HP5+". **The site works this out by itself** by measuring how much colour
+is in the cover photo. If it guesses wrong (a sepia-toned print can look
+like colour, for example), set it yourself in `album.md`:
+
+- `mode: color`
+- `mode: bw`
+
+### Mark a favourite
+
+Add `favorite: true` to `album.md`. The frame gets a hand-drawn
+grease-pencil circle or box, in red or blue (each album keeps its own).
+Remove the line, or write `favorite: false`, to take the mark off.
+
+### Link a Synology share for full-resolution downloads
+
+The site serves web-sized copies of your photos (about 2000 pixels on the
+long edge). Each photo's download button gives that size. For the
+full-resolution originals, share the album from your NAS:
+
+1. In **Synology Photos**, open the album, click **Share**, turn on
+   **Enable share link**, and set the privacy to "Public" (or
+   password-protected if you prefer). Allow downloads.
+2. Copy the link.
+3. Paste it into `album.md` as `album_url: "the link"`, in quotation marks.
+
+A **Download full album** button then appears on the album page. Leave
+`album_url` out and the button is hidden.
+
+### ⚠️ Keep big photo files out of the repository
+
+Everything in `content/` is stored in your GitHub repository forever, even
+after you delete it. Camera originals (10–40 MB each) will quickly make the
+repository slow and can hit GitHub's limits (about 100 MB per file, 1 GB
+per site).
+
+- **Before uploading, export photos at about 2500 px on the long edge,
+  JPG quality ~85.** That's typically 0.5–1.5 MB each, and the site
+  can't show more detail than that anyway.
+- **Keep the originals on your NAS** and link them with `album_url`.
+
+### The sample albums
+
+`sample-color-harbour`, `sample-color-market` and `sample-bw-streets`
+are generated placeholders, so you can see the layout. **To remove them,
+delete those three folders** in `content/gallery/`. Nothing else
+refers to them.
 
 ---
 
@@ -180,9 +222,11 @@ You don't need this, but if you'd like to see changes before publishing:
 
 ## Changing the look
 
-The colours are listed at the very top of `src/styles/global.css` (for
-example `--brass` and `--oxblood`). Changing a hex value there changes it
-everywhere on the site.
+Every colour is defined once, at the very top of `src/styles/global.css`.
+The palette is taken from a dark Paris hotel bar: espresso and walnut
+backgrounds, cognac leather accents, lamp-glow gold and cream highlights,
+and olive-umber panels. Each line has a comment saying what it's for.
+Change a hex value there and it changes everywhere on the site.
 
 ## Custom domain (optional)
 

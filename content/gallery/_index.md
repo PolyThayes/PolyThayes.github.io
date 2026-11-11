@@ -4,4 +4,4 @@ title: "Gallery"
 lede: "Photos from trips, in no particular order."
 ---
 
-A running contact sheet. Open any album, or click a frame to see it full-screen.
+A contact sheet of every album. Pick a frame to open it.

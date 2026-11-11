@@ -40,8 +40,13 @@ const albums = defineCollection({
     location: z.string().optional(),
     description: z.string().optional(),
     cover: z.string().optional(),
+    // "color" or "bw". Leave it out and the site decides from the cover photo.
+    mode: z.enum(['color', 'bw']).optional(),
+    // favorite: true draws a grease-pencil mark around the frame.
+    favorite: z.boolean().optional().default(false),
+    // A share link (e.g. Synology Photos) for the full-resolution album.
+    album_url: z.string().optional(),
     captions: z.record(z.string(), z.string()).optional().default({}),
-    download: z.boolean().optional().default(true),
     hidden: z.boolean().optional().default(false),
   }),
 });

@@ -2,15 +2,14 @@
 import { getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import SplitText from '../../components/SplitText.astro';
-import AlbumCard from '../../components/AlbumCard.astro';
-import PhotoGrid from '../../components/PhotoGrid.astro';
+import ContactSheet from '../../components/ContactSheet.astro';
 import { getAlbums } from '../../lib/gallery';
+import { formatDate } from '../../lib/writing';
 
 const albums = await getAlbums();
 const intro = await getEntry('sections', 'gallery');
 const { Content } = intro ? await render(intro) : { Content: null };
-const all = albums.flatMap((a) => a.photos.map((p) => ({ ...p, albumTitle: a.title, allow: a.download })));
-const total = all.length;
+const total = albums.reduce((n, a) => n + a.photos.length, 0);
 ---
 
 <Base title="Gallery" description={intro?.data.lede}>
@@ -21,31 +20,34 @@ const total = all.length;
     {Content && <div class="intro prose" data-reveal style="--i:5"><Content /></div>}
   </section>
 
-  <section class="wrap albums" aria-label="Albums">
-    {albums.map((a, i) => <AlbumCard album={a} i={i} />)}
+  <section class="wrap" aria-label="Contact sheet">
+    {albums.length > 0 ? <ContactSheet albums={albums} /> : <p class="muted">No albums yet.</p>}
   </section>
 
   {
-    total > 0 && (
-      <section class="wrap every">
-        <header class="every-head" data-reveal>
-          <hr class="rule" data-reveal />
-          <p class="eyebrow">Every frame</p>
-          <h2>The contact sheet</h2>
-          <button class="btn" type="button" data-open-lightbox>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 5v14l11-7z" /></svg>
-            View full-screen
-          </button>
-        </header>
-        <PhotoGrid photos={all} download={all.every((p) => p.allow)} />
+    albums.length > 0 && (
+      <section class="wrap index" aria-label="Album index">
+        <p class="eyebrow" data-reveal="fade">Index</p>
+        <ol class="rows">
+          {albums.map((a, i) => (
+            <li data-reveal style={`--i:${i % 6}`}>
+              <a href={`/gallery/${a.slug}/`} class="row glow-card">
+                <span class="r-num">{a.frame}</span>
+                <span class="r-title">{a.title}</span>
+                <span class="r-meta">
+                  {a.date && <span>{formatDate(a.date, 'short')}</span>}
+                  <span>{a.photos.length} photos</span>
+                  <span class:list={['stock', a.mode]}>{a.mode === 'bw' ? 'B&W' : 'Colour'}</span>
+                  {a.favorite && <span class="fav" title="Favourite">●</span>}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
       </section>
     )
   }
 </Base>
-
-<script>
-  import '../../scripts/lightbox';
-</script>
 
 <style>
   .intro {
@@ -53,32 +55,76 @@ const total = all.length;
     color: var(--muted);
   }
 
-  .albums {
-    display: grid;
-    gap: clamp(4rem, 10vw, 8rem);
-    padding-top: 1rem;
+  .index {
+    margin-top: clamp(3rem, 7vw, 5rem);
   }
 
-  .every {
-    margin-top: clamp(5rem, 12vw, 9rem);
+  .rows {
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-soft);
   }
 
-  .every-head {
+  .row {
     display: grid;
-    justify-items: center;
+    grid-template-columns: 3.2rem 1fr auto;
+    align-items: baseline;
     gap: 1rem;
-    margin-bottom: 2.5rem;
-    text-align: center;
+    padding: 1rem 0.8rem;
+    border-bottom: 1px solid var(--line-soft);
+    text-decoration: none;
+    transition: background 0.4s, box-shadow 0.6s var(--ease-out);
   }
 
-  .every-head .rule {
-    width: min(22rem, 100%);
-    margin-bottom: 2rem;
+  .row:hover {
+    background: color-mix(in srgb, var(--olive) 40%, transparent);
+    color: inherit;
   }
 
-  .every-head h2 {
-    font-size: clamp(2rem, 1.4rem + 2.5vw, 3.4rem);
-    font-weight: 300;
-    font-style: italic;
+  .r-num {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--cognac);
+  }
+
+  .r-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+  }
+
+  .r-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.3rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .stock.color {
+    color: var(--film-edge-color);
+  }
+
+  .stock.bw {
+    color: var(--film-edge-bw);
+  }
+
+  .fav {
+    color: var(--grease-red);
+  }
+
+  @media (max-width: 600px) {
+    .row {
+      grid-template-columns: 2.4rem 1fr;
+    }
+
+    .r-meta {
+      grid-column: 2;
+      justify-content: flex-start;
+    }
   }
 </style>

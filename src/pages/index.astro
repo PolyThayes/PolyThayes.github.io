@@ -50,7 +50,7 @@ const [first, ...rest] = site.name.split(' ');
     <div class="tiles">
       {
         tiles.map((t, i) => (
-          <a class="tile" href={t.href} data-reveal style={`--i:${i}`}>
+          <a class="tile glow-card" href={t.href} data-reveal style={`--i:${i}`}>
             <span class="tile-no">{toRoman(i + 1)}</span>
             <span class="eyebrow">{t.label}</span>
             <span class="tile-title">{site.sections?.[t.key]?.title}</span>
@@ -87,7 +87,7 @@ const [first, ...rest] = site.name.split(' ');
         </header>
         <div class="strip" data-reveal="fade">
           {strip.map((p, i) => (
-            <a href={`/gallery/${p.album}/`} class="frame" style={`--i:${i}`}>
+            <a href={`/gallery/${p.album}/`} class="frame glow-card" style={`--i:${i}`}>
               <Image src={p.src} alt={p.caption ?? p.albumTitle} widths={[360, 720]} sizes="(max-width: 700px) 70vw, 340px" loading="lazy" />
               <span class="frame-cap">{p.albumTitle}</span>
             </a>
@@ -120,7 +120,6 @@ const [first, ...rest] = site.name.split(' ');
   .aurora span {
     position: absolute;
     border-radius: 50%;
-    animation: drift 22s ease-in-out infinite alternate;
   }
 
   .aurora span:nth-child(1) {
@@ -128,7 +127,7 @@ const [first, ...rest] = site.name.split(' ');
     height: 46vw;
     left: 52%;
     top: -10%;
-    background: radial-gradient(circle, rgba(142, 59, 59, 0.55), transparent 65%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--gold) 20%, transparent), transparent 65%);
   }
 
   .aurora span:nth-child(2) {
@@ -136,9 +135,7 @@ const [first, ...rest] = site.name.split(' ');
     height: 38vw;
     left: 70%;
     top: 40%;
-    background: radial-gradient(circle, rgba(212, 173, 88, 0.28), transparent 65%);
-    animation-duration: 28s;
-    animation-delay: -6s;
+    background: radial-gradient(circle, color-mix(in srgb, var(--cognac) 22%, transparent), transparent 65%);
   }
 
   .aurora span:nth-child(3) {
@@ -146,15 +143,7 @@ const [first, ...rest] = site.name.split(' ');
     height: 34vw;
     left: -8%;
     top: 55%;
-    background: radial-gradient(circle, rgba(35, 51, 43, 0.7), transparent 65%);
-    animation-duration: 32s;
-    animation-delay: -12s;
-  }
-
-  @keyframes drift {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-6vw, 4vh) scale(1.12); }
-    100% { transform: translate(4vw, -5vh) scale(0.95); }
+    background: radial-gradient(circle, color-mix(in srgb, var(--olive) 60%, transparent), transparent 65%);
   }
 
   .hero-inner {
@@ -177,7 +166,7 @@ const [first, ...rest] = site.name.split(' ');
 
   .l2 {
     font-style: italic;
-    color: var(--brass);
+    color: var(--cognac);
     padding-left: clamp(1.5rem, 9vw, 9rem);
     font-variation-settings: 'SOFT' 100, 'WONK' 1;
   }
@@ -187,7 +176,7 @@ const [first, ...rest] = site.name.split(' ');
     margin: 2.4rem 0 0;
     font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
     font-style: italic;
-    color: var(--ivory-dim);
+    color: var(--cream-dim);
     line-height: 1.45;
   }
 
@@ -210,12 +199,12 @@ const [first, ...rest] = site.name.split(' ');
   .seal text {
     font-family: var(--font-mono);
     font-size: 11px;
-    fill: var(--brass);
+    fill: var(--cognac);
   }
 
   .seal .seal-mark {
     font-size: 34px;
-    fill: var(--oxblood);
+    fill: var(--leather);
   }
 
   @keyframes spin {
@@ -235,7 +224,7 @@ const [first, ...rest] = site.name.split(' ');
   .scroll-cue span {
     position: absolute;
     inset: 0;
-    background: var(--brass);
+    background: var(--cognac);
     animation: cue 2.4s var(--ease-in-out) infinite;
   }
 
@@ -260,7 +249,7 @@ const [first, ...rest] = site.name.split(' ');
     align-content: start;
     min-height: clamp(14rem, 26vw, 20rem);
     padding: clamp(1.6rem, 3.5vw, 3rem);
-    background: var(--ink);
+    background: var(--espresso);
     text-decoration: none;
     overflow: hidden;
     isolation: isolate;
@@ -272,8 +261,8 @@ const [first, ...rest] = site.name.split(' ');
     inset: 0;
     z-index: -1;
     background:
-      radial-gradient(500px 300px at var(--mx, 70%) var(--my, 30%), rgba(212, 173, 88, 0.18), transparent 70%),
-      linear-gradient(160deg, var(--wine), var(--ink-2) 70%);
+      radial-gradient(500px 300px at var(--mx, 70%) var(--my, 30%), color-mix(in srgb, var(--gold) 18%, transparent), transparent 70%),
+      linear-gradient(160deg, var(--olive-deep), var(--walnut) 70%);
     opacity: 0;
     transition: opacity 0.7s var(--ease-out);
   }
@@ -301,7 +290,7 @@ const [first, ...rest] = site.name.split(' ');
 
   .tile:hover .tile-no {
     transform: translateY(0.4rem) rotate(-4deg);
-    -webkit-text-stroke-color: var(--brass);
+    -webkit-text-stroke-color: var(--cognac);
   }
 
   .tile-title {
@@ -324,7 +313,7 @@ const [first, ...rest] = site.name.split(' ');
     right: clamp(1.6rem, 3.5vw, 3rem);
     bottom: clamp(1.6rem, 3.5vw, 3rem);
     font-size: 1.6rem;
-    color: var(--brass);
+    color: var(--cognac);
     transform: translateX(-0.8rem);
     opacity: 0;
     transition: transform 0.6s var(--ease-out), opacity 0.4s;
@@ -348,7 +337,7 @@ const [first, ...rest] = site.name.split(' ');
     letter-spacing: 0.16em;
     text-transform: uppercase;
     text-decoration: none;
-    color: var(--ivory-dim);
+    color: var(--cream-dim);
   }
 
   .essays {
@@ -368,7 +357,7 @@ const [first, ...rest] = site.name.split(' ');
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--gutter);
     scrollbar-width: thin;
-    scrollbar-color: var(--brass-deep) transparent;
+    scrollbar-color: var(--cognac-deep) transparent;
   }
 
   .frame {
@@ -398,7 +387,7 @@ const [first, ...rest] = site.name.split(' ');
     position: absolute;
     inset: auto 0 0 0;
     padding: 2.5rem 1rem 0.9rem;
-    background: linear-gradient(transparent, rgba(18, 15, 13, 0.85));
+    background: linear-gradient(transparent, color-mix(in srgb, var(--espresso) 85%, transparent));
     font-family: var(--font-mono);
     font-size: 0.7rem;
     letter-spacing: 0.16em;
