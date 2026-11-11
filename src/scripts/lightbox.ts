@@ -11,15 +11,16 @@ function init() {
   boxes.forEach((b) => b.destroy());
   boxes = [];
 
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll<HTMLElement>('.pswp-gallery').forEach((gallery) => {
     const lb = new PhotoSwipeLightbox({
       gallery,
       children: '.cell > a:first-child',
       pswpModule: () => import('photoswipe'),
       bgOpacity: 0.96,
-      showHideAnimationType: 'zoom',
-      showAnimationDuration: 450,
-      hideAnimationDuration: 380,
+      showHideAnimationType: calm ? 'none' : 'zoom',
+      showAnimationDuration: 280,
+      hideAnimationDuration: 240,
       wheelToZoom: true,
       padding: { top: 40, bottom: 90, left: 20, right: 20 },
       imageClickAction: 'zoom',
@@ -37,7 +38,7 @@ function init() {
         order: 8,
         isButton: true,
         tagName: 'a',
-        title: 'Download original',
+        title: 'Download photo',
         html: ICON_DL,
         onInit: (el, p) => {
           const a = el as HTMLAnchorElement;

@@ -60,32 +60,32 @@ const pdf = page.data.pdf ? `/files/${page.data.pdf.replace(/^\/?(files\/)?/, ''
 
   /* The résumé sits on a sheet of warm paper */
   .sheet {
-    --ivory: #2a211a;
-    --ivory-dim: #4b3e32;
-    --muted: #7d6c56;
-    --brass: #8f6620;
-    --brass-hi: #6b4b14;
-    --line-soft: rgba(42, 33, 26, 0.14);
+    --cream: var(--ink-text);
+    --cream-dim: var(--ink-dim);
+    --muted: var(--ink-muted);
+    --cognac: var(--ink-accent);
+    --gold: var(--ink-gold);
+    --line-soft: color-mix(in srgb, var(--ink-text) 14%, transparent);
     position: relative;
     max-width: 52rem;
     margin: 0 auto;
     padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5.5rem);
     background:
       radial-gradient(circle at 10% 0%, rgba(255, 255, 255, 0.5), transparent 40%),
-      linear-gradient(180deg, #f5eddd, #efe4cf);
-    color: var(--ivory);
+      linear-gradient(180deg, var(--paper-bg), var(--paper-bg-2));
+    color: var(--cream);
     border-radius: 3px;
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.4) inset,
       0 40px 100px -30px rgba(0, 0, 0, 0.85),
-      0 0 0 1px rgba(212, 173, 88, 0.25);
+      0 0 0 1px color-mix(in srgb, var(--gold) 25%, transparent);
   }
 
   .sheet::before {
     content: '';
     position: absolute;
     inset: 12px;
-    border: 1px solid rgba(143, 102, 32, 0.25);
+    border: 1px solid color-mix(in srgb, var(--ink-accent) 25%, transparent);
     pointer-events: none;
   }
 
@@ -117,7 +117,7 @@ const pdf = page.data.pdf ? `/files/${page.data.pdf.replace(/^\/?(files\/)?/, ''
   }
 
   .sheet-links a {
-    color: var(--brass);
+    color: var(--cognac);
     text-decoration: none;
   }
 
@@ -134,7 +134,7 @@ const pdf = page.data.pdf ? `/files/${page.data.pdf.replace(/^\/?(files\/)?/, ''
     font-size: 0.78rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--brass);
+    color: var(--cognac);
   }
 
   .sheet-body :global(h3) {
@@ -159,11 +159,11 @@ const pdf = page.data.pdf ? `/files/${page.data.pdf.replace(/^\/?(files\/)?/, ''
   .sheet-body :global(hr::after) {
     content: '·  ·  ·';
     letter-spacing: 0.3em;
-    color: var(--brass);
+    color: var(--cognac);
   }
 
   .sheet-body :global(a) {
-    color: var(--brass);
+    color: var(--cognac);
   }
 
   @media print {

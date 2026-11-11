@@ -1,9 +1,9 @@
 .pswp {
-  --pswp-bg: #0c0a09;
-  --pswp-placeholder-bg: #1a1613;
-  --pswp-icon-color: #f2e9d8;
-  --pswp-icon-color-secondary: #0c0a09;
-  --pswp-icon-stroke-color: #0c0a09;
+  --pswp-bg: var(--film-base);
+  --pswp-placeholder-bg: var(--walnut);
+  --pswp-icon-color: var(--cream);
+  --pswp-icon-color-secondary: var(--film-base);
+  --pswp-icon-stroke-color: var(--film-base);
   --pswp-icon-stroke-width: 0;
 }
 
@@ -11,7 +11,7 @@
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.16em;
-  color: var(--brass);
+  color: var(--cognac);
   opacity: 1;
 }
 
@@ -30,7 +30,7 @@
 }
 
 .pswp__button--download:hover .pswp__icn {
-  color: var(--brass-hi);
+  color: var(--gold);
   transform: translateY(2px);
 }
 
@@ -63,14 +63,14 @@
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--brass);
+  color: var(--cognac);
 }
 
 .pswp__caption-text {
   font-family: var(--font-body);
   font-style: italic;
   font-size: 1.1rem;
-  color: var(--ivory);
+  color: var(--cream);
 }
 
 .pswp--ui-visible .pswp__caption {

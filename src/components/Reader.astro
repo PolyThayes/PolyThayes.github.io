@@ -61,13 +61,13 @@ const icon = {
       (newer || older) && (
         <nav class="pager" aria-label="More writing">
           {older ? (
-            <a href={older.href} class="pg prev" data-reveal style="--i:1">
+            <a href={older.href} class="pg prev glow-card" data-reveal style="--i:1">
               <span class="eyebrow">← Previous</span>
               <span class="pg-title">{older.title}</span>
             </a>
           ) : <span />}
           {newer ? (
-            <a href={newer.href} class="pg next" data-reveal style="--i:2">
+            <a href={newer.href} class="pg next glow-card" data-reveal style="--i:2">
               <span class="eyebrow">Next →</span>
               <span class="pg-title">{newer.title}</span>
             </a>
@@ -126,41 +126,32 @@ const icon = {
 
 <style>
   /* ─── Reading themes (applied to the whole page) ─────────────── */
-  :global(html[data-reader='paper']) {
-    --ink: #f3ebdb;
-    --ink-2: #ebe1cc;
-    --ink-3: #e0d3b8;
-    --ink-4: #d4c4a5;
-    --ivory: #2a211a;
-    --ivory-dim: #4b3e32;
-    --muted: #7d6c56;
-    --brass: #8f6620;
-    --brass-hi: #6b4b14;
-    --brass-deep: #b08a45;
-    --line: rgba(143, 102, 32, 0.3);
-    --line-soft: rgba(42, 33, 26, 0.12);
+  :global(html[data-reader='paper']),
+  :global(html[data-reader='sepia']) {
+    --espresso: var(--paper-bg);
+    --walnut: var(--paper-bg-2);
+    --walnut-2: color-mix(in srgb, var(--paper-bg-2) 80%, var(--ink-muted));
+    --walnut-3: color-mix(in srgb, var(--paper-bg-2) 65%, var(--ink-muted));
+    --cream: var(--ink-text);
+    --cream-dim: var(--ink-dim);
+    --muted: var(--ink-muted);
+    --cognac: var(--ink-accent);
+    --gold: var(--ink-gold);
+    --cognac-deep: var(--ink-accent);
+    --olive: color-mix(in srgb, var(--paper-bg-2) 70%, #8a7d4a);
+    --line: color-mix(in srgb, var(--ink-accent) 30%, transparent);
+    --line-soft: color-mix(in srgb, var(--ink-text) 12%, transparent);
     color-scheme: light;
   }
 
   :global(html[data-reader='sepia']) {
-    --ink: #e6d3ae;
-    --ink-2: #dcc69c;
-    --ink-3: #d1b98b;
-    --ink-4: #c4aa78;
-    --ivory: #34251a;
-    --ivory-dim: #4f3a29;
-    --muted: #775e43;
-    --brass: #87521e;
-    --brass-hi: #663c12;
-    --brass-deep: #a8743a;
-    --line: rgba(135, 82, 30, 0.32);
-    --line-soft: rgba(52, 37, 26, 0.14);
-    color-scheme: light;
+    --espresso: var(--sepia-bg);
+    --walnut: var(--sepia-bg-2);
   }
 
   :global(html[data-reader='paper'] body),
   :global(html[data-reader='sepia'] body) {
-    background: var(--ink);
+    background: var(--espresso);
   }
 
   :global(html[data-reader] body::before) {
@@ -191,7 +182,7 @@ const icon = {
   .r-progress span {
     display: block;
     height: 100%;
-    background: linear-gradient(90deg, var(--oxblood), var(--brass));
+    background: linear-gradient(90deg, var(--leather), var(--cognac));
     transform-origin: left;
     transform: scaleX(var(--p, 0));
   }
@@ -233,7 +224,7 @@ const icon = {
     max-width: 40ch;
     font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
     font-style: italic;
-    color: var(--ivory-dim);
+    color: var(--cream-dim);
   }
 
   .byline {
@@ -272,7 +263,7 @@ const icon = {
     font-size: 4.6em;
     line-height: 0.82;
     padding: 0.06em 0.12em 0 0;
-    color: var(--brass);
+    color: var(--cognac);
     font-variation-settings: 'SOFT' 100, 'WONK' 1;
     font-weight: 400;
   }
@@ -319,7 +310,7 @@ const icon = {
     margin: 4rem 0 3rem;
     text-align: center;
     font-size: 1.6rem;
-    color: var(--brass);
+    color: var(--cognac);
   }
 
   .takeaway {
@@ -348,13 +339,13 @@ const icon = {
     gap: 0.6rem;
     align-content: start;
     padding: 2rem;
-    background: var(--ink);
+    background: var(--espresso);
     text-decoration: none;
     transition: background 0.5s;
   }
 
   .pg:hover {
-    background: var(--ink-2);
+    background: color-mix(in srgb, var(--olive) 45%, var(--espresso));
     color: inherit;
   }
 
@@ -392,7 +383,7 @@ const icon = {
     padding: 0.35rem 0.4rem 0.35rem 0.4rem;
     border: 1px solid var(--line);
     border-radius: 999px;
-    background: color-mix(in srgb, var(--ink-2) 86%, transparent);
+    background: color-mix(in srgb, var(--walnut) 86%, transparent);
     backdrop-filter: blur(16px) saturate(1.4);
     -webkit-backdrop-filter: blur(16px) saturate(1.4);
     box-shadow: 0 18px 50px -12px rgba(0, 0, 0, 0.55);
@@ -406,7 +397,7 @@ const icon = {
     border: 0;
     border-radius: 50%;
     background: transparent;
-    color: var(--ivory-dim);
+    color: var(--cream-dim);
     cursor: pointer;
     transition: background 0.3s, color 0.3s;
   }
@@ -419,8 +410,8 @@ const icon = {
   .dock-btn:hover,
   .dock-btn[aria-expanded='true'],
   .dock-btn[aria-pressed='true'] {
-    background: var(--brass);
-    color: var(--ink);
+    background: var(--cognac);
+    color: var(--espresso);
   }
 
   .dock-time {
@@ -441,7 +432,7 @@ const icon = {
     padding: 1.2rem;
     border: 1px solid var(--line);
     border-radius: 14px;
-    background: var(--ink-2);
+    background: var(--walnut);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     box-shadow: 0 24px 60px -16px rgba(0, 0, 0, 0.6);
@@ -479,7 +470,7 @@ const icon = {
     border: 1px solid var(--line-soft);
     border-radius: 10px;
     background: transparent;
-    color: var(--ivory);
+    color: var(--cream);
     font-family: var(--font-mono);
     font-size: 0.68rem;
     letter-spacing: 0.1em;
@@ -488,7 +479,7 @@ const icon = {
   }
 
   .swatches button[aria-checked='true'] {
-    border-color: var(--brass);
+    border-color: var(--cognac);
   }
 
   .sw {
@@ -498,9 +489,9 @@ const icon = {
     border: 1px solid var(--line);
   }
 
-  .sw-ink { background: linear-gradient(135deg, #120f0d 50%, #d4ad58 50%); }
-  .sw-paper { background: linear-gradient(135deg, #f3ebdb 50%, #2a211a 50%); }
-  .sw-sepia { background: linear-gradient(135deg, #e6d3ae 50%, #34251a 50%); }
+  .sw-ink { background: linear-gradient(135deg, #1b130d 50%, #c78450 50%); }
+  .sw-paper { background: linear-gradient(135deg, #f3e9d6 50%, #2d1d12 50%); }
+  .sw-sepia { background: linear-gradient(135deg, #e3cfa8 50%, #33200f 50%); }
 
   .sizes {
     display: grid;
@@ -527,7 +518,7 @@ const icon = {
     border: 1px solid var(--line-soft);
     border-radius: 10px;
     background: transparent;
-    color: var(--ivory);
+    color: var(--cream);
     text-align: left;
     text-decoration: none;
     font: inherit;
@@ -536,9 +527,9 @@ const icon = {
   }
 
   .dl:hover {
-    border-color: var(--brass);
-    background: var(--ink-3);
-    color: var(--ivory);
+    border-color: var(--cognac);
+    background: var(--walnut-2);
+    color: var(--cream);
   }
 
   .dl strong {
@@ -615,7 +606,7 @@ const icon = {
 
     .r-body :global(.lead::first-letter),
     .r-body :global(sup) {
-      color: #7a5a1c !important;
+      color: #7a5520 !important;
     }
 
     .r-body :global(*) {
