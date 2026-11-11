@@ -21,18 +21,3 @@ links:
     url: "mailto:you@example.com"
   - label: "GitHub"
     url: "https://github.com/PolyThayes"
-
-# The four tiles on the home page. Change the wording freely.
-sections:
-  writing:
-    title: "Things worth putting down"
-    blurb: "Essays, criticism & short pieces"
-  gallery:
-    title: "A running contact sheet"
-    blurb: "Photographs from the road"
-  about:
-    title: "Who's behind the camera"
-    blurb: "A short introduction"
-  resume:
-    title: "The professional version"
-    blurb: "Experience & background"
