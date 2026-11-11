@@ -6,10 +6,10 @@
 name: "Nikhil Gupta"
 
 # The small line above your name on the home page.
-eyebrow: "Photography · Writing "
+eyebrow: "Photographer · Writer · This site's only author"
 
 # The sentence under your name on the home page.
-headline: "Some of my photos and select pieces of writing"
+headline: "I take photos on trips, write when something's worth saying, and this is where both live."
 
 # Used by search engines and link previews.
 description: "Photographs, writing, and a bit about me."
@@ -18,6 +18,6 @@ description: "Photographs, writing, and a bit about me."
 # Delete any line you don't want. Add more in the same format.
 links:
   - label: "Email"
-    url: "Nikhilsgupta@icloud.com"
-  - label: "Instagram"
-    url: "https://www.instagram.com/the.great.nikhil/"
+    url: "mailto:you@example.com"
+  - label: "GitHub"
+    url: "https://github.com/PolyThayes"
