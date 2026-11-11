@@ -7,27 +7,28 @@
    ────────────────────────────────────────────────────────────── */
 :root {
   /* Backgrounds — espresso and walnut, darkest to lightest */
-  --espresso: #1b130d;    /* page background (walnut pillar, deepened) */
-  --walnut: #2d1d12;      /* raised surfaces (floor) */
-  --walnut-2: #3b2516;    /* panels, placeholders (carpet) */
-  --walnut-3: #483724;    /* borders on panels (wood panelling) */
+  --espresso: #110b08;    /* page background: walnut panelling in shadow */
+  --walnut: #1c140e;      /* raised surfaces */
+  --walnut-2: #2a1d14;    /* panels, placeholders */
+  --walnut-3: #3a2819;    /* panel edges (lit wood) */
 
   /* Primary accent — cognac & tan leather */
-  --cognac: #c78450;      /* leather sofa */
-  --tan: #d39c7b;         /* leather highlight */
-  --cognac-deep: #8e5530; /* leather in shadow */
-  --leather: #60351e;     /* dark armchair leather */
+  --cognac: #b9743f;      /* cognac leather armchairs */
+  --tan: #d49a6a;         /* leather catching the lamplight */
+  --cognac-deep: #7d4724; /* leather in shadow */
+  --leather: #4f2a17;     /* dark armchair leather */
 
   /* Highlights — lamp glow & cream; use sparingly */
-  --gold: #dcb46e;        /* sconce halo, lifted for legibility */
-  --cream: #ecdfc6;       /* body text (cushion / shade cream) */
-  --cream-dim: #cdbb9c;   /* secondary text */
-  --shade: #f5d2a4;       /* lampshade cream, for small accents */
-  --muted: #a8916f;       /* captions, meta text */
+  --gold: #d6b274;        /* gilt trim & sconce glow */
+  --gilt: #9c7c45;        /* hairlines and rules (gilt in shadow) */
+  --cream: #efe3cb;       /* body text: lampshade cream */
+  --cream-dim: #cbb999;   /* secondary text */
+  --shade: #f6dcb2;       /* a lit lampshade, for small accents */
+  --muted: #9e8868;       /* captions, meta text */
 
   /* Secondary — the olive-umber of the murals */
-  --olive: #4a4021;
-  --olive-deep: #2e2914;
+  --olive: #36321b;       /* mural olive-umber (hover panels) */
+  --olive-deep: #1f1c0f;
 
   /* Film (contact sheet) */
   --film-base: #0b0907;
@@ -41,7 +42,7 @@
   --grease-blue: #9cc6df;
 
   /* Derived — lines, glows */
-  --line: color-mix(in srgb, var(--gold) 24%, transparent);
+  --line: color-mix(in srgb, var(--gilt) 45%, transparent);
   --line-soft: color-mix(in srgb, var(--cream) 9%, transparent);
   --glow: 0 0 0 1px color-mix(in srgb, var(--gold) 30%, transparent),
     0 14px 40px -12px color-mix(in srgb, var(--gold) 38%, transparent);
@@ -90,8 +91,9 @@ body {
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(1100px 650px at 85% -10%, color-mix(in srgb, var(--gold) 11%, transparent), transparent 60%),
-    radial-gradient(900px 700px at -10% 30%, color-mix(in srgb, var(--olive) 35%, transparent), transparent 65%),
+    radial-gradient(520px 380px at 88% -4%, color-mix(in srgb, var(--shade) 9%, transparent), transparent 70%),
+    radial-gradient(700px 520px at 6% 0%, color-mix(in srgb, var(--gold) 6%, transparent), transparent 70%),
+    radial-gradient(1200px 600px at 50% 110%, color-mix(in srgb, var(--olive) 30%, transparent), transparent 70%),
     var(--espresso);
   background-attachment: fixed;
   color: var(--cream);
@@ -110,7 +112,7 @@ body::before {
   inset: 0;
   z-index: 100;
   pointer-events: none;
-  opacity: 0.07;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .9 0 0 0 0 .8 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -184,7 +186,7 @@ p { text-wrap: pretty; }
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--cognac);
+  color: var(--gold);
 }
 
 .muted { color: var(--muted); }
@@ -207,7 +209,7 @@ p { text-wrap: pretty; }
   height: 1px;
   border: 0;
   margin: 0;
-  background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+  background: linear-gradient(90deg, transparent, var(--gilt) 20%, var(--gilt) 80%, transparent);
   opacity: 0.6;
 }
 
@@ -229,14 +231,14 @@ p { text-wrap: pretty; }
   display: inline-flex;
   align-items: center;
   gap: 0.6em;
-  padding: 0.75em 1.3em;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  padding: 0.95em 1.7em;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 1px;
   background: var(--bg);
   color: var(--cream);
   font-family: var(--font-mono);
   font-size: 0.74rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
@@ -251,7 +253,7 @@ p { text-wrap: pretty; }
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--cognac);
+  background: var(--gold);
   transform: translateY(101%);
   transition: transform 0.5s var(--ease-out);
 }

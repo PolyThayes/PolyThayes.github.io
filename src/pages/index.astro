@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import SplitText from '../components/SplitText.astro';
 import EssayRow from '../components/EssayRow.astro';
 import { getSite } from '../lib/site';
-import { getEssays, toRoman } from '../lib/writing';
+import { getEssays } from '../lib/writing';
 import { getAlbums } from '../lib/gallery';
 
 const site = getSite();
@@ -12,12 +12,6 @@ const essays = (await getEssays()).slice(0, 3);
 const albums = await getAlbums();
 const strip = albums.flatMap((a) => a.photos.map((p) => ({ ...p, albumTitle: a.title }))).slice(0, 8);
 
-const tiles = [
-  { href: '/writing/', label: 'Writing', key: 'writing' },
-  { href: '/gallery/', label: 'Gallery', key: 'gallery' },
-  { href: '/about/', label: 'About', key: 'about' },
-  { href: '/resume/', label: 'Résumé', key: 'resume' },
-];
 const [first, ...rest] = site.name.split(' ');
 ---
 
@@ -36,35 +30,13 @@ const [first, ...rest] = site.name.split(' ');
         <a class="btn" href="/gallery/">See the photographs</a>
       </div>
 
-      <svg class="seal" viewBox="0 0 200 200" aria-hidden="true">
-        <defs><path id="circ" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
-        <text><textPath href="#circ" textLength="486" lengthAdjust="spacing">PHOTOGRAPHS · ESSAYS · NOTES · PHOTOGRAPHS · ESSAYS · NOTES ·</textPath></text>
-        <text x="100" y="114" text-anchor="middle" class="seal-mark">✦</text>
-      </svg>
     </div>
-    <a href="#index" class="scroll-cue" aria-label="Scroll down"><span></span></a>
-  </section>
-
-  <section class="wrap index" id="index" aria-label="Sections">
-    <hr class="rule" data-reveal />
-    <div class="tiles">
-      {
-        tiles.map((t, i) => (
-          <a class="tile glow-card" href={t.href} data-reveal style={`--i:${i}`}>
-            <span class="tile-no">{toRoman(i + 1)}</span>
-            <span class="eyebrow">{t.label}</span>
-            <span class="tile-title">{site.sections?.[t.key]?.title}</span>
-            <span class="tile-blurb">{site.sections?.[t.key]?.blurb}</span>
-            <span class="tile-arrow" aria-hidden="true">→</span>
-          </a>
-        ))
-      }
-    </div>
+    <a href="#latest" class="scroll-cue" aria-label="Scroll down"><span></span></a>
   </section>
 
   {
     essays.length > 0 && (
-      <section class="wrap latest">
+      <section class="wrap latest" id="latest">
         <header class="sec-head" data-reveal>
           <p class="eyebrow">Latest writing</p>
           <a href="/writing/" class="all">All writing →</a>
@@ -125,9 +97,9 @@ const [first, ...rest] = site.name.split(' ');
   .aurora span:nth-child(1) {
     width: 46vw;
     height: 46vw;
-    left: 52%;
-    top: -10%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--gold) 20%, transparent), transparent 65%);
+    left: 62%;
+    top: 4%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--shade) 13%, transparent), transparent 60%);
   }
 
   .aurora span:nth-child(2) {
@@ -135,7 +107,7 @@ const [first, ...rest] = site.name.split(' ');
     height: 38vw;
     left: 70%;
     top: 40%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--cognac) 22%, transparent), transparent 65%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--cognac) 10%, transparent), transparent 65%);
   }
 
   .aurora span:nth-child(3) {
@@ -143,7 +115,7 @@ const [first, ...rest] = site.name.split(' ');
     height: 34vw;
     left: -8%;
     top: 55%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--olive) 60%, transparent), transparent 65%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--olive) 45%, transparent), transparent 65%);
   }
 
   .hero-inner {
@@ -187,30 +159,6 @@ const [first, ...rest] = site.name.split(' ');
     margin-top: 2.4rem;
   }
 
-  .seal {
-    position: absolute;
-    right: var(--gutter);
-    bottom: 3rem;
-    width: clamp(7rem, 13vw, 11rem);
-    animation: spin 40s linear infinite;
-    opacity: 0.85;
-  }
-
-  .seal text {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    fill: var(--cognac);
-  }
-
-  .seal .seal-mark {
-    font-size: 34px;
-    fill: var(--leather);
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
   .scroll-cue {
     position: absolute;
     left: 50%;
@@ -233,97 +181,6 @@ const [first, ...rest] = site.name.split(' ');
     60%, 100% { transform: translateY(100%); }
   }
 
-  .tiles {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    margin-block: clamp(3rem, 6vw, 5rem);
-    background: var(--line-soft);
-    border: 1px solid var(--line-soft);
-  }
-
-  .tile {
-    position: relative;
-    display: grid;
-    gap: 0.7rem;
-    align-content: start;
-    min-height: clamp(14rem, 26vw, 20rem);
-    padding: clamp(1.6rem, 3.5vw, 3rem);
-    background: var(--espresso);
-    text-decoration: none;
-    overflow: hidden;
-    isolation: isolate;
-  }
-
-  .tile::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background:
-      radial-gradient(500px 300px at var(--mx, 70%) var(--my, 30%), color-mix(in srgb, var(--gold) 18%, transparent), transparent 70%),
-      linear-gradient(160deg, var(--olive-deep), var(--walnut) 70%);
-    opacity: 0;
-    transition: opacity 0.7s var(--ease-out);
-  }
-
-  .tile:hover::before {
-    opacity: 1;
-  }
-
-  .tile:hover {
-    color: inherit;
-  }
-
-  .tile-no {
-    position: absolute;
-    right: clamp(1.2rem, 3vw, 2.4rem);
-    top: 0.6rem;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: clamp(4rem, 8vw, 7rem);
-    font-weight: 200;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--line);
-    transition: transform 1s var(--ease-out), -webkit-text-stroke-color 0.5s;
-  }
-
-  .tile:hover .tile-no {
-    transform: translateY(0.4rem) rotate(-4deg);
-    -webkit-text-stroke-color: var(--cognac);
-  }
-
-  .tile-title {
-    margin-top: auto;
-    padding-top: 3rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.6rem, 1rem + 2vw, 2.6rem);
-    font-weight: 350;
-    line-height: 1.05;
-    max-width: 14ch;
-  }
-
-  .tile-blurb {
-    font-style: italic;
-    color: var(--muted);
-  }
-
-  .tile-arrow {
-    position: absolute;
-    right: clamp(1.6rem, 3.5vw, 3rem);
-    bottom: clamp(1.6rem, 3.5vw, 3rem);
-    font-size: 1.6rem;
-    color: var(--cognac);
-    transform: translateX(-0.8rem);
-    opacity: 0;
-    transition: transform 0.6s var(--ease-out), opacity 0.4s;
-  }
-
-  .tile:hover .tile-arrow {
-    transform: none;
-    opacity: 1;
-  }
-
   .sec-head {
     display: flex;
     align-items: baseline;
@@ -338,6 +195,10 @@ const [first, ...rest] = site.name.split(' ');
     text-transform: uppercase;
     text-decoration: none;
     color: var(--cream-dim);
+  }
+
+  .latest {
+    margin-top: clamp(4rem, 9vw, 7rem);
   }
 
   .essays {
@@ -401,27 +262,5 @@ const [first, ...rest] = site.name.split(' ');
     transform: none;
   }
 
-  @media (max-width: 700px) {
-    .tiles {
-      grid-template-columns: 1fr;
-    }
-
-    .seal {
-      bottom: 1.5rem;
-      opacity: 0.5;
-    }
-  }
 </style>
 
-<script>
-  // The soft brass glow on the section tiles follows the pointer.
-  document.addEventListener('astro:page-load', () => {
-    document.querySelectorAll<HTMLElement>('.tile').forEach((t) => {
-      t.addEventListener('pointermove', (e) => {
-        const r = t.getBoundingClientRect();
-        t.style.setProperty('--mx', `${e.clientX - r.left}px`);
-        t.style.setProperty('--my', `${e.clientY - r.top}px`);
-      });
-    });
-  });
-</script>
