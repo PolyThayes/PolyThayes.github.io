@@ -1,0 +1,175 @@
+---
+import { getEntry, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SplitText from '../components/SplitText.astro';
+import { getSite } from '../lib/site';
+
+const site = getSite();
+const page = await getEntry('pages', 'about');
+if (!page) throw new Error('content/about.md is missing');
+const { Content } = await render(page);
+const initials = site.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
+---
+
+<Base title={page.data.title ?? 'About'} description={page.data.intro}>
+  <section class="wrap page-head">
+    <p class="eyebrow" data-reveal="fade">About</p>
+    <h1><SplitText text={page.data.title ?? 'About'} /></h1>
+  </section>
+
+  <section class="wrap about">
+    <aside class="portrait" data-reveal="scale">
+      <div class="arch">
+        {
+          page.data.portrait ? (
+            <Image src={page.data.portrait} alt={`Portrait of ${site.name}`} widths={[400, 800]} sizes="(max-width: 800px) 70vw, 360px" />
+          ) : (
+            <div class="monogram" aria-hidden="true">
+              <span>{initials}</span>
+            </div>
+          )
+        }
+      </div>
+      <p class="caption">{site.name}</p>
+      {
+        site.links && site.links.length > 0 && (
+          <ul class="contact">
+            {site.links.map((l, i) => (
+              <li data-reveal style={`--i:${i + 1}`}>
+                <a href={l.url}>
+                  <span>{l.label}</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </aside>
+
+    <div class="text">
+      {page.data.intro && <p class="intro" data-reveal="blur">{page.data.intro}</p>}
+      <div class="prose" data-reveal style="--i:1"><Content /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: start;
+  }
+
+  .portrait {
+    position: sticky;
+    top: 6.5rem;
+  }
+
+  .arch {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 999px 999px 6px 6px;
+    overflow: hidden;
+    outline: 1px solid var(--brass);
+    outline-offset: 10px;
+    background: linear-gradient(165deg, var(--wine), var(--ink-2) 60%, var(--forest));
+  }
+
+  .arch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .monogram {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .monogram span {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 200;
+    font-size: clamp(6rem, 12vw, 9rem);
+    color: var(--brass);
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    animation: breathe 7s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    50% {
+      transform: scale(1.06) rotate(-3deg);
+      opacity: 0.85;
+    }
+  }
+
+  .caption {
+    margin: 1.8rem 0 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .contact {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .contact a {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.9rem 0.2rem;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: padding 0.5s var(--ease-out), color 0.3s;
+  }
+
+  .contact a:hover {
+    padding-inline: 0.8rem;
+  }
+
+  .intro {
+    margin: 0 0 2.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 1.2rem + 2vw, 2.8rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.2;
+    color: var(--brass-hi);
+    text-wrap: balance;
+  }
+
+  .prose :global(> p:first-of-type::first-letter) {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 4.2em;
+    line-height: 0.85;
+    padding: 0.05em 0.12em 0 0;
+    color: var(--brass);
+  }
+
+  @media (max-width: 800px) {
+    .about {
+      grid-template-columns: 1fr;
+    }
+
+    .portrait {
+      position: static;
+      max-width: 18rem;
+    }
+  }
+</style>

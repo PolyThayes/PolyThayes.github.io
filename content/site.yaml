@@ -1,0 +1,38 @@
+# ──────────────────────────────────────────────────────────────
+#  SITE SETTINGS — the words that appear on every page.
+#  Edit the text after each colon. Keep the quotation marks.
+# ──────────────────────────────────────────────────────────────
+
+name: "Nikhil Gupta"
+
+# The small line above your name on the home page.
+eyebrow: "Photographer · Writer · This site's only author"
+
+# The sentence under your name on the home page.
+headline: "I take photos on trips, write when something's worth saying, and this is where both live."
+
+# Used by search engines and link previews.
+description: "Photographs, writing, and a bit about me."
+
+# Contact links shown on the About page and in the footer.
+# Delete any line you don't want. Add more in the same format.
+links:
+  - label: "Email"
+    url: "mailto:you@example.com"
+  - label: "GitHub"
+    url: "https://github.com/PolyThayes"
+
+# The four tiles on the home page. Change the wording freely.
+sections:
+  writing:
+    title: "Things worth putting down"
+    blurb: "Essays, criticism & short pieces"
+  gallery:
+    title: "A running contact sheet"
+    blurb: "Photographs from the road"
+  about:
+    title: "Who's behind the camera"
+    blurb: "A short introduction"
+  resume:
+    title: "The professional version"
+    blurb: "Experience & background"

@@ -1,0 +1,98 @@
+---
+import { getSite, NAV } from '../lib/site';
+const site = getSite();
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <hr class="rule" data-reveal />
+    <div class="cols">
+      <div class="sig" data-reveal>
+        <p class="big">{site.name}</p>
+        <p class="muted small">{site.description}</p>
+      </div>
+      <nav class="links" aria-label="Footer" data-reveal style="--i:1">
+        {NAV.map((n) => <a href={n.href}>{n.label}</a>)}
+      </nav>
+      <div class="links" data-reveal style="--i:2">
+        {site.links?.map((l) => <a href={l.url} rel={l.url.startsWith('http') ? 'me noopener' : undefined}>{l.label}</a>)}
+        <a href="/rss.xml">RSS</a>
+      </div>
+    </div>
+    <div class="base">
+      <span>© {year} {site.name}</span>
+      <a href="#main" class="top">Back to top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: clamp(4rem, 10vw, 8rem);
+    padding-bottom: 2rem;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
+    padding-block: 3rem;
+  }
+
+  .big {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .small {
+    font-size: 0.95rem;
+    margin: 0.4rem 0 0;
+  }
+
+  .links {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+  }
+
+  .links a,
+  .base {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+  }
+
+  .links a:hover,
+  .top:hover {
+    color: var(--brass);
+  }
+
+  .base {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid var(--line-soft);
+    padding-top: 1.4rem;
+  }
+
+  .top {
+    text-decoration: none;
+  }
+
+  @media (max-width: 700px) {
+    .cols {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .sig {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

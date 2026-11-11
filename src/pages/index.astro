@@ -1,0 +1,438 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SplitText from '../components/SplitText.astro';
+import EssayRow from '../components/EssayRow.astro';
+import { getSite } from '../lib/site';
+import { getEssays, toRoman } from '../lib/writing';
+import { getAlbums } from '../lib/gallery';
+
+const site = getSite();
+const essays = (await getEssays()).slice(0, 3);
+const albums = await getAlbums();
+const strip = albums.flatMap((a) => a.photos.map((p) => ({ ...p, albumTitle: a.title }))).slice(0, 8);
+
+const tiles = [
+  { href: '/writing/', label: 'Writing', key: 'writing' },
+  { href: '/gallery/', label: 'Gallery', key: 'gallery' },
+  { href: '/about/', label: 'About', key: 'about' },
+  { href: '/resume/', label: 'Résumé', key: 'resume' },
+];
+const [first, ...rest] = site.name.split(' ');
+---
+
+<Base>
+  <section class="hero">
+    <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="wrap hero-inner">
+      <p class="eyebrow" data-reveal="fade">{site.eyebrow}</p>
+      <h1>
+        <span class="l1"><SplitText text={first} /></span>
+        {rest.length > 0 && <span class="l2"><SplitText text={rest.join(' ')} offset={first.length} /></span>}
+      </h1>
+      {site.headline && <p class="headline" data-reveal="blur" style="--i:6">{site.headline}</p>}
+      <div class="hero-cta" data-reveal style="--i:8">
+        <a class="btn btn--solid" href="/writing/">Read the writing</a>
+        <a class="btn" href="/gallery/">See the photographs</a>
+      </div>
+
+      <svg class="seal" viewBox="0 0 200 200" aria-hidden="true">
+        <defs><path id="circ" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
+        <text><textPath href="#circ" textLength="486" lengthAdjust="spacing">PHOTOGRAPHS · ESSAYS · NOTES · PHOTOGRAPHS · ESSAYS · NOTES ·</textPath></text>
+        <text x="100" y="114" text-anchor="middle" class="seal-mark">✦</text>
+      </svg>
+    </div>
+    <a href="#index" class="scroll-cue" aria-label="Scroll down"><span></span></a>
+  </section>
+
+  <section class="wrap index" id="index" aria-label="Sections">
+    <hr class="rule" data-reveal />
+    <div class="tiles">
+      {
+        tiles.map((t, i) => (
+          <a class="tile" href={t.href} data-reveal style={`--i:${i}`}>
+            <span class="tile-no">{toRoman(i + 1)}</span>
+            <span class="eyebrow">{t.label}</span>
+            <span class="tile-title">{site.sections?.[t.key]?.title}</span>
+            <span class="tile-blurb">{site.sections?.[t.key]?.blurb}</span>
+            <span class="tile-arrow" aria-hidden="true">→</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    essays.length > 0 && (
+      <section class="wrap latest">
+        <header class="sec-head" data-reveal>
+          <p class="eyebrow">Latest writing</p>
+          <a href="/writing/" class="all">All writing →</a>
+        </header>
+        <ol class="essays">
+          {essays.map((e, i) => (
+            <EssayRow essay={e} n={i + 1} i={i} />
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  {
+    strip.length > 0 && (
+      <section class="photos">
+        <header class="wrap sec-head" data-reveal>
+          <p class="eyebrow">From the gallery</p>
+          <a href="/gallery/" class="all">All albums →</a>
+        </header>
+        <div class="strip" data-reveal="fade">
+          {strip.map((p, i) => (
+            <a href={`/gallery/${p.album}/`} class="frame" style={`--i:${i}`}>
+              <Image src={p.src} alt={p.caption ?? p.albumTitle} widths={[360, 720]} sizes="(max-width: 700px) 70vw, 340px" loading="lazy" />
+              <span class="frame-cap">{p.albumTitle}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    margin-top: -4.5rem;
+    padding-top: 4.5rem;
+    display: grid;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .aurora {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    filter: blur(80px);
+    opacity: 0.75;
+  }
+
+  .aurora span {
+    position: absolute;
+    border-radius: 50%;
+    animation: drift 22s ease-in-out infinite alternate;
+  }
+
+  .aurora span:nth-child(1) {
+    width: 46vw;
+    height: 46vw;
+    left: 52%;
+    top: -10%;
+    background: radial-gradient(circle, rgba(142, 59, 59, 0.55), transparent 65%);
+  }
+
+  .aurora span:nth-child(2) {
+    width: 38vw;
+    height: 38vw;
+    left: 70%;
+    top: 40%;
+    background: radial-gradient(circle, rgba(212, 173, 88, 0.28), transparent 65%);
+    animation-duration: 28s;
+    animation-delay: -6s;
+  }
+
+  .aurora span:nth-child(3) {
+    width: 34vw;
+    height: 34vw;
+    left: -8%;
+    top: 55%;
+    background: radial-gradient(circle, rgba(35, 51, 43, 0.7), transparent 65%);
+    animation-duration: 32s;
+    animation-delay: -12s;
+  }
+
+  @keyframes drift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-6vw, 4vh) scale(1.12); }
+    100% { transform: translate(4vw, -5vh) scale(0.95); }
+  }
+
+  .hero-inner {
+    position: relative;
+    padding-block: 4rem 7rem;
+  }
+
+  h1 {
+    margin-top: 1.4rem;
+    font-size: clamp(3.6rem, 1rem + 12vw, 11.5rem);
+    font-weight: 300;
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+  }
+
+  h1 > span {
+    display: block;
+  }
+
+  .l2 {
+    font-style: italic;
+    color: var(--brass);
+    padding-left: clamp(1.5rem, 9vw, 9rem);
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+  }
+
+  .headline {
+    max-width: 34ch;
+    margin: 2.4rem 0 0;
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+    font-style: italic;
+    color: var(--ivory-dim);
+    line-height: 1.45;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 2.4rem;
+  }
+
+  .seal {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 3rem;
+    width: clamp(7rem, 13vw, 11rem);
+    animation: spin 40s linear infinite;
+    opacity: 0.85;
+  }
+
+  .seal text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--brass);
+  }
+
+  .seal .seal-mark {
+    font-size: 34px;
+    fill: var(--oxblood);
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.6rem;
+    width: 1px;
+    height: 3.5rem;
+    overflow: hidden;
+    background: var(--line-soft);
+  }
+
+  .scroll-cue span {
+    position: absolute;
+    inset: 0;
+    background: var(--brass);
+    animation: cue 2.4s var(--ease-in-out) infinite;
+  }
+
+  @keyframes cue {
+    0% { transform: translateY(-100%); }
+    60%, 100% { transform: translateY(100%); }
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    margin-block: clamp(3rem, 6vw, 5rem);
+    background: var(--line-soft);
+    border: 1px solid var(--line-soft);
+  }
+
+  .tile {
+    position: relative;
+    display: grid;
+    gap: 0.7rem;
+    align-content: start;
+    min-height: clamp(14rem, 26vw, 20rem);
+    padding: clamp(1.6rem, 3.5vw, 3rem);
+    background: var(--ink);
+    text-decoration: none;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(500px 300px at var(--mx, 70%) var(--my, 30%), rgba(212, 173, 88, 0.18), transparent 70%),
+      linear-gradient(160deg, var(--wine), var(--ink-2) 70%);
+    opacity: 0;
+    transition: opacity 0.7s var(--ease-out);
+  }
+
+  .tile:hover::before {
+    opacity: 1;
+  }
+
+  .tile:hover {
+    color: inherit;
+  }
+
+  .tile-no {
+    position: absolute;
+    right: clamp(1.2rem, 3vw, 2.4rem);
+    top: 0.6rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(4rem, 8vw, 7rem);
+    font-weight: 200;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--line);
+    transition: transform 1s var(--ease-out), -webkit-text-stroke-color 0.5s;
+  }
+
+  .tile:hover .tile-no {
+    transform: translateY(0.4rem) rotate(-4deg);
+    -webkit-text-stroke-color: var(--brass);
+  }
+
+  .tile-title {
+    margin-top: auto;
+    padding-top: 3rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 1rem + 2vw, 2.6rem);
+    font-weight: 350;
+    line-height: 1.05;
+    max-width: 14ch;
+  }
+
+  .tile-blurb {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .tile-arrow {
+    position: absolute;
+    right: clamp(1.6rem, 3.5vw, 3rem);
+    bottom: clamp(1.6rem, 3.5vw, 3rem);
+    font-size: 1.6rem;
+    color: var(--brass);
+    transform: translateX(-0.8rem);
+    opacity: 0;
+    transition: transform 0.6s var(--ease-out), opacity 0.4s;
+  }
+
+  .tile:hover .tile-arrow {
+    transform: none;
+    opacity: 1;
+  }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.4rem;
+  }
+
+  .all {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ivory-dim);
+  }
+
+  .essays {
+    margin: 0;
+    padding: 0;
+  }
+
+  .photos {
+    margin-top: clamp(4rem, 9vw, 7rem);
+  }
+
+  .strip {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem var(--gutter) 1.5rem;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: thin;
+    scrollbar-color: var(--brass-deep) transparent;
+  }
+
+  .frame {
+    position: relative;
+    flex: 0 0 auto;
+    width: clamp(15rem, 26vw, 21rem);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radius);
+    scroll-snap-align: start;
+  }
+
+  .frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.4s var(--ease-out), filter 0.8s;
+    filter: saturate(0.85);
+  }
+
+  .frame:hover img {
+    transform: scale(1.06);
+    filter: saturate(1.05);
+  }
+
+  .frame-cap {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 2.5rem 1rem 0.9rem;
+    background: linear-gradient(transparent, rgba(18, 15, 13, 0.85));
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transform: translateY(100%);
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .frame:hover .frame-cap,
+  .frame:focus-visible .frame-cap {
+    transform: none;
+  }
+
+  @media (max-width: 700px) {
+    .tiles {
+      grid-template-columns: 1fr;
+    }
+
+    .seal {
+      bottom: 1.5rem;
+      opacity: 0.5;
+    }
+  }
+</style>
+
+<script>
+  // The soft brass glow on the section tiles follows the pointer.
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('.tile').forEach((t) => {
+      t.addEventListener('pointermove', (e) => {
+        const r = t.getBoundingClientRect();
+        t.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        t.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    });
+  });
+</script>

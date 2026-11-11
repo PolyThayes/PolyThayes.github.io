@@ -1,0 +1,805 @@
+---
+// The essay reading experience: themes, text size, focus mode, progress,
+// and downloads (PDF via print, EPUB, Markdown).
+interface Link {
+  href: string;
+  title: string;
+}
+interface Props {
+  id: string;
+  title: string;
+  author: string;
+  summary?: string;
+  date?: string;
+  isoDate?: string;
+  minutes: number;
+  words: number;
+  downloads: { epub: { href: string; name: string }; md: { href: string; name: string } };
+  newer?: Link;
+  older?: Link;
+}
+const { id, title, author, summary, date, isoDate, minutes, words, downloads, newer, older } = Astro.props;
+
+const icon = {
+  type: 'M4 19 9.5 5h1L16 19M6.2 14h7.6M15.5 19l3-8 3 8M16.4 16.6h4.2',
+  focus: 'M3 9V5a2 2 0 0 1 2-2h4M15 3h4a2 2 0 0 1 2 2v4M21 15v4a2 2 0 0 1-2 2h-4M9 21H5a2 2 0 0 1-2-2v-4M8 12h8',
+  save: 'M12 3v12m0 0-5-5m5 5 5-5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2',
+};
+---
+
+<div class="r-progress" aria-hidden="true"><span></span></div>
+
+<article class="reader" data-minutes={minutes}>
+  <header class="r-head">
+    <a href="/writing/" class="back" data-reveal="fade">← All writing</a>
+    <p class="eyebrow" data-reveal="fade" style="--i:1">
+      Essay{date && <> · <time datetime={isoDate}>{date}</time></>}
+    </p>
+    <h1 transition:name={`essay-title-${id}`}>{title}</h1>
+    {summary && <p class="summary" data-reveal="blur" style="--i:3">{summary}</p>}
+    <p class="byline" data-reveal="fade" style="--i:4">
+      <span>By {author}</span><span>{minutes} min read</span><span>{words.toLocaleString('en-US')} words</span>
+    </p>
+    <hr class="rule" data-reveal style="--i:5" />
+  </header>
+
+  <div class="r-body prose" id="essay-body">
+    <slot />
+  </div>
+
+  <footer class="r-end">
+    <p class="fin" aria-hidden="true">❦</p>
+    <div class="takeaway" data-reveal>
+      <p class="eyebrow">Take it with you</p>
+      <div class="dl-row">
+        <button class="btn" type="button" data-print>Save as PDF</button>
+        <a class="btn" href={downloads.epub.href} download={downloads.epub.name}>EPUB · e-reader</a>
+        <a class="btn" href={downloads.md.href} download={downloads.md.name}>Markdown · text</a>
+      </div>
+    </div>
+    {
+      (newer || older) && (
+        <nav class="pager" aria-label="More writing">
+          {older ? (
+            <a href={older.href} class="pg prev" data-reveal style="--i:1">
+              <span class="eyebrow">← Previous</span>
+              <span class="pg-title">{older.title}</span>
+            </a>
+          ) : <span />}
+          {newer ? (
+            <a href={newer.href} class="pg next" data-reveal style="--i:2">
+              <span class="eyebrow">Next →</span>
+              <span class="pg-title">{newer.title}</span>
+            </a>
+          ) : <span />}
+        </nav>
+      )
+    }
+  </footer>
+</article>
+
+<div class="dock" role="toolbar" aria-label="Reading tools">
+  <div class="dock-bar">
+    <button type="button" class="dock-btn" data-panel="type" aria-expanded="false" aria-controls="panel-type" title="Appearance">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d={icon.type} /></svg>
+      <span class="sr-only">Appearance</span>
+    </button>
+    <button type="button" class="dock-btn" data-focus aria-pressed="false" title="Focus mode">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d={icon.focus} /></svg>
+      <span class="sr-only">Focus mode</span>
+    </button>
+    <button type="button" class="dock-btn" data-panel="save" aria-expanded="false" aria-controls="panel-save" title="Download">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d={icon.save} /></svg>
+      <span class="sr-only">Download</span>
+    </button>
+    <span class="dock-time" aria-live="off"><span data-left>{minutes}</span> min left</span>
+  </div>
+
+  <div class="panel" id="panel-type" hidden>
+    <p class="eyebrow">Page</p>
+    <div class="swatches" role="radiogroup" aria-label="Page colour">
+      <button type="button" role="radio" data-theme="" aria-checked="true"><i class="sw sw-ink"></i>Ink</button>
+      <button type="button" role="radio" data-theme="paper" aria-checked="false"><i class="sw sw-paper"></i>Paper</button>
+      <button type="button" role="radio" data-theme="sepia" aria-checked="false"><i class="sw sw-sepia"></i>Sepia</button>
+    </div>
+    <p class="eyebrow">Text size</p>
+    <div class="sizes">
+      <button type="button" data-size="-1" aria-label="Smaller text">A−</button>
+      <span data-size-label>100%</span>
+      <button type="button" data-size="1" aria-label="Larger text">A+</button>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-save" hidden>
+    <p class="eyebrow">Download this essay</p>
+    <button type="button" class="dl" data-print>
+      <strong>PDF</strong><span>Opens your print window — choose “Save as PDF”</span>
+    </button>
+    <a class="dl" href={downloads.epub.href} download={downloads.epub.name}>
+      <strong>EPUB</strong><span>For Apple Books, Kobo & most e-readers</span>
+    </a>
+    <a class="dl" href={downloads.md.href} download={downloads.md.name}>
+      <strong>Markdown</strong><span>Plain text, opens anywhere</span>
+    </a>
+  </div>
+</div>
+
+<style>
+  /* ─── Reading themes (applied to the whole page) ─────────────── */
+  :global(html[data-reader='paper']) {
+    --ink: #f3ebdb;
+    --ink-2: #ebe1cc;
+    --ink-3: #e0d3b8;
+    --ink-4: #d4c4a5;
+    --ivory: #2a211a;
+    --ivory-dim: #4b3e32;
+    --muted: #7d6c56;
+    --brass: #8f6620;
+    --brass-hi: #6b4b14;
+    --brass-deep: #b08a45;
+    --line: rgba(143, 102, 32, 0.3);
+    --line-soft: rgba(42, 33, 26, 0.12);
+    color-scheme: light;
+  }
+
+  :global(html[data-reader='sepia']) {
+    --ink: #e6d3ae;
+    --ink-2: #dcc69c;
+    --ink-3: #d1b98b;
+    --ink-4: #c4aa78;
+    --ivory: #34251a;
+    --ivory-dim: #4f3a29;
+    --muted: #775e43;
+    --brass: #87521e;
+    --brass-hi: #663c12;
+    --brass-deep: #a8743a;
+    --line: rgba(135, 82, 30, 0.32);
+    --line-soft: rgba(52, 37, 26, 0.14);
+    color-scheme: light;
+  }
+
+  :global(html[data-reader='paper'] body),
+  :global(html[data-reader='sepia'] body) {
+    background: var(--ink);
+  }
+
+  :global(html[data-reader] body::before) {
+    mix-blend-mode: multiply;
+    opacity: 0.12;
+  }
+
+  :global(body.reading),
+  .r-head,
+  .r-body,
+  .dock-bar,
+  .panel {
+    transition:
+      background-color 0.7s ease,
+      color 0.7s ease,
+      border-color 0.7s ease;
+  }
+
+  /* ─── Progress ─────────────────────────────────────────────── */
+  .r-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 3px;
+    z-index: 60;
+    pointer-events: none;
+  }
+
+  .r-progress span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--oxblood), var(--brass));
+    transform-origin: left;
+    transform: scaleX(var(--p, 0));
+  }
+
+  /* ─── Layout ───────────────────────────────────────────────── */
+  .reader {
+    --measure: 40rem;
+    padding-inline: var(--gutter);
+  }
+
+  .r-head {
+    max-width: 58rem;
+    margin: 0 auto;
+    padding-block: clamp(3rem, 8vw, 6rem) 0;
+    text-align: center;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 2.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+  }
+
+  .r-head h1 {
+    margin-top: 1.4rem;
+    font-size: clamp(2.2rem, 1.2rem + 4.2vw, 5rem);
+    font-weight: 330;
+    line-height: 1.02;
+    font-variation-settings: 'SOFT' 60, 'WONK' 1;
+  }
+
+  .summary {
+    margin: 1.6rem auto 0;
+    max-width: 40ch;
+    font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+    font-style: italic;
+    color: var(--ivory-dim);
+  }
+
+  .byline {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem 1.6rem;
+    margin: 1.8rem 0 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .r-head .rule {
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+
+  .r-body {
+    max-width: var(--measure);
+    margin: clamp(3rem, 6vw, 4.5rem) auto 0;
+    font-size: calc(1.18rem * var(--reader-size, 1));
+    line-height: 1.75;
+  }
+
+  .r-body :global(> p:first-child),
+  .r-body :global(.lead) {
+    margin-top: 0;
+  }
+
+  .r-body :global(.lead::first-letter) {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 4.6em;
+    line-height: 0.82;
+    padding: 0.06em 0.12em 0 0;
+    color: var(--brass);
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    font-weight: 400;
+  }
+
+  .r-body :global(h2) {
+    text-align: center;
+    font-size: 1.6em;
+  }
+
+  .r-body :global(ol),
+  .r-body :global(ul) {
+    padding-left: 1.4em;
+  }
+
+  /* Focus mode: everything but the paragraph you're on recedes */
+  :global(.focus-mode) .r-body :global(> *) {
+    opacity: 0.18;
+    filter: blur(0.6px);
+    transition: opacity 0.6s var(--ease-out), filter 0.6s var(--ease-out);
+  }
+
+  :global(.focus-mode) .r-body :global(> .current) {
+    opacity: 1;
+    filter: none;
+  }
+
+  :global(.focus-mode) :global(.site-header),
+  :global(.focus-mode) :global(.site-footer) {
+    opacity: 0.08;
+    transition: opacity 0.6s;
+  }
+
+  :global(.focus-mode) :global(.site-header:hover) {
+    opacity: 1;
+  }
+
+  /* ─── End matter ───────────────────────────────────────────── */
+  .r-end {
+    max-width: 58rem;
+    margin: 0 auto;
+  }
+
+  .fin {
+    margin: 4rem 0 3rem;
+    text-align: center;
+    font-size: 1.6rem;
+    color: var(--brass);
+  }
+
+  .takeaway {
+    text-align: center;
+  }
+
+  .dl-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-top: 1.2rem;
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    margin-top: 5rem;
+    background: var(--line-soft);
+    border: 1px solid var(--line-soft);
+  }
+
+  .pg {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 2rem;
+    background: var(--ink);
+    text-decoration: none;
+    transition: background 0.5s;
+  }
+
+  .pg:hover {
+    background: var(--ink-2);
+    color: inherit;
+  }
+
+  .next {
+    text-align: right;
+  }
+
+  .pg-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+
+  /* ─── Floating dock ────────────────────────────────────────── */
+  .dock {
+    position: fixed;
+    left: 50%;
+    bottom: max(1.2rem, env(safe-area-inset-bottom));
+    z-index: 70;
+    transform: translate(-50%, 0);
+    animation: dock-in 0.9s var(--ease-out) 0.8s both;
+  }
+
+  @keyframes dock-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 140%);
+    }
+  }
+
+  .dock-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.35rem 0.4rem 0.35rem 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ink-2) 86%, transparent);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    box-shadow: 0 18px 50px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  .dock-btn {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ivory-dim);
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .dock-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .dock-btn:hover,
+  .dock-btn[aria-expanded='true'],
+  .dock-btn[aria-pressed='true'] {
+    background: var(--brass);
+    color: var(--ink);
+  }
+
+  .dock-time {
+    padding: 0 0.9rem 0 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .panel {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 0.7rem);
+    width: min(20rem, calc(100vw - 2rem));
+    padding: 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--ink-2);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 24px 60px -16px rgba(0, 0, 0, 0.6);
+    transform: translateX(-50%);
+    animation: panel-in 0.45s var(--ease-out);
+  }
+
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 10px) scale(0.97);
+    }
+  }
+
+  .panel .eyebrow {
+    margin: 0 0 0.7rem;
+  }
+
+  .panel .eyebrow:not(:first-child) {
+    margin-top: 1.2rem;
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .swatches button,
+  .sizes button {
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.3rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ivory);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .swatches button[aria-checked='true'] {
+    border-color: var(--brass);
+  }
+
+  .sw {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+  }
+
+  .sw-ink { background: linear-gradient(135deg, #120f0d 50%, #d4ad58 50%); }
+  .sw-paper { background: linear-gradient(135deg, #f3ebdb 50%, #2a211a 50%); }
+  .sw-sepia { background: linear-gradient(135deg, #e6d3ae 50%, #34251a 50%); }
+
+  .sizes {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.6rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  .sizes button {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    text-transform: none;
+  }
+
+  .dl {
+    display: grid;
+    gap: 0.15rem;
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    margin-top: 0.4rem;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ivory);
+    text-align: left;
+    text-decoration: none;
+    font: inherit;
+    cursor: pointer;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .dl:hover {
+    border-color: var(--brass);
+    background: var(--ink-3);
+    color: var(--ivory);
+  }
+
+  .dl strong {
+    font-family: var(--font-display);
+    font-weight: 500;
+  }
+
+  .dl span {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 640px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+
+    .next {
+      text-align: left;
+    }
+  }
+
+  /* ─── Print / Save as PDF ──────────────────────────────────── */
+  @media print {
+    @page {
+      margin: 2.2cm 2.4cm;
+    }
+
+    :global(html),
+    :global(body) {
+      background: #fff !important;
+      color: #111 !important;
+    }
+
+    :global(body::before),
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.nav-progress),
+    :global(.skip),
+    .r-progress,
+    .dock,
+    .back,
+    .r-end {
+      display: none !important;
+    }
+
+    .reader {
+      padding: 0;
+    }
+
+    .r-head {
+      padding-top: 0;
+      color: #111;
+    }
+
+    .r-head h1 {
+      font-size: 26pt;
+      color: #111;
+    }
+
+    .eyebrow,
+    .byline,
+    .summary {
+      color: #555 !important;
+    }
+
+    .r-body {
+      max-width: none;
+      margin-top: 1.5rem;
+      font-size: 11.5pt;
+      line-height: 1.6;
+      color: #111;
+    }
+
+    .r-body :global(.lead::first-letter),
+    .r-body :global(sup) {
+      color: #7a5a1c !important;
+    }
+
+    .r-body :global(*) {
+      opacity: 1 !important;
+      filter: none !important;
+      transform: none !important;
+    }
+
+    .r-body :global(p) {
+      orphans: 3;
+      widows: 3;
+    }
+
+    .r-body :global(h2),
+    .r-body :global(h3) {
+      break-after: avoid;
+    }
+  }
+</style>
+
+<script>
+  const SIZES = [0.85, 0.92, 1, 1.08, 1.16, 1.26, 1.38];
+  let ctrl: AbortController | undefined;
+
+  type Prefs = { theme?: string; size?: number };
+  const load = (): Prefs => {
+    try {
+      return JSON.parse(localStorage.getItem('reader') || '{}');
+    } catch {
+      return {};
+    }
+  };
+  const save = (p: Prefs) => {
+    try {
+      localStorage.setItem('reader', JSON.stringify(p));
+    } catch {}
+  };
+
+  function init() {
+    ctrl?.abort();
+    const article = document.querySelector<HTMLElement>('.reader');
+    if (!article) return;
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const html = document.documentElement;
+    const body = article.querySelector<HTMLElement>('.r-body')!;
+    const bar = document.querySelector<HTMLElement>('.r-progress span')!;
+    const left = document.querySelector<HTMLElement>('[data-left]')!;
+    const minutes = Number(article.dataset.minutes) || 1;
+    const blocks = [...body.children] as HTMLElement[];
+
+    // Drop cap on the first real paragraph (skips short header lines).
+    blocks.find((el) => el.tagName === 'P' && (el.textContent ?? '').length > 160)?.classList.add('lead');
+
+    // Preferences
+    const prefs = load();
+    const applyTheme = (t: string) => {
+      if (t) html.dataset.reader = t;
+      else delete html.dataset.reader;
+      document.querySelectorAll<HTMLElement>('[data-theme]').forEach((b) =>
+        b.setAttribute('aria-checked', String(b.dataset.theme === t)),
+      );
+    };
+    let sizeIdx = SIZES.indexOf(prefs.size ?? 1);
+    if (sizeIdx < 0) sizeIdx = 2;
+    const sizeLabel = document.querySelector('[data-size-label]')!;
+    const applySize = () => {
+      html.style.setProperty('--reader-size', String(SIZES[sizeIdx]));
+      sizeLabel.textContent = `${Math.round(SIZES[sizeIdx] * 100)}%`;
+    };
+    applyTheme(prefs.theme ?? '');
+    applySize();
+
+    document.querySelectorAll<HTMLElement>('[data-theme]').forEach((b) =>
+      b.addEventListener(
+        'click',
+        () => {
+          const t = b.dataset.theme ?? '';
+          applyTheme(t);
+          save({ ...load(), theme: t });
+        },
+        { signal },
+      ),
+    );
+    document.querySelectorAll<HTMLElement>('[data-size]').forEach((b) =>
+      b.addEventListener(
+        'click',
+        () => {
+          sizeIdx = Math.min(SIZES.length - 1, Math.max(0, sizeIdx + Number(b.dataset.size)));
+          applySize();
+          save({ ...load(), size: SIZES[sizeIdx] });
+        },
+        { signal },
+      ),
+    );
+
+    // Panels
+    const panelBtns = document.querySelectorAll<HTMLButtonElement>('[data-panel]');
+    const closePanels = (except?: HTMLButtonElement) =>
+      panelBtns.forEach((b) => {
+        if (b === except) return;
+        b.setAttribute('aria-expanded', 'false');
+        document.getElementById(b.getAttribute('aria-controls')!)!.hidden = true;
+      });
+    panelBtns.forEach((b) =>
+      b.addEventListener(
+        'click',
+        (e) => {
+          e.stopPropagation();
+          const panel = document.getElementById(b.getAttribute('aria-controls')!)!;
+          const open = panel.hidden;
+          closePanels(b);
+          panel.hidden = !open;
+          b.setAttribute('aria-expanded', String(open));
+        },
+        { signal },
+      ),
+    );
+    document.addEventListener(
+      'click',
+      (e) => {
+        if (!(e.target as HTMLElement).closest('.panel')) closePanels();
+      },
+      { signal },
+    );
+    document.addEventListener('keydown', (e) => e.key === 'Escape' && closePanels(), { signal });
+
+    // Print → PDF
+    document.querySelectorAll('[data-print]').forEach((b) =>
+      b.addEventListener(
+        'click',
+        () => {
+          closePanels();
+          window.print();
+        },
+        { signal },
+      ),
+    );
+
+    // Focus mode
+    const focusBtn = document.querySelector<HTMLButtonElement>('[data-focus]')!;
+    const setFocus = (on: boolean) => {
+      html.classList.toggle('focus-mode', on);
+      focusBtn.setAttribute('aria-pressed', String(on));
+      if (on) tick();
+    };
+    focusBtn.addEventListener('click', () => setFocus(!html.classList.contains('focus-mode')), { signal });
+
+    // Scroll: progress, time left, focus target
+    let current: HTMLElement | undefined;
+    let raf = 0;
+    function tick() {
+      raf = 0;
+      const r = body.getBoundingClientRect();
+      const total = r.height - window.innerHeight * 0.6;
+      const p = Math.min(1, Math.max(0, -r.top / Math.max(1, total)));
+      bar.style.setProperty('--p', p.toFixed(4));
+      left.textContent = String(Math.max(0, Math.ceil(minutes * (1 - p))));
+      if (html.classList.contains('focus-mode')) {
+        const y = window.innerHeight * 0.42;
+        let best = blocks[0];
+        for (const el of blocks) {
+          const b = el.getBoundingClientRect();
+          if (b.top <= y) best = el;
+          else break;
+        }
+        if (best !== current) {
+          current?.classList.remove('current');
+          best.classList.add('current');
+          current = best;
+        }
+      }
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true, signal });
+    window.addEventListener('resize', onScroll, { signal });
+    tick();
+  }
+
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => {
+    ctrl?.abort();
+    document.documentElement.classList.remove('focus-mode');
+  });
+</script>

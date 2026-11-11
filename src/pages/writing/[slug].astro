@@ -1,0 +1,49 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Reader from '../../components/Reader.astro';
+import { getEssays, formatDate, fileTitle } from '../../lib/writing';
+import { getSite } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const essays = await getEssays();
+  return essays.map((essay, i) => ({
+    params: { slug: essay.id },
+    props: { essay, newer: essays[i - 1], older: essays[i + 1] },
+  }));
+}
+
+const { essay, newer, older } = Astro.props;
+const { Content } = await render(essay);
+const site = getSite();
+const dl = fileTitle(essay.title);
+---
+
+<Base title={essay.title} description={essay.data.summary} bodyClass="reading">
+  <script is:inline slot="head" data-astro-rerun>
+    try {
+      var s = JSON.parse(localStorage.getItem('reader') || '{}');
+      if (s.theme) document.documentElement.dataset.reader = s.theme;
+      if (s.size) document.documentElement.style.setProperty('--reader-size', s.size);
+    } catch (e) {}
+  </script>
+
+  <Reader
+    title={essay.title}
+    author={site.name}
+    summary={essay.data.summary}
+    date={formatDate(essay.data.date)}
+    isoDate={essay.data.date?.toISOString()}
+    minutes={essay.minutes}
+    words={essay.words}
+    id={essay.id}
+    downloads={{
+      epub: { href: `/downloads/writing/${essay.id}.epub`, name: `${dl}.epub` },
+      md: { href: `/downloads/writing/${essay.id}.md`, name: `${dl}.md` },
+    }}
+    newer={newer && { href: `/writing/${newer.id}/`, title: newer.title }}
+    older={older && { href: `/writing/${older.id}/`, title: older.title }}
+  >
+    <Content />
+  </Reader>
+</Base>

@@ -1,0 +1,27 @@
+---
+// Splits a line into letters so each can animate in on its own.
+interface Props {
+  text: string;
+  offset?: number;
+}
+const { text, offset = 0 } = Astro.props;
+let c = offset;
+const words = text.split(' ').map((w) => [...w].map((ch) => ({ ch, c: c++ })));
+---
+
+<span class="split" aria-label={text}>
+  {
+    words.map((w, wi) => (
+      <>
+        <span class="word" aria-hidden="true" style="display:inline-block;white-space:nowrap">
+          {w.map(({ ch, c }) => (
+            <span class="ch" style={`--c:${c}`}>
+              {ch}
+            </span>
+          ))}
+        </span>
+        {wi < words.length - 1 && ' '}
+      </>
+    ))
+  }
+</span>
