@@ -9,6 +9,8 @@ const site = getSite();
 const page = await getEntry('pages', 'about');
 if (!page) throw new Error('content/about.md is missing');
 const { Content } = await render(page);
+const pos = (page.data.portrait_position ?? 'top').trim().toLowerCase();
+const portraitY = ({ top: '0%', center: '50%', middle: '50%', bottom: '100%' } as Record<string, string>)[pos] ?? (/^\d+(\.\d+)?%$/.test(pos) ? pos : '0%');
 const initials = site.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
 ---
 
@@ -23,7 +25,7 @@ const initials = site.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
       <div class="arch">
         {
           page.data.portrait ? (
-            <Image src={page.data.portrait} alt={`Portrait of ${site.name}`} widths={[400, 800]} sizes="(max-width: 800px) 70vw, 360px" />
+            <Image src={page.data.portrait} alt={`Portrait of ${site.name}`} widths={[400, 800]} sizes="(max-width: 800px) 70vw, 360px" style={`object-position: 50% ${portraitY}`} />
           ) : (
             <div class="monogram" aria-hidden="true">
               <span>{initials}</span>

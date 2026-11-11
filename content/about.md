@@ -5,6 +5,9 @@ intro: "Mostly I'm the one at the back of the group, holding the camera."
 # Optional portrait: drop a photo into the content folder (next to this
 # file) and put its file name here, e.g.  portrait: "./portrait.jpg"
 portrait: "./8N3A6128.jpg"
+# Which part of the photo to keep in the arched frame: "top", "center",
+# "bottom", or a percentage (0% = very top, 100% = very bottom).
+portrait_position: "top"
 ---
 
 <!--

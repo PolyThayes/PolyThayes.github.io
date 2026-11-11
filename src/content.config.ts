@@ -24,6 +24,9 @@ const pages = defineCollection({
       subtitle: z.string().optional(),
       intro: z.string().optional(),
       portrait: image().optional(),
+      // Which part of the portrait to keep when the frame crops it:
+      // "top", "center", "bottom", or a percentage like "20%".
+      portrait_position: z.string().optional(),
       pdf: z.string().optional(),
     }),
 });
