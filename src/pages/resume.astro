@@ -1,48 +1,186 @@
 ---
 import { getEntry, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import SplitText from '../components/SplitText.astro';
 import { getSite } from '../lib/site';
 
 const site = getSite();
-const page = await getEntry('pages', 'resume');
-if (!page) throw new Error('content/resume.md is missing');
-const { Content } = await render(page);
-const pdf = page.data.pdf ? `/files/${page.data.pdf.replace(/^\/?(files\/)?/, '')}` : undefined;
+const pro = await getEntry('pages', 'resume');
+if (!pro) throw new Error('content/resume.md is missing');
+// The acting résumé is optional: delete content/resume-acting.md and the
+// page goes back to a single sheet.
+const acting = await getEntry('pages', 'resume-acting');
+
+const pdfHref = (f?: string) => (f ? `/files/${f.replace(/^\/?(files\/)?/, '')}` : undefined);
+const sides = await Promise.all(
+  [pro, acting].filter((e) => !!e).map(async (e, i) => ({
+    key: i === 0 ? 'front' : 'back',
+    id: i === 0 ? 'professional' : 'acting',
+    label: e!.data.label ?? (i === 0 ? 'Professional' : 'Acting'),
+    subtitle: e!.data.subtitle,
+    pdf: pdfHref(e!.data.pdf),
+    headshot: e!.data.headshot,
+    stats: Object.entries(e!.data.stats ?? {}),
+    Content: (await render(e!)).Content,
+  })),
+);
+const twoSided = sides.length === 2;
 ---
 
-<Base title={page.data.title ?? 'Résumé'} description={page.data.subtitle}>
+<Base title={pro.data.title ?? 'Résumé'} description={pro.data.subtitle}>
   <section class="wrap page-head head">
     <div>
       <p class="eyebrow" data-reveal="fade">Curriculum vitae</p>
-      <h1><SplitText text={page.data.title ?? 'Résumé'} /></h1>
-      {page.data.subtitle && <p class="lede" data-reveal="blur" style="--i:4">{page.data.subtitle}</p>}
+      <h1><SplitText text={pro.data.title ?? 'Résumé'} /></h1>
+      {
+        sides.map((s) =>
+          s.subtitle ? (
+            <p class="lede for-side" data-for={s.key} data-reveal="blur" style="--i:4">
+              {s.subtitle}
+            </p>
+          ) : null,
+        )
+      }
     </div>
     <div class="actions" data-reveal style="--i:5">
       {
-        pdf && (
-          <a class="btn btn--solid" href={pdf} download>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
-            Download PDF
-          </a>
+        sides.map((s) =>
+          s.pdf ? (
+            <a class="btn btn--solid for-side" data-for={s.key} href={s.pdf} download>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
+              Download PDF
+            </a>
+          ) : null,
         )
       }
-      <button class="btn" type="button" onclick="window.print()">Print</button>
+      <button class="btn" type="button" data-print>Print</button>
     </div>
   </section>
 
   <section class="wrap">
-    <article class="sheet" data-reveal="scale">
-      <header class="sheet-head">
-        <p class="sheet-name">{site.name}</p>
-        {site.links && <p class="sheet-links">{site.links.map((l) => <a href={l.url}>{l.label}</a>)}</p>}
-      </header>
-      <div class="sheet-body prose">
-        <Content />
+    {
+      twoSided && (
+        <div class="switch" role="group" aria-label="Choose a résumé" data-reveal="fade" style="--i:5">
+          <span class="switch-pill" aria-hidden="true" />
+          {sides.map((s) => (
+            <button type="button" class="switch-btn" data-go={s.key} aria-pressed={s.key === 'front' ? 'true' : 'false'}>
+              {s.label}
+            </button>
+          ))}
+        </div>
+      )
+    }
+
+    <div class:list={['flip', { 'two-sided': twoSided }]} data-side="front" data-reveal="scale">
+      <div class="flipper">
+        {
+          sides.map((s) => (
+            <article class:list={['sheet', 'face', s.key]} id={s.id} aria-label={`${s.label} résumé`}>
+              <header class:list={['sheet-head', { 'with-shot': s.headshot }]}>
+                {s.headshot && (
+                  <Image src={s.headshot} alt={`Headshot of ${site.name}`} widths={[240, 480]} sizes="160px" class="headshot" />
+                )}
+                <div>
+                  <p class="sheet-name">{site.name}</p>
+                  {s.stats.length > 0 && (
+                    <p class="stats">
+                      {s.stats.map(([k, v]) => (
+                        <span>
+                          <b>{k}</b> {v}
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                  {site.links && <p class="sheet-links">{site.links.map((l) => <a href={l.url}>{l.label}</a>)}</p>}
+                </div>
+              </header>
+              <div class="sheet-body prose">
+                <s.Content />
+              </div>
+              {twoSided && (
+                <button type="button" class="turn" data-go={s.key === 'front' ? 'back' : 'front'}>
+                  <span>{s.key === 'front' ? sides[1].label : sides[0].label} résumé</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v4h-4" /></svg>
+                </button>
+              )}
+            </article>
+          ))
+        }
       </div>
-    </article>
+    </div>
+    {twoSided && <p class="hint" data-reveal="fade">Click the page to turn it over.</p>}
   </section>
 </Base>
+
+<script>
+  let ctrl: AbortController | undefined;
+
+  function init() {
+    ctrl?.abort();
+    const flip = document.querySelector<HTMLElement>('.flip');
+    if (!flip) return;
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+
+    document.querySelectorAll('[data-print]').forEach((b) => b.addEventListener('click', () => window.print(), { signal }));
+    if (!flip.classList.contains('two-sided')) return;
+
+    const faces = flip.querySelectorAll<HTMLElement>('.face');
+    const set = (side: string, animate = true) => {
+      if (side !== 'front' && side !== 'back') side = 'front';
+      if (animate && flip.dataset.side !== side) {
+        flip.classList.remove('turning');
+        void flip.offsetWidth;
+        flip.classList.add('turning');
+      }
+      flip.dataset.side = side;
+      document.documentElement.dataset.resumeSide = side;
+      faces.forEach((f) => {
+        const hidden = !f.classList.contains(side);
+        f.toggleAttribute('inert', hidden);
+        f.setAttribute('aria-hidden', String(hidden));
+      });
+      document.querySelectorAll<HTMLElement>('.switch-btn').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.go === side)));
+      const id = flip.querySelector<HTMLElement>(`.face.${side}`)?.id;
+      if (id) history.replaceState(history.state, '', side === 'back' ? `#${id}` : location.pathname);
+    };
+
+    document.querySelectorAll<HTMLElement>('[data-go]').forEach((b) =>
+      b.addEventListener(
+        'click',
+        (e) => {
+          e.stopPropagation();
+          set(b.dataset.go!);
+        },
+        { signal },
+      ),
+    );
+
+    // Clicking anywhere on the paper turns it over — except on links,
+    // buttons, or when you're selecting text to copy.
+    flip.addEventListener(
+      'click',
+      (e) => {
+        const t = e.target as HTMLElement;
+        if (t.closest('a, button')) return;
+        if (String(window.getSelection() ?? '').length > 0) return;
+        set(flip.dataset.side === 'front' ? 'back' : 'front');
+      },
+      { signal },
+    );
+    flip.addEventListener('animationend', () => flip.classList.remove('turning'), { signal });
+
+    // A link to /resume/#acting opens straight onto the acting side.
+    const back = flip.querySelector<HTMLElement>('.face.back');
+    const fromHash = (animate: boolean) => set(back && location.hash === `#${back.id}` ? 'back' : 'front', animate);
+    window.addEventListener('hashchange', () => fromHash(true), { signal });
+    fromHash(false);
+  }
+
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => ctrl?.abort());
+</script>
 
 <style>
   .head {
@@ -67,9 +205,7 @@ const pdf = page.data.pdf ? `/files/${page.data.pdf.replace(/^\/?(files\/)?/, ''
     --gold: var(--ink-gold);
     --line-soft: color-mix(in srgb, var(--ink-text) 14%, transparent);
     position: relative;
-    max-width: 52rem;
-    margin: 0 auto;
-    padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5.5rem);
+    padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5.5rem) clamp(4rem, 8vw, 6rem);
     background:
       radial-gradient(circle at 10% 0%, rgba(255, 255, 255, 0.5), transparent 40%),
       linear-gradient(180deg, var(--paper-bg), var(--paper-bg-2));
@@ -196,6 +332,333 @@ const pdf = page.data.pdf ? `/files/${page.data.pdf.replace(/^\/?(files\/)?/, ''
       opacity: 1 !important;
       transform: none !important;
       filter: none !important;
+    }
+  }
+</style>
+
+<style>
+  /* ─── Two-sided résumé: switch, flip, turn-over corner ─────────── */
+  .switch {
+    position: relative;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    width: fit-content;
+    margin: 0 auto 2rem;
+    padding: 4px;
+    border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+    border-radius: 1px;
+    isolation: isolate;
+  }
+
+  .switch-btn {
+    min-width: 9.5rem;
+    padding: 0.75rem 1.4rem;
+    border: 0;
+    background: none;
+    color: var(--cream-dim);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.5s var(--ease-out);
+  }
+
+  .switch-btn[aria-pressed='true'] {
+    color: var(--espresso);
+  }
+
+  .switch-pill {
+    position: absolute;
+    z-index: -1;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    background: var(--cognac);
+    box-shadow: var(--glow);
+    transition: transform 0.7s var(--ease-out);
+  }
+
+  :global(html[data-resume-side='back']) .switch-pill {
+    transform: translateX(100%);
+  }
+
+  .flip {
+    max-width: 52rem;
+    margin: 0 auto;
+    perspective: 2600px;
+  }
+
+  .flipper {
+    display: grid;
+  }
+
+  .face {
+    grid-area: 1 / 1;
+  }
+
+  .turn,
+  .hint {
+    display: none;
+  }
+
+  /* Everything below only applies when JavaScript is running; without it
+     both résumés simply show one after the other. */
+  :global(.js) .two-sided .flipper {
+    transform-style: preserve-3d;
+    transition: transform 1.1s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+
+  :global(.js) .two-sided .face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    cursor: pointer;
+  }
+
+  :global(.js) .two-sided .back {
+    transform: rotateY(180deg);
+  }
+
+  :global(.js) .two-sided[data-side='back'] .flipper {
+    transform: rotateY(180deg);
+  }
+
+  /* A gentle lift while the sheet is in the air */
+  :global(.js) .two-sided.turning {
+    animation: lift 1.1s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+
+  @keyframes lift {
+    50% {
+      transform: translateY(-14px) scale(0.965);
+    }
+  }
+
+  :global(.js) .two-sided .turn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.4rem 1.5rem 1.1rem 2.8rem;
+    border: 0;
+    background:
+      linear-gradient(135deg, transparent 50%, color-mix(in srgb, var(--ink-accent) 16%, var(--paper-bg-2)) 50%) no-repeat right bottom / 2.4rem 2.4rem;
+    color: var(--ink-accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-size 0.5s var(--ease-out), color 0.3s;
+  }
+
+  :global(.js) .two-sided .turn svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  /* The corner curls up a little when you point at the page */
+  :global(.js) .two-sided .face:hover .turn {
+    background-size: 3.4rem 3.4rem;
+  }
+
+  :global(.js) .two-sided .turn:hover svg {
+    transform: rotate(200deg);
+  }
+
+  :global(.js) .two-sided ~ .hint {
+    display: block;
+    margin: 1.4rem 0 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Side-specific subtitle and PDF button above the sheet */
+  :global(.js) .for-side[data-for='back'] {
+    display: none;
+  }
+
+  :global(html[data-resume-side='back']) .for-side[data-for='front'] {
+    display: none;
+  }
+
+  :global(html[data-resume-side='back']) .for-side[data-for='back'] {
+    display: revert;
+  }
+
+  :global(html[data-resume-side='back']) a.for-side[data-for='back'] {
+    display: inline-flex;
+  }
+
+  /* No-JS: stack the two sheets with some space */
+  .face + .face {
+    margin-top: 3rem;
+  }
+
+  :global(.js) .two-sided .face + .face {
+    margin-top: 0;
+  }
+
+  /* Reduced motion: a quiet cross-fade instead of a flip */
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .two-sided .flipper,
+    :global(.js) .two-sided[data-side='back'] .flipper,
+    :global(.js) .two-sided .back {
+      transform: none;
+    }
+
+    :global(.js) .two-sided .face {
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    :global(.js) .two-sided[data-side='front'] .back,
+    :global(.js) .two-sided[data-side='back'] .front {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  /* Headshot and quick facts on the acting side */
+  .sheet-head.with-shot {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.6rem;
+    align-items: center;
+    text-align: left;
+  }
+
+  .sheet-head.with-shot .sheet-links {
+    justify-content: flex-start;
+  }
+
+  .sheet-head :global(.headshot) {
+    width: 8.5rem;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 15%;
+    border: 1px solid color-mix(in srgb, var(--ink-accent) 30%, transparent);
+  }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem 1.2rem;
+    margin: 0.6rem 0 0;
+    font-size: 0.95rem;
+    color: var(--cream-dim);
+  }
+
+  .with-shot .stats {
+    justify-content: flex-start;
+  }
+
+  .stats b {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 0.3em;
+  }
+
+  /* Credit tables (Role | Production | Company) */
+  .sheet-body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.98rem;
+  }
+
+  .sheet-body :global(th) {
+    padding: 0.4rem 0.8rem 0.4rem 0;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .sheet-body :global(td) {
+    padding: 0.55rem 0.8rem 0.55rem 0;
+    border-top: 1px solid var(--line-soft);
+    vertical-align: top;
+  }
+
+  .sheet-body :global(td:first-child) {
+    font-style: italic;
+  }
+
+  .sheet-body :global(ul) {
+    padding-left: 1.1em;
+  }
+
+  @media (max-width: 600px) {
+    .switch-btn {
+      min-width: 0;
+      padding-inline: 1rem;
+    }
+
+    .sheet-head.with-shot {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .sheet-head.with-shot .sheet-links,
+    .with-shot .stats {
+      justify-content: center;
+    }
+
+    .sheet-body :global(table),
+    .sheet-body :global(thead),
+    .sheet-body :global(tbody),
+    .sheet-body :global(tr),
+    .sheet-body :global(td) {
+      display: block;
+    }
+
+    .sheet-body :global(thead) {
+      display: none;
+    }
+
+    .sheet-body :global(tr) {
+      padding: 0.6rem 0;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .sheet-body :global(td) {
+      padding: 0;
+      border: 0;
+    }
+  }
+
+  @media print {
+    .switch,
+    .hint,
+    .turn {
+      display: none !important;
+    }
+
+    .flipper,
+    .face {
+      transform: none !important;
+    }
+
+    :global(html[data-resume-side='back']) .front,
+    :global(html:not([data-resume-side='back'])) .two-sided .back {
+      display: none !important;
     }
   }
 </style>
