@@ -119,19 +119,50 @@ Each essay automatically gets:
 
 The Gallery page is laid out like a film contact sheet. **Each album is one
 frame on the sheet**, shown as its cover photo with a frame number (1, 1A,
-2, 2A …). Click a frame to open that album's page, with a photo grid, a
+2, 2A …). Frames sit in strips of six (three on tablets, two on phones),
+and each new album adds a frame, so the sheet grows into more rows as you
+add albums. Unused spots at the end of the last strip show as blank film.
+Click a frame to open that album's page, with a photo grid, a
 full-screen viewer, a download button on each photo, and an optional
 "Download full album" link.
 
-### Add an album
+### Step 1: Shrink your photos first (2 minutes)
 
-1. Make a new folder inside `content/gallery/`, e.g. `content/gallery/iceland-2026/`.
-   The folder name becomes the web address (`/gallery/iceland-2026/`).
-2. Drop your photos into it (JPG, PNG, WebP or AVIF; export iPhone HEIC
-   photos as JPG first). Photos show in file-name order, so number them
-   if order matters: `01-…`, `02-…`.
-3. Add a text file called `album.md` in the same folder. Copy one from a
-   sample album and change the words:
+Camera and phone photos are far bigger than a website needs. Shrink them
+before uploading so the site stays fast and GitHub doesn't fill up.
+**Aim for about 2500 pixels on the long side, as JPG.** That makes each
+photo roughly 0.5–1.5 MB.
+
+**With Photos (Mac or iPhone library):**
+1. Select the photos, then choose **File → Export → Export [n] Photos…**
+2. Set **Photo Kind: JPEG**, **JPEG Quality: High**, **Size: Custom**,
+   **Max: 2500 pixels**, **Width & Height**.
+3. Click **Export** and pick a new folder on your Desktop.
+
+**With Preview (for photos already in a folder):**
+1. In Finder, select all the photos and open them in **Preview**.
+2. In Preview's sidebar, press **⌘A** to select them all.
+3. Choose **Tools → Adjust Size…**, set the larger of **Width/Height** to
+   **2500 pixels**, keep **Scale proportionally** ticked, and click **OK**.
+4. Choose **File → Export Selected Images…**, set **Format: JPEG**, and
+   save them into a new folder. (Exporting keeps your originals untouched.)
+
+iPhone HEIC photos are converted to JPG by either method.
+
+### Step 2: Name and order them
+
+Photos appear in file-name order, so rename them with numbers if the order
+matters: `01-arrival.jpg`, `02-harbour.jpg`… (In Finder, select them all,
+right-click → **Rename…** → **Format** gives you numbered names in one go.)
+Avoid Finder copies like `photo 2.jpg`.
+
+### Step 3: Add the album
+
+1. Make a folder for the album, e.g. `iceland-2026`. The folder name
+   becomes the web address (`/gallery/iceland-2026/`).
+2. Put your shrunk photos in it.
+3. Add a text file called `album.md` in the same folder. The easiest way
+   is to copy `album.md` from a sample album and change the words:
 
 ```markdown
 ---
@@ -139,22 +170,30 @@ title: "Iceland"
 date: 2026-07-01
 description: "Ten days of weather."
 cover: "04-glacier.jpg"
-mode: color
-favorite: true
 album_url: "https://your-nas.quickconnect.to/mo/sharing/AbCdEf"
 ---
 
 Optional: a few sentences about the trip, shown on the album page.
 ```
 
-That's all. The album appears on the contact sheet automatically, in date
-order (newest first). On GitHub you can drag the whole folder onto
-**Add file → Upload files** inside `content/gallery`.
-
-Every line is optional except that the folder needs at least one photo.
-`cover` is the file name of the photo to show on the sheet; leave it out
-to use the first photo. `location:` and per-photo `captions:` also work;
+Every line is optional. `cover` is the photo shown on the contact sheet
+(it uses the first photo if you leave it out). `date` decides the order on
+the sheet (newest first). `location:` and per-photo `captions:` also work;
 see `sample-color-harbour/album.md` for an example.
+
+### Step 4: Upload it
+
+**On github.com:** open your repository, go into `content` → `gallery`,
+choose **Add file → Upload files**, and drag the whole album folder onto
+the page. GitHub keeps it as a folder. Click **Commit changes**.
+
+**Or with GitHub Desktop:** drag the folder into
+`Documents/GitHub/PolyThayes.github.io/content/gallery/` in Finder, then
+in GitHub Desktop write a short summary ("Add Iceland album"), click
+**Commit to main**, then **Push origin**.
+
+The album appears on the contact sheet automatically about two minutes
+later.
 
 ### Colour or black-and-white
 
@@ -172,6 +211,10 @@ like colour, for example), set it yourself in `album.md`:
 Add `favorite: true` to `album.md`. The frame gets a hand-drawn
 grease-pencil circle or box, in red or blue (each album keeps its own).
 Remove the line, or write `favorite: false`, to take the mark off.
+
+Use it sparingly, as a photographer would on a real contact sheet: a mark
+on one frame in five or six looks deliberate, while marks everywhere stop
+meaning anything.
 
 ### Link a Synology share for full-resolution downloads
 
@@ -195,8 +238,8 @@ after you delete it. Camera originals (10–40 MB each) will quickly make the
 repository slow and can hit GitHub's limits (about 100 MB per file, 1 GB
 per site).
 
-- **Before uploading, export photos at about 2500 px on the long edge,
-  JPG quality ~85.** That's typically 0.5–1.5 MB each, and the site
+- **Before uploading, shrink photos to about 2500 px on the long edge as
+  JPG** (see Step 1 above). That's typically 0.5–1.5 MB each, and the site
   can't show more detail than that anyway.
 - **Keep the originals on your NAS** and link them with `album_url`.
 
@@ -238,9 +281,10 @@ You don't need this, but if you'd like to see changes before publishing:
 ## Changing the look
 
 Every colour is defined once, at the very top of `src/styles/global.css`.
-The palette is taken from a dark Paris hotel bar: espresso and walnut
-backgrounds, cognac leather accents, lamp-glow gold and cream highlights,
-and olive-umber panels. Each line has a comment saying what it's for.
+The palette is bottle-green velvet and gilt, like a private library:
+deep emerald backgrounds, antique-gold accents, cream text, and emerald
+hover panels. The section titles hang in four different historical
+picture frames (`src/components/FramedTitle.astro`). Each line has a comment saying what it's for.
 Change a hex value there and it changes everywhere on the site.
 
 ## Custom domain (optional)

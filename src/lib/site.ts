@@ -24,6 +24,6 @@ export function getSite(): SiteSettings {
 export const NAV = [
   { href: '/writing/', label: 'Writing' },
   { href: '/gallery/', label: 'Gallery' },
-  { href: '/about/', label: 'About' },
   { href: '/resume/', label: 'Résumé' },
+  { href: '/about/', label: 'About' },
 ];

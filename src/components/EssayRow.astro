@@ -52,7 +52,7 @@ const { essay, n, i = 0 } = Astro.props;
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(90deg, color-mix(in srgb, var(--olive) 55%, transparent), color-mix(in srgb, var(--gold) 6%, transparent) 70%, transparent);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--panel) 55%, transparent), color-mix(in srgb, var(--gold) 6%, transparent) 70%, transparent);
     transform: scaleY(0);
     transform-origin: bottom;
     transition: transform 0.7s var(--ease-out);
@@ -72,7 +72,7 @@ const { essay, n, i = 0 } = Astro.props;
     font-family: var(--font-display);
     font-style: italic;
     font-size: 1.4rem;
-    color: var(--cognac);
+    color: var(--accent);
     text-align: right;
   }
 
@@ -124,7 +124,7 @@ const { essay, n, i = 0 } = Astro.props;
     height: 3rem;
     border: 1px solid var(--line);
     border-radius: 50%;
-    color: var(--cognac);
+    color: var(--accent);
     transition: transform 0.6s var(--ease-out), background 0.4s, color 0.4s;
   }
 
@@ -133,8 +133,8 @@ const { essay, n, i = 0 } = Astro.props;
   }
 
   a:hover .arrow {
-    background: var(--cognac);
-    color: var(--espresso);
+    background: var(--accent);
+    color: var(--bg);
     transform: rotate(-45deg);
   }
 

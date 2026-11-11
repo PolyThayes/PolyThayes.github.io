@@ -87,7 +87,7 @@ const items = await Promise.all(
     aspect-ratio: var(--ar);
     overflow: hidden;
     border-radius: 3px;
-    background: var(--walnut-2);
+    background: var(--surface-2);
   }
 
   .cell > a:first-child {
@@ -129,7 +129,7 @@ const items = await Promise.all(
     justify-content: space-between;
     gap: 1rem;
     padding: 1rem;
-    background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--espresso) 75%, transparent));
+    background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--bg) 75%, transparent));
     opacity: 0;
     transition: opacity 0.5s var(--ease-out);
   }
@@ -166,7 +166,7 @@ const items = await Promise.all(
     width: 2.3rem;
     height: 2.3rem;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--espresso) 60%, transparent);
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     color: var(--cream);
@@ -186,8 +186,8 @@ const items = await Promise.all(
   }
 
   .dl:hover {
-    background: var(--cognac);
-    color: var(--espresso);
+    background: var(--accent);
+    color: var(--bg);
   }
 
   @media (hover: none) {
