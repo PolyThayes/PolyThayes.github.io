@@ -1,0 +1,218 @@
+---
+import fs from 'node:fs';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import { getAlbums, originalPath, type Album } from '../../lib/gallery';
+import { formatDate } from '../../lib/writing';
+import { marked } from '../../lib/markdown';
+
+export async function getStaticPaths() {
+  const albums = await getAlbums();
+  return albums.map((album, i) => ({
+    params: { album: album.slug },
+    props: { album, next: albums[(i + 1) % albums.length] as Album | undefined },
+  }));
+}
+
+const { album, next } = Astro.props;
+const bytes = album.photos.reduce((n, p) => n + fs.statSync(originalPath(p)).size, 0);
+const size = bytes > 1e9 ? `${(bytes / 1e9).toFixed(1)} GB` : `${Math.max(1, Math.round(bytes / 1e6))} MB`;
+const bodyHtml = album.body ? marked(album.body) : '';
+const photos = album.photos.map((p) => ({ ...p, albumTitle: album.title }));
+---
+
+<Base title={album.title} description={album.description}>
+  <section class="hero">
+    <div class="hero-img" transition:name={`album-cover-${album.slug}`}>
+      <Image src={album.cover.src} alt="" widths={[800, 1400, 2200]} sizes="100vw" loading="eager" />
+    </div>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="wrap hero-text">
+      <a href="/gallery/" class="back" data-reveal="fade">← All albums</a>
+      <p class="eyebrow" data-reveal="fade" style="--i:1">
+        {album.photos.length} photographs{album.date && <> · {formatDate(album.date)}</>}
+      </p>
+      <h1 transition:name={`album-title-${album.slug}`}>{album.title}</h1>
+      {album.location && <p class="loc" data-reveal="blur" style="--i:3">{album.location}</p>}
+    </div>
+  </section>
+
+  <section class="wrap about-album">
+    <div class="copy" data-reveal>
+      {album.description && <p class="lede">{album.description}</p>}
+      {bodyHtml && <div class="prose muted" set:html={bodyHtml} />}
+    </div>
+    <div class="actions" data-reveal style="--i:1">
+      <button class="btn btn--solid" type="button" data-open-lightbox>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l11-7z" /></svg>
+        Slideshow
+      </button>
+      {
+        album.download && (
+          <a class="btn" href={`/downloads/albums/${album.slug}.zip`} download={`${album.slug}.zip`}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
+            Download all · {size}
+          </a>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="wrap">
+    <PhotoGrid photos={photos} download={album.download} />
+  </section>
+
+  {
+    next && next.slug !== album.slug && (
+      <section class="wrap next">
+        <a href={`/gallery/${next.slug}/`} class="next-link" data-reveal>
+          <span class="eyebrow">Next album</span>
+          <span class="next-title">{next.title} →</span>
+          <Image src={next.cover.src} alt="" width={900} class="next-img" loading="lazy" />
+        </a>
+      </section>
+    )
+  }
+</Base>
+
+<script>
+  import '../../scripts/lightbox';
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: min(82svh, 56rem);
+    display: grid;
+    align-items: end;
+    margin-top: -4.5rem;
+    overflow: hidden;
+  }
+
+  .hero-img {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: kenburns 24s ease-out both;
+  }
+
+  @keyframes kenburns {
+    from {
+      transform: scale(1.14);
+    }
+  }
+
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(18, 15, 13, 0.55) 0%, transparent 30%, transparent 45%, var(--ink) 100%),
+      radial-gradient(ellipse at 20% 100%, rgba(74, 26, 31, 0.5), transparent 60%);
+  }
+
+  .hero-text {
+    position: relative;
+    padding-block: 8rem 3rem;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ivory-dim);
+  }
+
+  h1 {
+    margin-top: 0.8rem;
+    font-size: clamp(3rem, 1.5rem + 7vw, 8rem);
+    font-weight: 300;
+    line-height: 0.95;
+    font-variation-settings: 'SOFT' 80, 'WONK' 1;
+    text-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .loc {
+    margin: 0.8rem 0 0;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--brass-hi);
+  }
+
+  .about-album {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    padding-block: 2rem 3rem;
+  }
+
+  .lede {
+    margin: 0 0 1rem;
+    max-width: 38ch;
+    font-size: clamp(1.2rem, 1rem + 0.7vw, 1.5rem);
+    font-style: italic;
+    color: var(--ivory-dim);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  .next {
+    margin-top: clamp(4rem, 10vw, 7rem);
+  }
+
+  .next-link {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+    padding: clamp(2rem, 6vw, 4rem);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    isolation: isolate;
+  }
+
+  .next-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.4rem + 3vw, 4rem);
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  .next-link :global(.next-img) {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.18;
+    filter: grayscale(0.4);
+    transition: opacity 0.8s, transform 1.4s var(--ease-out), filter 0.8s;
+  }
+
+  .next-link:hover :global(.next-img) {
+    opacity: 0.42;
+    filter: none;
+    transform: scale(1.04);
+  }
+
+  .next-link:hover {
+    color: inherit;
+  }
+</style>

@@ -1,6 +1,10 @@
 ---
 title: "About"
-layout: "simple"
+# A short line shown large at the top of the page (optional).
+intro: "Mostly I'm the one at the back of the group, holding the camera."
+# Optional portrait: drop a photo into the content folder (next to this
+# file) and put its file name here, e.g.  portrait: "./portrait.jpg"
+# portrait: "./portrait.jpg"
 ---
 
 <!--

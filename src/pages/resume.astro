@@ -1,0 +1,201 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import SplitText from '../components/SplitText.astro';
+import { getSite } from '../lib/site';
+
+const site = getSite();
+const page = await getEntry('pages', 'resume');
+if (!page) throw new Error('content/resume.md is missing');
+const { Content } = await render(page);
+const pdf = page.data.pdf ? `/files/${page.data.pdf.replace(/^\/?(files\/)?/, '')}` : undefined;
+---
+
+<Base title={page.data.title ?? 'Résumé'} description={page.data.subtitle}>
+  <section class="wrap page-head head">
+    <div>
+      <p class="eyebrow" data-reveal="fade">Curriculum vitae</p>
+      <h1><SplitText text={page.data.title ?? 'Résumé'} /></h1>
+      {page.data.subtitle && <p class="lede" data-reveal="blur" style="--i:4">{page.data.subtitle}</p>}
+    </div>
+    <div class="actions" data-reveal style="--i:5">
+      {
+        pdf && (
+          <a class="btn btn--solid" href={pdf} download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
+            Download PDF
+          </a>
+        )
+      }
+      <button class="btn" type="button" onclick="window.print()">Print</button>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <article class="sheet" data-reveal="scale">
+      <header class="sheet-head">
+        <p class="sheet-name">{site.name}</p>
+        {site.links && <p class="sheet-links">{site.links.map((l) => <a href={l.url}>{l.label}</a>)}</p>}
+      </header>
+      <div class="sheet-body prose">
+        <Content />
+      </div>
+    </article>
+  </section>
+</Base>
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.7rem;
+  }
+
+  /* The résumé sits on a sheet of warm paper */
+  .sheet {
+    --ivory: #2a211a;
+    --ivory-dim: #4b3e32;
+    --muted: #7d6c56;
+    --brass: #8f6620;
+    --brass-hi: #6b4b14;
+    --line-soft: rgba(42, 33, 26, 0.14);
+    position: relative;
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5.5rem);
+    background:
+      radial-gradient(circle at 10% 0%, rgba(255, 255, 255, 0.5), transparent 40%),
+      linear-gradient(180deg, #f5eddd, #efe4cf);
+    color: var(--ivory);
+    border-radius: 3px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.4) inset,
+      0 40px 100px -30px rgba(0, 0, 0, 0.85),
+      0 0 0 1px rgba(212, 173, 88, 0.25);
+  }
+
+  .sheet::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(143, 102, 32, 0.25);
+    pointer-events: none;
+  }
+
+  .sheet-head {
+    text-align: center;
+    padding-bottom: 1.6rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .sheet-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.4rem + 2.5vw, 3rem);
+    font-weight: 350;
+    letter-spacing: 0.02em;
+  }
+
+  .sheet-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem 1.4rem;
+    margin: 0.7rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .sheet-links a {
+    color: var(--brass);
+    text-decoration: none;
+  }
+
+  .sheet-body {
+    max-width: none;
+    font-size: 1.05rem;
+  }
+
+  .sheet-body :global(h2) {
+    margin-top: 2.2rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brass);
+  }
+
+  .sheet-body :global(h3) {
+    margin-top: 1.4rem;
+    font-size: 1.45rem;
+    font-weight: 450;
+  }
+
+  .sheet-body :global(h3 + p strong:only-child) {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .sheet-body :global(hr) {
+    margin: 1.8rem 0;
+  }
+
+  .sheet-body :global(hr::after) {
+    content: '·  ·  ·';
+    letter-spacing: 0.3em;
+    color: var(--brass);
+  }
+
+  .sheet-body :global(a) {
+    color: var(--brass);
+  }
+
+  @media print {
+    :global(body::before),
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.nav-progress),
+    .page-head {
+      display: none !important;
+    }
+
+    :global(html),
+    :global(body) {
+      background: #fff !important;
+    }
+
+    .sheet {
+      box-shadow: none;
+      background: #fff;
+      padding: 0;
+      max-width: none;
+    }
+
+    .sheet::before {
+      display: none;
+    }
+
+    .sheet,
+    .sheet :global(*) {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+  }
+</style>

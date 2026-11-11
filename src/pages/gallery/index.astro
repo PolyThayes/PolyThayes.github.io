@@ -1,0 +1,84 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SplitText from '../../components/SplitText.astro';
+import AlbumCard from '../../components/AlbumCard.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import { getAlbums } from '../../lib/gallery';
+
+const albums = await getAlbums();
+const intro = await getEntry('sections', 'gallery');
+const { Content } = intro ? await render(intro) : { Content: null };
+const all = albums.flatMap((a) => a.photos.map((p) => ({ ...p, albumTitle: a.title, allow: a.download })));
+const total = all.length;
+---
+
+<Base title="Gallery" description={intro?.data.lede}>
+  <section class="wrap page-head">
+    <p class="eyebrow" data-reveal="fade">{albums.length} albums · {total} photographs</p>
+    <h1><SplitText text={intro?.data.title ?? 'Gallery'} /></h1>
+    {intro?.data.lede && <p class="lede" data-reveal="blur" style="--i:4">{intro.data.lede}</p>}
+    {Content && <div class="intro prose" data-reveal style="--i:5"><Content /></div>}
+  </section>
+
+  <section class="wrap albums" aria-label="Albums">
+    {albums.map((a, i) => <AlbumCard album={a} i={i} />)}
+  </section>
+
+  {
+    total > 0 && (
+      <section class="wrap every">
+        <header class="every-head" data-reveal>
+          <hr class="rule" data-reveal />
+          <p class="eyebrow">Every frame</p>
+          <h2>The contact sheet</h2>
+          <button class="btn" type="button" data-open-lightbox>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 5v14l11-7z" /></svg>
+            View full-screen
+          </button>
+        </header>
+        <PhotoGrid photos={all} download={all.every((p) => p.allow)} />
+      </section>
+    )
+  }
+</Base>
+
+<script>
+  import '../../scripts/lightbox';
+</script>
+
+<style>
+  .intro {
+    margin-top: 1rem;
+    color: var(--muted);
+  }
+
+  .albums {
+    display: grid;
+    gap: clamp(4rem, 10vw, 8rem);
+    padding-top: 1rem;
+  }
+
+  .every {
+    margin-top: clamp(5rem, 12vw, 9rem);
+  }
+
+  .every-head {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  .every-head .rule {
+    width: min(22rem, 100%);
+    margin-bottom: 2rem;
+  }
+
+  .every-head h2 {
+    font-size: clamp(2rem, 1.4rem + 2.5vw, 3.4rem);
+    font-weight: 300;
+    font-style: italic;
+  }
+</style>

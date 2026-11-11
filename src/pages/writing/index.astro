@@ -1,0 +1,40 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EssayRow from '../../components/EssayRow.astro';
+import SplitText from '../../components/SplitText.astro';
+import { getEssays } from '../../lib/writing';
+
+const essays = await getEssays();
+const intro = await getEntry('sections', 'writing');
+const { Content } = intro ? await render(intro) : { Content: null };
+const totalWords = essays.reduce((n, e) => n + e.words, 0);
+---
+
+<Base title="Writing" description={intro?.data.lede}>
+  <section class="wrap page-head">
+    <p class="eyebrow" data-reveal="fade">{essays.length} pieces · {totalWords.toLocaleString('en-US')} words</p>
+    <h1><SplitText text={intro?.data.title ?? 'Writing'} /></h1>
+    {intro?.data.lede && <p class="lede" data-reveal="blur" style="--i:4">{intro.data.lede}</p>}
+    {Content && <div class="intro prose" data-reveal style="--i:5"><Content /></div>}
+  </section>
+
+  <section class="wrap">
+    <ol class="list">
+      {essays.map((e, i) => <EssayRow essay={e} n={i + 1} i={i} />)}
+    </ol>
+    {essays.length === 0 && <p class="muted">Nothing here yet.</p>}
+  </section>
+</Base>
+
+<style>
+  .intro {
+    margin-top: 1rem;
+    color: var(--muted);
+  }
+
+  .list {
+    margin: 0;
+    padding: 0;
+  }
+</style>

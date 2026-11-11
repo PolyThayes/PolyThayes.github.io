@@ -1,0 +1,82 @@
+.pswp {
+  --pswp-bg: #0c0a09;
+  --pswp-placeholder-bg: #1a1613;
+  --pswp-icon-color: #f2e9d8;
+  --pswp-icon-color-secondary: #0c0a09;
+  --pswp-icon-stroke-color: #0c0a09;
+  --pswp-icon-stroke-width: 0;
+}
+
+.pswp__counter {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  color: var(--brass);
+  opacity: 1;
+}
+
+.pswp__button--download {
+  display: grid;
+  place-items: center;
+  color: var(--pswp-icon-color);
+}
+
+.pswp__button--download .pswp__icn {
+  position: static;
+  width: 28px;
+  height: 28px;
+  color: var(--pswp-icon-color);
+  transition: color 0.3s, transform 0.4s var(--ease-out);
+}
+
+.pswp__button--download:hover .pswp__icn {
+  color: var(--brass-hi);
+  transform: translateY(2px);
+}
+
+.pswp__caption {
+  position: absolute;
+  left: 50%;
+  bottom: 1.6rem;
+  width: min(44rem, calc(100% - 2rem));
+  transform: translateX(-50%);
+  text-align: center;
+  display: grid;
+  gap: 0.3rem;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.pswp__caption.is-in {
+  animation: cap-in 0.7s var(--ease-out);
+}
+
+@keyframes cap-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+}
+
+.pswp__caption-album {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.pswp__caption-text {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ivory);
+}
+
+.pswp--ui-visible .pswp__caption {
+  opacity: 1;
+}
+
+.pswp:not(.pswp--ui-visible) .pswp__caption {
+  opacity: 0;
+}

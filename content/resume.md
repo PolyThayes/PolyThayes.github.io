@@ -1,6 +1,10 @@
 ---
 title: "Résumé"
-layout: "simple"
+# The line under the title (optional).
+subtitle: "Experience, education & skills"
+# Optional: put a PDF of your résumé in the  public/files  folder and
+# write its file name here. A "Download PDF" button will appear.
+# pdf: "resume.pdf"
 ---
 
 <!--
@@ -8,12 +12,6 @@ layout: "simple"
   This is plain Markdown, so headings, bold, and horizontal rules
   are enough to make it look organized — no special formatting needed.
 -->
-
-*[Optional: add a line here linking to a downloadable PDF version, e.g.
-`[Download as PDF](/files/resume.pdf)` once you've added one to the
-`static/files/` folder.]*
-
----
 
 ### Job Title, Company Name
 **Month Year – Present**

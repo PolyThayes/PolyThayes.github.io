@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import SplitText from '../components/SplitText.astro';
+---
+
+<Base title="Not found">
+  <section class="wrap page-head nf">
+    <p class="eyebrow" data-reveal="fade">Error 404</p>
+    <h1><SplitText text="Lost the thread." /></h1>
+    <p class="lede" data-reveal="blur" style="--i:4">This page doesn't exist — or it wandered off somewhere.</p>
+    <p data-reveal style="--i:6"><a class="btn btn--solid" href="/">Back to the beginning</a></p>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 60vh;
+  }
+</style>

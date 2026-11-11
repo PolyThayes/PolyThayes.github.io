@@ -1,0 +1,116 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '@fontsource-variable/fraunces/full.css';
+import '@fontsource-variable/fraunces/full-italic.css';
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getSite } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  bodyClass?: string;
+}
+
+const site = getSite();
+const { title, description = site.description, image, bodyClass } = Astro.props;
+const fullTitle = title ? `${title} — ${site.name}` : site.name;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const pageAnim = {
+  forwards: {
+    old: { name: 'vt-out', duration: '0.4s', easing: 'cubic-bezier(.65,0,.35,1)', fillMode: 'both' },
+    new: { name: 'vt-in', duration: '0.8s', delay: '0.12s', easing: 'cubic-bezier(.16,1,.3,1)', fillMode: 'both' },
+  },
+  backwards: {
+    old: { name: 'vt-out', duration: '0.4s', easing: 'cubic-bezier(.65,0,.35,1)', fillMode: 'both' },
+    new: { name: 'vt-in', duration: '0.8s', delay: '0.12s', easing: 'cubic-bezier(.16,1,.3,1)', fillMode: 'both' },
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} — Writing`} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#120f0d" />
+    <meta property="og:title" content={fullTitle} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <script is:inline data-astro-rerun>
+      document.documentElement.classList.add('js');
+    </script>
+    <ClientRouter fallback="animate" />
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <div class="nav-progress" aria-hidden="true" transition:persist="nav-progress"></div>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header />
+    <main id="main" transition:animate={pageAnim}>
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/ui';
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: fixed;
+    left: 1rem;
+    top: -4rem;
+    z-index: 200;
+    padding: 0.6rem 1rem;
+    background: var(--brass);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    transition: top 0.3s;
+  }
+
+  .skip:focus {
+    top: 1rem;
+  }
+
+  .nav-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 2px;
+    z-index: 150;
+    background: linear-gradient(90deg, var(--oxblood), var(--brass), var(--brass-hi));
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  :global(.is-navigating) .nav-progress {
+    opacity: 1;
+    transform: scaleX(0.7);
+    transition: transform 2.5s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 0.2s;
+  }
+
+  :global(.nav-done) .nav-progress {
+    opacity: 0;
+    transform: scaleX(1);
+    transition: transform 0.3s ease-out, opacity 0.5s 0.3s;
+  }
+</style>

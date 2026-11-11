@@ -1,0 +1,190 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { Photo } from '../lib/gallery';
+
+interface Props {
+  photos: (Photo & { albumTitle?: string })[];
+  download?: boolean;
+  id?: string;
+}
+const { photos, download = true, id } = Astro.props;
+
+const items = await Promise.all(
+  photos.map(async (p) => {
+    const width = Math.min(2400, p.src.width);
+    const large = await getImage({ src: p.src, width, format: 'webp', quality: 84 });
+    return {
+      ...p,
+      large: large.src,
+      w: width,
+      h: Math.round((p.src.height / p.src.width) * width),
+      ar: (p.src.width / p.src.height).toFixed(4),
+      dl: `/downloads/photos/${p.album}/${p.slug}`,
+    };
+  }),
+);
+---
+
+<div class="grid pswp-gallery" id={id}>
+  {
+    items.map((p, i) => (
+      <figure class="cell" style={`--ar:${p.ar};--i:${i % 6}`} data-reveal="scale">
+        <a
+          href={p.large}
+          data-pswp-width={p.w}
+          data-pswp-height={p.h}
+          data-cropped="true"
+          data-caption={p.caption ?? ''}
+          data-album={p.albumTitle ?? ''}
+          data-download={download ? p.dl : undefined}
+          data-filename={p.slug}
+          aria-label={`Open photo${p.caption ? `: ${p.caption}` : ''}`}
+        >
+          <Image
+            src={p.src}
+            alt={p.caption ?? p.albumTitle ?? 'Photograph'}
+            widths={[400, 700, 1100]}
+            sizes="(max-width: 600px) 90vw, (max-width: 1100px) 45vw, 30vw"
+            loading={i < 4 ? 'eager' : 'lazy'}
+          />
+          <span class="veil" aria-hidden="true">
+            {(p.caption || p.albumTitle) && <span class="cap">{p.caption ?? p.albumTitle}</span>}
+            <span class="zoom">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg>
+            </span>
+          </span>
+        </a>
+        {download && (
+          <a class="dl" href={p.dl} download={p.slug} title="Download original" aria-label={`Download ${p.slug}`}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
+          </a>
+        )}
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .grid {
+    --row: clamp(170px, 24vw, 330px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.4rem, 1vw, 0.8rem);
+  }
+
+  .grid::after {
+    content: '';
+    flex-grow: 999999;
+  }
+
+  .cell {
+    position: relative;
+    margin: 0;
+    flex-grow: calc(var(--ar) * 100);
+    flex-basis: calc(var(--ar) * var(--row));
+    aspect-ratio: var(--ar);
+    overflow: hidden;
+    border-radius: 3px;
+    background: var(--ink-3);
+  }
+
+  .cell > a:first-child {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: zoom-in;
+  }
+
+  .cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.4s var(--ease-out), filter 0.8s;
+  }
+
+  .cell:hover img {
+    transform: scale(1.05);
+  }
+
+  .veil {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(180deg, transparent 50%, rgba(12, 10, 9, 0.75));
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-out);
+  }
+
+  .cell:hover .veil,
+  .cell:focus-within .veil {
+    opacity: 1;
+  }
+
+  .cap {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--ivory);
+    transform: translateY(8px);
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .cell:hover .cap {
+    transform: none;
+  }
+
+  .zoom {
+    flex: none;
+    width: 1.3rem;
+    color: var(--brass-hi);
+  }
+
+  .dl {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    display: grid;
+    place-items: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    background: rgba(18, 15, 13, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--ivory);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s, transform 0.5s var(--ease-out), background 0.3s, color 0.3s;
+  }
+
+  .dl svg {
+    width: 1.1rem;
+  }
+
+  .cell:hover .dl,
+  .dl:focus-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .dl:hover {
+    background: var(--brass);
+    color: var(--ink);
+  }
+
+  @media (hover: none) {
+    .dl {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .grid {
+      --row: 150px;
+    }
+  }
+</style>
