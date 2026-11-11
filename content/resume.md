@@ -2,6 +2,8 @@
 title: "Résumé"
 # The line under the title (optional).
 subtitle: "Experience, education & skills"
+# The word on the switch at the top of the Résumé page.
+label: "Professional"
 # Optional: put a PDF of your résumé in the  public/files  folder and
 # write its file name here. A "Download PDF" button will appear.
 # pdf: "resume.pdf"

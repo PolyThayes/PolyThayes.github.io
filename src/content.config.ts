@@ -27,6 +27,10 @@ const pages = defineCollection({
       // Which part of the portrait to keep when the frame crops it:
       // "top", "center", "bottom", or a percentage like "20%".
       portrait_position: z.string().optional(),
+      // Résumé pages
+      label: z.string().optional(),
+      headshot: image().optional(),
+      stats: z.record(z.string(), z.coerce.string()).optional(),
       pdf: z.string().optional(),
     }),
 });

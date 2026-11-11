@@ -57,9 +57,15 @@ the top is shown large, in italics.
 `about.md`), then change the line `# portrait: "./portrait.jpg"` to
 `portrait: "./your-photo-name.jpg"` (remove the `#`).
 
-## Résumé page → `content/resume.md`
+## Résumé page → `content/resume.md` and `content/resume-acting.md`
 
-Write it as plain text. A few simple markers give it structure:
+The Résumé page is a two-sided sheet of paper. Your professional résumé is
+on the front (`resume.md`) and your acting résumé is on the back
+(`resume-acting.md`). Visitors turn it over by clicking the page, the
+turned-up corner, or the **Professional / Acting** switch above it. The
+link `yoursite/resume/#acting` opens straight onto the acting side.
+
+Write both as plain text. A few simple markers give it structure:
 
 | You type…                   | It becomes…                          |
 | --------------------------- | ------------------------------------ |
@@ -67,10 +73,19 @@ Write it as plain text. A few simple markers give it structure:
 | `### Job Title, Company`    | a job heading                        |
 | `**Month Year – Present**`  | the date line under a job            |
 | `---` (on its own line)     | a small ornamental divider           |
+| `\| Role \| Play \| Company \|` | a row in a credits table (see the acting file) |
 
-**To offer a PDF download:** upload your PDF into `public/files/`, then in
-`resume.md` change `# pdf: "resume.pdf"` to `pdf: "your-file-name.pdf"`
-(remove the `#`). A **Download PDF** button appears automatically.
+At the top of each file:
+
+- `label:` is the word on the switch ("Professional", "Acting").
+- `subtitle:` is the line under the page title.
+- `pdf:` adds a **Download PDF** button for that side. Put the PDF in
+  `public/files/` and write its file name, e.g. `pdf: "acting-resume.pdf"`.
+- Acting side only: `headshot: "./headshot.jpg"` (photo in the `content`
+  folder) and `stats:` (Height, Hair, Eyes… add or remove lines freely).
+
+**Only want one résumé?** Delete `content/resume-acting.md` and the page
+goes back to a single sheet with no switch.
 
 ## Writing
 
