@@ -209,7 +209,7 @@ like colour, for example), set it yourself in `album.md`:
 ### Mark a favourite
 
 Add `favorite: true` to `album.md`. The frame gets a hand-drawn
-grease-pencil circle or box, in red or blue (each album keeps its own).
+grease-pencil circle or box, in red.
 Remove the line, or write `favorite: false`, to take the mark off.
 
 Use it sparingly, as a photographer would on a real contact sheet: a mark
