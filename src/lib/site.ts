@@ -7,6 +7,9 @@ export interface SiteSettings {
   eyebrow?: string;
   headline?: string;
   description?: string;
+  share_image?: string;
+  share_image_alt?: string;
+  share_image_position?: string;
   links?: { label: string; url: string }[];
   sections?: Record<string, { title?: string; blurb?: string }>;
 }

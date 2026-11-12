@@ -3,37 +3,12 @@ title: '"Just Believe. Okay?..." "Okay.": On the Boy''s Leap of Faith in The Roa
 date: 2026-03-12
 summary: "An essay from English: Existentialism in Literature"
 ---
-Nikhil Gupta
-
-Mr. Baker
-
-Existentialism in Literature
-
-12 March 2026
-
-“Just Believe. Okay?...” “Okay.”: On the boy’s Leap of Faith in “The Road.”
 
 If there were ever a debate on whether philosophy falls under the umbrella of science, one need only look at the vernacular these theorists use to pose and defend their hypotheses. Take, for example, Kierkegaard’s ‘Teleological suspension of the ethical,’ --a term which essentially constitutes his thesis after defining the various forms of despair man is in. A phrase that shares the same incredibly specific, though immediately ungraspable, quality as ‘Pneumonoultramicroscopicsilicovolcanoconiosis.’
 
-Suspension of the ethical is not merely a moral suspension where an individual sets aside the ‘ethical life’; it is also,
+Suspension of the ethical is not merely a moral suspension where an individual sets aside the ‘ethical life’; it is also, arguably, a logical suspension. In Kierkegaard’s primary example--where Abraham ascends the mountain ready to sacrifice his ‘only begotten son,’--Abraham rejects the ethical view which denounces murder, sacrifice, and the-evil-inherent-in-bringing-your-son-on-a-trip-intending-to-kill-him. But he must also set aside logic and reason. In Fear and Trembling, Kierkegaard calls what might be modernly called the mental loopholes that Abraham performs: “[the ability] to be able to lose one's reason.” (Kierkegaard. 44.) The way Kierkegaard interprets the bible, when Abraham sets out, “he was willing to sacrifice him if required, [but] all that time believed that God would not require Isaac of him.”--absurd! (41.)
 
-arguably, a logical suspension. In Kierkegaard’s primary example--where Abraham ascends the mountain ready to
-
-sacrifice his ‘only begotten son,’--Abraham rejects the ethical view which denounces murder, sacrifice, and
-
-the-evil-inherent-in-bringing-your-son-on-a-trip-intending-to-kill-him. But he must also set aside logic and reason.
-
-In Fear and Trembling, Kierkegaard calls what might be modernly called the mental loopholes that Abraham performs:
-
-“[the ability] to be able to lose one's reason.” (Kierkegaard. 44.) The way Kierkegaard interprets the bible, when Abraham
-
-sets out, “he was willing to sacrifice him if required, [but] all that time believed that God would not require Issac of
-
-him.”--absurd! (41.)
-
-Abraham’s leap of faith is not a single act. It is a continuously, infinitely renewed choice. One which starts the moment
-
-“he swung his leg over the ass’s back,” and then continues every blink, breath, and step of the way. (42.) As Kierkegaard says himself, “I would have held back, even at the last minute, though not for this I would have arrived too late at Mount Moriah.” (41.) Abraham’s leap is a continued faith in God; over and over does he choose to devote himself in his willingness to give his son, and over and over does he choose to believe in God’s goodness and that It will not truly require Isaac.
+Abraham’s leap of faith is not a single act. It is a continuously, infinitely renewed choice. One which starts the moment “he swung his leg over the ass’s back,” and then continues every blink, breath, and step of the way. (42.) As Kierkegaard says himself, “I would have held back, even at the last minute, though not for this I would have arrived too late at Mount Moriah.” (41.) Abraham’s leap is a continued faith in God; over and over does he choose to devote himself in his willingness to give his son, and over and over does he choose to believe in God’s goodness and that It will not truly require Isaac.
 
 In The Road, the man and boy exist in Kierkegaard’s philosophical dilemma: their starving finite bodies aimed pointedly toward death, their minds, however, on a yellow-bricked journey—as fire-carrying good guys—south to the coast. Within this context, McCarthy creates echoes of the Abrahamic story. The father, like Abraham, carts his son toward almost-certain death while preaching a promise he himself is attempting to believe. But it is the boy who most clearly embodies the position Kierkegaard describes: listening to the father almost as Abraham listens to God, setting aside reason in what can only be described as ‘A Leap of Faith.’
 
@@ -68,9 +43,7 @@ Unlike the swimming example, here the boy has no experiential reason to trust ev
 
 The boy’s resolve grows stronger as the novel progresses, even as it becomes increasingly unlikely. Abraham must have thought at every step up Mount Moriah, ‘Is this the point where God tells me good job and lets me return home with my son?’ He knows--by the absurd--through his Leap-- that it must happen; he simply does not know when. The boy must think the same way. But as the South becomes more and more unlikely a place of promise, to remain faithful, he must grow increasingly so.
 
-The boy’s faith in the man is just as illogical as Abraham’s in God. For it is not always clear what Its plan is or whether It is true, right, or real. One of the most sound critiques of an all-good, all-powerful God is the paradox: ‘if God is all good, then he is not all powerful--for he does not stop cancer in children--and if God is all powerful, then he is not all good,
-
-because he does not remove all cancer from all children.’-- That is, God seems inconsistent. A trend that the man continues:
+The boy’s faith in the man is just as illogical as Abraham’s in God. For it is not always clear what Its plan is or whether It is true, right, or real. One of the most sound critiques of an all-good, all-powerful God is the paradox: ‘if God is all good, then he is not all powerful--for he does not stop cancer in children--and if God is all powerful, then he is not all good, because he does not remove all cancer from all children.’-- That is, God seems inconsistent. A trend that the man continues:
 
 You promised not to do that, the boy said.
 
@@ -119,10 +92,7 @@ But ultimately, he must accept the man. The boy has just exposed the logical pos
 
 There is, then, the question of what exactly “okay” (72.) means.
 
-McCarthy provides perhaps the clearest of the word almost immediately in the novel. In fact, the definition is the second   
-time he uses the word: So we'll be warm. Yes. Okay. Okay what? Nothing. Just okay. (10.)   
-It is, simply “okay.” (247.) Yet as any actor worth their weight will tell you, “Okay” (93.) is one of the hardest lines   
-written because of how many ways it can be said, the meaning changing with each inflection, breath, and movement: M: But we’re not dying. B: Okay. (101.)
+McCarthy provides perhaps the clearest of the word almost immediately in the novel. In fact, the definition is the second time he uses the word: So we'll be warm. Yes. Okay. Okay what? Nothing. Just okay. (10.) It is, simply “okay.” (247.) Yet as any actor worth their weight will tell you, “Okay” (93.) is one of the hardest lines written because of how many ways it can be said, the meaning changing with each inflection, breath, and movement: M: But we’re not dying. B: Okay. (101.)
 
 (With a quiver in the voice and glossy eyes): Okay.
 

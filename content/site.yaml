@@ -14,6 +14,16 @@ headline: "I take photos on trips, write when something's worth saying, and this
 # Used by search engines and link previews.
 description: "Photographs, writing, and a bit about me."
 
+# The photo shown when someone shares a link to your home, About, Gallery
+# or Résumé page (by text, iMessage, WhatsApp…). Name any photo inside the
+# content folder, e.g. "8N3A6128.jpg" or "gallery/Taiwan Film/3Taiwan.jpg".
+# Album pages use their own cover photo instead.
+share_image: "8N3A6128.jpg"
+share_image_alt: "Portrait of Nikhil Gupta"
+# Which part of the photo to keep when it's cropped to a wide preview:
+# "top", "center", "bottom", or "attention" (the site picks).
+share_image_position: "top"
+
 # Contact links shown on the About page and in the footer.
 # Delete any line you don't want. Add more in the same format.
 links:

@@ -46,9 +46,9 @@ const twoSided = sides.length === 2;
       {
         sides.map((s) =>
           s.pdf ? (
-            <a class="btn btn--solid for-side" data-for={s.key} href={s.pdf} download>
+            <a class="btn btn--solid for-side" data-for={s.key} href={s.pdf} download aria-label={`Download ${s.label.toLowerCase()} résumé as a PDF`}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
-              Download PDF
+              {s.label} résumé (PDF)
             </a>
           ) : null,
         )
@@ -122,10 +122,76 @@ const twoSided = sides.length === 2;
     ctrl = new AbortController();
     const { signal } = ctrl;
 
-    document.querySelectorAll('[data-print]').forEach((b) => b.addEventListener('click', () => window.print(), { signal }));
+    // "Print" prints the PDF of the side that's showing, not the web page.
+    // Chrome, Edge and Firefox print it straight from a hidden frame; Safari
+    // can't, so it opens the PDF in a new tab, where Print is one click away.
+    // With no PDF set for that side, the web page is printed instead.
+    const printPdf = (href: string) => {
+      const safari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+      if (safari) {
+        window.open(href, '_blank', 'noopener');
+        return;
+      }
+      document.querySelector('iframe.print-frame')?.remove();
+      const frame = document.createElement('iframe');
+      frame.className = 'print-frame';
+      frame.setAttribute('aria-hidden', 'true');
+      frame.tabIndex = -1;
+      frame.style.cssText = 'position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0';
+      frame.src = href;
+      frame.addEventListener('load', () => {
+        try {
+          frame.contentWindow!.focus();
+          frame.contentWindow!.print();
+        } catch {
+          window.open(href, '_blank', 'noopener');
+        }
+      });
+      document.body.append(frame);
+    };
+    document.querySelectorAll('[data-print]').forEach((b) =>
+      b.addEventListener(
+        'click',
+        () => {
+          const side = flip.dataset.side ?? 'front';
+          const pdf = document.querySelector<HTMLAnchorElement>(`a.for-side[data-for="${side}"]`)?.getAttribute('href');
+          if (pdf) printPdf(pdf);
+          else window.print();
+        },
+        { signal },
+      ),
+    );
     if (!flip.classList.contains('two-sided')) return;
 
     const faces = flip.querySelectorAll<HTMLElement>('.face');
+    const flipper = flip.querySelector<HTMLElement>('.flipper')!;
+
+    // The card is as tall as the side that's showing, so the shorter side
+    // doesn't leave a blank gap below it. The hidden side is clipped to the
+    // same height once the turn has finished ("settled").
+    const fit = () => {
+      const current = flip.querySelector<HTMLElement>(`.face.${flip.dataset.side}`);
+      if (!current) return;
+      const h = current.offsetHeight;
+      flipper.style.height = `${h}px`;
+      flip.style.setProperty('--face-h', `${h}px`);
+    };
+    let settleTimer: number | undefined;
+    const settle = () => {
+      window.clearTimeout(settleTimer);
+      flip.classList.add('settled');
+    };
+    flipper.addEventListener(
+      'transitionend',
+      (e) => {
+        if (e.target === flipper) settle();
+      },
+      { signal },
+    );
+    const ro = new ResizeObserver(() => fit());
+    faces.forEach((f) => ro.observe(f));
+    signal.addEventListener('abort', () => ro.disconnect());
+
     const set = (side: string, animate = true) => {
       if (side !== 'front' && side !== 'back') side = 'front';
       if (animate && flip.dataset.side !== side) {
@@ -133,8 +199,16 @@ const twoSided = sides.length === 2;
         void flip.offsetWidth;
         flip.classList.add('turning');
       }
+      const changed = flip.dataset.side !== side;
+      if (changed && animate) {
+        flip.classList.remove('settled');
+        window.clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(settle, 1400);
+      }
       flip.dataset.side = side;
       document.documentElement.dataset.resumeSide = side;
+      fit();
+      if (!animate) settle();
       faces.forEach((f) => {
         const hidden = !f.classList.contains(side);
         f.toggleAttribute('inert', hidden);
@@ -406,8 +480,19 @@ const twoSided = sides.length === 2;
   /* Everything below only applies when JavaScript is running; without it
      both résumés simply show one after the other. */
   :global(.js) .two-sided .flipper {
+    align-items: start;
     transform-style: preserve-3d;
-    transition: transform 1.1s cubic-bezier(0.7, 0, 0.2, 1);
+    transition:
+      transform 1.1s cubic-bezier(0.7, 0, 0.2, 1),
+      height 1.1s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+
+  /* Once the turn is over, clip the hidden side to the height of the one
+     showing so it can't stretch the page. */
+  :global(.js) .two-sided.settled[data-side='front'] .back,
+  :global(.js) .two-sided.settled[data-side='back'] .front {
+    max-height: var(--face-h, none);
+    overflow: hidden;
   }
 
   :global(.js) .two-sided .face {
@@ -517,6 +602,10 @@ const twoSided = sides.length === 2;
 
     :global(.js) .two-sided .face {
       transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    :global(.js) .two-sided .flipper {
+      transition: none;
     }
 
     :global(.js) .two-sided[data-side='front'] .back,
@@ -653,6 +742,14 @@ const twoSided = sides.length === 2;
     .flipper,
     .face {
       transform: none !important;
+    }
+
+    .flipper {
+      height: auto !important;
+    }
+
+    .face {
+      max-height: none !important;
     }
 
     :global(html[data-resume-side='back']) .front,

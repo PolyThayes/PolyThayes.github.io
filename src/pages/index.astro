@@ -13,12 +13,12 @@ const albums = await getAlbums();
 // A mix from every album: each album's cover, plus one more photo from
 // partway through it, shuffled into a fixed order so neighbours vary.
 const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
-const covers = albums.map((a) => ({ ...a.cover, albumTitle: a.title }));
+const covers = albums.map((a) => ({ ...a.cover, albumTitle: a.title, alt: `Cover photo of ${a.title}` }));
 const extras = albums
   .map((a) => {
     const rest = a.photos.filter((p) => p.file !== a.cover.file);
     const pick = rest[Math.floor(rest.length / 2)];
-    return pick && { ...pick, albumTitle: a.title };
+    return pick && { ...pick, albumTitle: a.title, alt: `Photo ${pick.index + 1} of ${a.photos.length}, ${a.title}` };
   })
   .filter((p) => !!p);
 const shuffle = <T extends { album: string; file: string }>(list: T[]) =>
@@ -76,10 +76,10 @@ const [first, ...rest] = site.name.split(' ');
           <p class="eyebrow">From the gallery</p>
           <a href="/gallery/" class="all">All albums →</a>
         </header>
-        <div class="strip" data-reveal="fade">
+        <div class="strip" data-reveal="fade" role="region" aria-label="Photographs from every album (scrolls sideways)" tabindex="0">
           {strip.map((p, i) => (
             <a href={`/gallery/${p.album}/`} class="frame glow-card" style={`--i:${i}`}>
-              <Image src={p.src} alt={p.caption ?? p.albumTitle} widths={[360, 720]} sizes="(max-width: 700px) 70vw, 340px" loading="lazy" />
+              <Image src={p.src} alt={p.caption ?? p.alt} widths={[360, 720]} sizes="(max-width: 700px) 70vw, 340px" loading="lazy" />
               <span class="frame-cap">{p.albumTitle}</span>
             </a>
           ))}

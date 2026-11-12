@@ -46,11 +46,6 @@ const slugify = (s: string) =>
 
 const titleCase = (s: string) => s.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-export function photoDownloadName(file: string) {
-  const dot = file.lastIndexOf('.');
-  return slugify(file.slice(0, dot)) + '.jpg';
-}
-
 export function originalPath(photo: Photo) {
   return `${__PROJECT_ROOT__}/content/gallery/${photo.folder}/${photo.file}`;
 }
@@ -121,13 +116,18 @@ async function loadAlbums(): Promise<Album[]> {
     const captions = data?.captions ?? {};
     items.sort((a, b) => a.file.localeCompare(b.file, undefined, { numeric: true }));
     const slug = slugify(folder);
+    // Captions can be written with or without the file extension, any case.
+    const bareName = (f: string) => f.trim().toLowerCase().replace(/\.[^.]+$/, '');
+    const captionFor = new Map(Object.entries(captions).map(([k, v]) => [bareName(k), v]));
+    const digits = Math.max(2, String(items.length).length);
     const photos: Photo[] = items.map((it, index) => ({
       album: slug,
       folder,
       file: it.file,
-      slug: photoDownloadName(it.file),
+      // Clean download name: album + photo number, e.g. "italy-bnw-07.jpg"
+      slug: `${slug}-${String(index + 1).padStart(digits, '0')}.jpg`,
       src: it.src,
-      caption: captions[it.file],
+      caption: captionFor.get(bareName(it.file)),
       index,
     }));
     // Match the cover with or without its extension ("04-glacier" or "04-glacier.jpg").

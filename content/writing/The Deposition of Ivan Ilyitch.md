@@ -1,25 +1,25 @@
 ---
-title: "THE DEPOSITION OF IVAN ILLYICH"
+title: "The Deposition of Ivan Ilyich"
 date: 2026-05-10
 summary: "An essay from English: Existentialism in Literature"
 ---
-## Pt. 1: The Death of Ivan Illyich
+## Pt. 1: The Death of Ivan Ilyich
 
-You've got your passion, you've got your pride But don't you know that only fools are satisfi ed? Dream on, but don't imagine they'll all come true, ooh When will you realize Vienna waits for you? <sup>1</sup>
+You've got your passion, you've got your pride But don't you know that only fools are satisfied? Dream on, but don't imagine they'll all come true, ooh When will you realize Vienna waits for you? <sup>1</sup>
 
-“Be Authentic,” everyone likes to say; being authentic killed poor Ivan Illyich. For the entire course of his death—the novel— Ivan Illyich had not been able to quell his pain for-the-sake of himself. No matter how much he tried. Yet as he lay:
+“Be Authentic,” everyone likes to say; being authentic killed poor Ivan Ilyich. For the entire course of his death—the novel— Ivan Ilyich had not been able to quell his pain for-the-sake of himself. No matter how much he tried. Yet as he lay:
 
 1. The dying man was still screaming desperately and flailing his arms. One hand fell on the boy's head. The boy grasped it, pressed it to his lips, and began to cry. At that very moment, Ivan Ilyich fell through and saw a light.<sup>2</sup>
 
-It is here, in this split second, that, having been falling, staring into the great black void of nothingness, he finally sees light. The flash before death is said to accompany one with a vision of their entire life, or maybe a split second of that which/who one loves most. Ivan Illyich’s flash accompanied his first few seconds of life. That is to say, before Ivan Illyich died, he had not lived; and further, as he lived, he dies.
+It is here, in this split second, that, having been falling, staring into the great black void of nothingness, he finally sees light. The flash before death is said to accompany one with a vision of their entire life, or maybe a split second of that which/who one loves most. Ivan Ilyich’s flash accompanied his first few seconds of life. That is to say, before Ivan Ilyich died, he had not lived; and further, as he lived, he dies.
 
 It is fair to say that he was physically alive. And in terms of the claims of authenticity which I am about to make, he is in fact alive. Heidegger notes: “On no account, however, do the terms ‘inauthentic’ and ‘non-authentic’ signify ‘really not,’ as if in this mode of Being, Dasein were altogether to lose its Being.” <sup>3</sup> Further, I do not mean to make the claim that Ilyich didn’t live because he didn’t feel joy—or anything like that because he did feel joy. Rather, in line with that truism about ‘falling and getting back up again,’ Ivan didn’t live because he didn’t get back up again.
 
-Heidegger’s “falling” is in the direction of “in-authenticity,” of being lost in the “they,” of which “averagness is an existential characteristic.” <sup>4</sup> Thus, the statement: ‘to be in-authentic is to be average,’ is fair, even if oversimplified. We see this in Ivan’s greatest pride and joy, his self-decorated home:
+Heidegger’s “falling” is in the direction of “in-authenticity,” of being lost in the “they,” of which “averageness is an existential characteristic.” <sup>4</sup> Thus, the statement: ‘to be in-authentic is to be average,’ is fair, even if oversimplified. We see this in Ivan’s greatest pride and joy, his self-decorated home:
 
 [the home] was stunning— an opinion voiced not only by himself, but by everyone else who saw the place. In actuality, it was like the homes of all people who are not really rich but want to look rich, and therefore end up looking like one another…And his place looked so much like the others that it would never have been noticed, though it all seemed quite exceptional to him.<sup>5</sup>
 
-His life is great, to him and the people around him, yet it is so average Tolstoy should have just pulled from Heidegger himself and said Ivan: “takes pleasure as ‘they’ take pleasure; [he] reads, sees, and judges about literature and art as they see and judge [etc, etc].” <sup>67</sup>  Ivan Illyich has fallen so far into the ‘they’ that it would be impossible to tell where one ends and the other begins. I ask: ‘Do you think Ivan Illyich has an opinion of his own, a fringe, niche, weird take on life, style, anything…?
+His life is great, to him and the people around him, yet it is so average Tolstoy should have just pulled from Heidegger himself and said Ivan: “takes pleasure as ‘they’ take pleasure; [he] reads, sees, and judges about literature and art as they see and judge [etc, etc].” <sup>67</sup>  Ivan Ilyich has fallen so far into the ‘they’ that it would be impossible to tell where one ends and the other begins. I ask: ‘Do you think Ivan Ilyich has an opinion of his own, a fringe, niche, weird take on life, style, anything…?
 
 Ivan fails to get up at all. Not until his death does he take a step back and stand up in his brief moment of resoluteness.<sup>8</sup> His wife came in and:
 
@@ -33,7 +33,7 @@ That something is die. Ivan Ilyich must die. Lacking the strength to acknowledge
 
 Ivan dies because he throws down the anchor. To understand his death is to completely reject the temperament of the ‘they,’ which would make him believe:
 
-Caius really was mortal, and it was only right that he should die, but for him, Vanya, Ivan Illyich, with all his thoughts and feelings, it was something else again. And its simply was not possible that he should have to die. That would be too terrible.<sup>11</sup>
+Caius really was mortal, and it was only right that he should die, but for him, Vanya, Ivan Ilyich, with all his thoughts and feelings, it was something else again. And its simply was not possible that he should have to die. That would be too terrible.<sup>11</sup>
 
 Rejecting this former sentiment, he uses his understanding of his own mortality to ‘care’ for his son and wife. He dies for-the-sake-of their suffering. Because he knows that their suffering is only in part for his actual dying, but more so, that his dying reminds them of their own mortality. He knows that in trying to ignore his pain, they ignore his mortality, casting them farther into the ‘they’ of ignoring their own mortality. So he dies for-the-sake-of letting them see death accepted, for-the-sake-of not casting them farther into the ‘they.’Heidegger says that:
 

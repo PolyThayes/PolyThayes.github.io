@@ -8,12 +8,22 @@ import SplitText from '../components/SplitText.astro';
     <p class="eyebrow" data-reveal="fade">Error 404</p>
     <h1><SplitText text="Lost the thread." /></h1>
     <p class="lede" data-reveal="blur" style="--i:4">This page doesn't exist — or it wandered off somewhere.</p>
-    <p data-reveal style="--i:6"><a class="btn btn--solid" href="/">Back to the beginning</a></p>
+    <p class="nf-links" data-reveal style="--i:6">
+      <a class="btn btn--solid" href="/">Home</a>
+      <a class="btn" href="/gallery/">Gallery</a>
+      <a class="btn" href="/writing/">Writing</a>
+    </p>
   </section>
 </Base>
 
 <style>
   .nf {
     min-height: 60vh;
+  }
+
+  .nf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
   }
 </style>

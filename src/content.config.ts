@@ -7,13 +7,17 @@ import { z } from 'astro/zod';
 
 const writing = defineCollection({
   loader: glob({ pattern: ['**/*.md', '!**/_*.md'], base: './content/writing' }),
-  schema: z.object({
-    title: z.string().optional(),
-    subtitle: z.string().optional(),
-    date: z.coerce.date().optional(),
-    summary: z.string().optional(),
-    draft: z.boolean().optional().default(false),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string().optional(),
+      subtitle: z.string().optional(),
+      date: z.coerce.date().optional(),
+      summary: z.string().optional(),
+      draft: z.boolean().optional().default(false),
+      // Optional link-preview photo for this essay (a photo in content/writing/).
+      image: image().optional(),
+      image_alt: z.string().optional(),
+    }),
 });
 
 const pages = defineCollection({

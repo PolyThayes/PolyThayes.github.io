@@ -17,6 +17,7 @@ const items = await Promise.all(
     const large = await getImage({ src: p.src, ...size, format: 'jpg', quality: 84 });
     return {
       ...p,
+      label: `Photo ${p.index + 1} of ${photos.length}`,
       large: large.src,
       w: size.width,
       h: size.height,
@@ -40,11 +41,12 @@ const items = await Promise.all(
           data-album={p.albumTitle ?? ''}
           data-download={download ? p.dl : undefined}
           data-filename={p.slug}
-          aria-label={`Open photo${p.caption ? `: ${p.caption}` : ''}`}
+          data-label={p.label}
+          aria-label={`Open ${p.label.toLowerCase()} full-screen${p.caption ? `: ${p.caption}` : ''}`}
         >
           <Image
             src={p.src}
-            alt={p.caption ?? p.albumTitle ?? 'Photograph'}
+            alt={p.caption ?? `${p.label}, ${p.albumTitle ?? 'album'}`}
             widths={[400, 800]}
             sizes="(max-width: 600px) 90vw, (max-width: 1100px) 45vw, 30vw"
             loading={i < 4 ? 'eager' : 'lazy'}
@@ -57,7 +59,7 @@ const items = await Promise.all(
           </span>
         </a>
         {download && (
-          <a class="dl" href={p.dl} download={p.slug} title="Download photo" aria-label={`Download ${p.slug}`}>
+          <a class="dl" href={p.dl} download={p.slug} title="Download photo" aria-label={`Download ${p.label.toLowerCase()}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" /></svg>
           </a>
         )}
