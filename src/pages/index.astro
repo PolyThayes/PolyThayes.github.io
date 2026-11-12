@@ -10,7 +10,26 @@ import { getAlbums } from '../lib/gallery';
 const site = getSite();
 const essays = (await getEssays()).slice(0, 3);
 const albums = await getAlbums();
-const strip = albums.flatMap((a) => a.photos.map((p) => ({ ...p, albumTitle: a.title }))).slice(0, 8);
+// A mix from every album: each album's cover, plus one more photo from
+// partway through it, shuffled into a fixed order so neighbours vary.
+const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+const covers = albums.map((a) => ({ ...a.cover, albumTitle: a.title }));
+const extras = albums
+  .map((a) => {
+    const rest = a.photos.filter((p) => p.file !== a.cover.file);
+    const pick = rest[Math.floor(rest.length / 2)];
+    return pick && { ...pick, albumTitle: a.title };
+  })
+  .filter((p) => !!p);
+const shuffle = <T extends { album: string; file: string }>(list: T[]) =>
+  list.map((p) => ({ p, k: hash(p.album + p.file) })).sort((a, b) => a.k - b.k).map((x) => x.p);
+// Covers lead, then the extras; never two from the same album side by side.
+const pool = [...shuffle(covers), ...shuffle(extras)];
+const strip: typeof pool = [];
+while (pool.length) {
+  const i = pool.findIndex((p) => p.album !== strip.at(-1)?.album);
+  strip.push(...pool.splice(i < 0 ? 0 : i, 1));
+}
 
 const [first, ...rest] = site.name.split(' ');
 ---

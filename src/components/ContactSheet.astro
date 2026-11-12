@@ -28,7 +28,7 @@ const STOCK = { color: 'PORTRA 400', bw: 'HP5+' } as const;
 const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
 const marks = albums.map((a) => {
   const h = hash(a.slug);
-  return { shape: h % 2 ? 'circle' : 'box', color: (h >> 3) % 2 ? 'red' : 'blue' };
+  return { shape: h % 2 ? 'circle' : 'box', color: 'red' };
 });
 ---
 
