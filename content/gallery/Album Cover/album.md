@@ -1,5 +1,4 @@
 ---
-# SAMPLE ALBUM — delete this whole folder when you add your own.
 title: "Catullus Album Cover"
 date: 2024-01-01
 location: "Verona, Italy"

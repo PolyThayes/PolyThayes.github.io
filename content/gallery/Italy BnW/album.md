@@ -1,5 +1,4 @@
 ---
-# SAMPLE ALBUM — delete this whole folder when you add your own.
 title: "BnW Photos from Italy"
 date: 2026-03-21
 location: "Florence, Siena, Milan"
