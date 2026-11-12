@@ -475,3 +475,62 @@ p { text-wrap: pretty; }
 
   body::before { animation: none; }
 }
+
+/* ── Essay extras: song-lyric epigraphs, dialogue, footnotes ─────────── */
+
+/* <div class="epigraph"> …lines… </div> — set in from the left, like a
+   printed epigraph */
+.prose .epigraph {
+  margin: 1.6em 0 2.4em;
+  padding-left: clamp(1.5rem, 14%, 9rem);
+  color: var(--cream-dim);
+}
+
+.prose .epigraph p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* <div class="dialogue"> — a transcript: one line per speaker, close-set */
+.prose .dialogue p {
+  margin: 0 0 0.45em;
+}
+
+/* Numbered quotations keep their number (2., 3.…) inside the quote */
+.prose blockquote ol {
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+/* Footnotes ([^1] in the text, "[^1]: …" at the end) */
+.prose .footnotes {
+  margin-top: 4em;
+  padding-top: 1.4em;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.82em;
+  color: var(--cream-dim);
+}
+
+.prose .footnotes ol {
+  padding-left: 1.4em;
+}
+
+.prose .footnotes li {
+  margin-bottom: 0.5em;
+}
+
+.prose .footnotes li p {
+  margin: 0;
+  font-style: normal;
+}
+
+.prose .footnotes [data-footnote-backref] {
+  margin-left: 0.3em;
+  text-decoration: none;
+}
+
+.prose sup a[data-footnote-ref] {
+  padding: 0 0.1em;
+  text-decoration: none;
+  color: var(--accent);
+}
