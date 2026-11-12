@@ -122,7 +122,45 @@ const twoSided = sides.length === 2;
     ctrl = new AbortController();
     const { signal } = ctrl;
 
-    document.querySelectorAll('[data-print]').forEach((b) => b.addEventListener('click', () => window.print(), { signal }));
+    // "Print" prints the PDF of the side that's showing, not the web page.
+    // Chrome, Edge and Firefox print it straight from a hidden frame; Safari
+    // can't, so it opens the PDF in a new tab, where Print is one click away.
+    // With no PDF set for that side, the web page is printed instead.
+    const printPdf = (href: string) => {
+      const safari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+      if (safari) {
+        window.open(href, '_blank', 'noopener');
+        return;
+      }
+      document.querySelector('iframe.print-frame')?.remove();
+      const frame = document.createElement('iframe');
+      frame.className = 'print-frame';
+      frame.setAttribute('aria-hidden', 'true');
+      frame.tabIndex = -1;
+      frame.style.cssText = 'position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0';
+      frame.src = href;
+      frame.addEventListener('load', () => {
+        try {
+          frame.contentWindow!.focus();
+          frame.contentWindow!.print();
+        } catch {
+          window.open(href, '_blank', 'noopener');
+        }
+      });
+      document.body.append(frame);
+    };
+    document.querySelectorAll('[data-print]').forEach((b) =>
+      b.addEventListener(
+        'click',
+        () => {
+          const side = flip.dataset.side ?? 'front';
+          const pdf = document.querySelector<HTMLAnchorElement>(`a.for-side[data-for="${side}"]`)?.getAttribute('href');
+          if (pdf) printPdf(pdf);
+          else window.print();
+        },
+        { signal },
+      ),
+    );
     if (!flip.classList.contains('two-sided')) return;
 
     const faces = flip.querySelectorAll<HTMLElement>('.face');
