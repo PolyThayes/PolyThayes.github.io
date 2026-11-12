@@ -32,7 +32,7 @@ stats:
 
 \*Original production / world premiere
 
-**Press:** “Played with truly recognisable angst” — BroadwayBaby, four stars; also mentioned by the BBC.
+**Press** for *The Idiot's Guide to Breaking Your Own Heart* (Edinburgh Fringe, 2025): “Played with truly recognisable angst” — BroadwayBaby, four stars; the production was also covered by the BBC.
 
 ## Training
 
