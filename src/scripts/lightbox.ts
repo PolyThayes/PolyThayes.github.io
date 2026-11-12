@@ -49,6 +49,8 @@ function init() {
             if (url) {
               a.href = url;
               a.download = src?.dataset.filename ?? '';
+              const label = src?.dataset.label;
+              a.setAttribute('aria-label', label ? `Download ${label.toLowerCase()}` : 'Download photo');
             }
           };
           p.on('change', update);

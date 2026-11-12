@@ -19,7 +19,15 @@ const site = getSite();
 const dl = fileTitle(essay.title);
 ---
 
-<Base title={essay.title} description={essay.data.summary} bodyClass="reading">
+<Base
+  title={essay.title}
+  description={essay.data.summary}
+  type="article"
+  published={essay.data.date}
+  image={essay.data.image}
+  imageAlt={essay.data.image_alt}
+  bodyClass="reading"
+>
   <script is:inline slot="head" data-astro-rerun>
     try {
       var s = JSON.parse(localStorage.getItem('reader') || '{}');

@@ -1,9 +1,8 @@
 ---
-title: "LESLIE MAMON SILKO's NEW CEREMONY"
+title: "Leslie Marmon Silko's New Ceremony"
 date: 2025-02-15
-summary: "ELIZABETH WOOLSY PRIZE WINNING ESSAY"
+summary: "Winner of the Elizabeth Gilman Woolsey Prize"
 ---
-## LESLIE MAMON SILKO'S NEW CEREMONY
 
 "Fragile."
 

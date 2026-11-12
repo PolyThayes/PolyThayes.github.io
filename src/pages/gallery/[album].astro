@@ -23,7 +23,7 @@ const photos = album.photos.map((p) => ({ ...p, albumTitle: album.title }));
 const stock = album.mode === 'bw' ? 'HP5+ · Black & white' : 'Portra 400 · Colour';
 ---
 
-<Base title={album.title} description={album.description}>
+<Base title={album.title} description={album.description} image={album.cover.src} imageAlt={album.cover.caption ?? `Cover photo of ${album.title}`}>
   <section class="wrap head">
     <a href="/gallery/" class="back" data-reveal="fade">← Contact sheet</a>
     <p class="eyebrow" data-reveal="fade" style="--i:1">
@@ -43,6 +43,11 @@ const stock = album.mode === 'bw' ? 'HP5+ · Black & white' : 'Portra 400 · Col
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l11-7z" /></svg>
         View full-screen
       </button>
+      <button class="btn" type="button" data-copy-link>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" /></svg>
+        <span data-copy-label>Copy link</span>
+      </button>
+      <span class="copied" role="status" aria-live="polite"></span>
       {
         album.albumUrl && (
           <a class="btn" href={album.albumUrl} target="_blank" rel="noopener">
@@ -67,6 +72,48 @@ const stock = album.mode === 'bw' ? 'HP5+ · Black & white' : 'Portra 400 · Col
 
 <script>
   import '../../scripts/lightbox';
+
+  // "Copy link": copies this album's address so it can be pasted into a text.
+  async function copy(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // Older phones: copy from a hidden text box instead.
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.append(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      let ok = false;
+      try {
+        ok = document.execCommand('copy');
+      } catch {}
+      ta.remove();
+      return ok;
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const btn = document.querySelector<HTMLButtonElement>('[data-copy-link]');
+    if (!btn) return;
+    const label = btn.querySelector('[data-copy-label]')!;
+    const status = document.querySelector('.copied')!;
+    let t: number | undefined;
+    btn.addEventListener('click', async () => {
+      const url = location.origin + location.pathname;
+      const ok = await copy(url);
+      label.textContent = ok ? 'Link copied' : 'Copy failed';
+      status.textContent = ok ? 'Album link copied to the clipboard.' : `Couldn't copy. The link is ${url}`;
+      window.clearTimeout(t);
+      t = window.setTimeout(() => {
+        label.textContent = 'Copy link';
+        status.textContent = '';
+      }, 2200);
+    });
+  });
 </script>
 
 <style>
@@ -133,6 +180,14 @@ const stock = album.mode === 'bw' ? 'HP5+ · Black & white' : 'Portra 400 · Col
     flex-wrap: wrap;
     gap: 0.7rem;
     margin-top: 2rem;
+  }
+
+  .copied {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
 
   .pager {

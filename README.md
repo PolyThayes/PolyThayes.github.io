@@ -48,6 +48,30 @@ Change the words after each colon. Keep the quotation marks. To remove a
 contact link, delete both its `- label:` and `url:` lines. For an email
 link, use `mailto:you@example.com` as the url.
 
+### The picture shown when you share a link
+
+When someone sends a link to your site by text, iMessage, WhatsApp or
+Slack, a preview card appears with a photo. You choose that photo in
+`site.yaml`:
+
+```yaml
+share_image: "8N3A6128.jpg"
+share_image_alt: "Portrait of Nikhil Gupta"
+share_image_position: "top"
+```
+
+- `share_image` is any photo inside the `content` folder, written as its
+  path from there, e.g. `"8N3A6128.jpg"` or `"gallery/Taiwan Film/3Taiwan.jpg"`.
+- `share_image_alt` describes the photo for people using screen readers.
+- `share_image_position` decides which part survives when the photo is
+  cropped to a wide preview: `"top"`, `"center"`, `"bottom"`, or
+  `"attention"` (the site picks the busiest part).
+
+This photo is used for the home, About, Gallery and Résumé pages, and
+for essays. **Album pages use their own cover photo** automatically.
+Messaging apps remember previews for a while, so a change can take a day
+or so to show in a chat where the link was already shared.
+
 ## About page → `content/about.md`
 
 Everything below the second `---` is the page text. The `intro:` line at
@@ -79,7 +103,8 @@ At the top of each file:
 
 - `label:` is the word on the switch ("Professional", "Acting").
 - `subtitle:` is the line under the page title.
-- `pdf:` adds a **Download PDF** button for that side. Put the PDF in
+- `pdf:` adds a download button for that side, labelled with the
+  `label:` word, e.g. **Professional résumé (PDF)**. Put the PDF in
   `public/files/` and write its file name, e.g. `pdf: "acting-resume.pdf"`.
 - Acting side only: `headshot: "./headshot.jpg"` (photo in the `content`
   folder) and `stats:` (Height, Hair, Eyes… add or remove lines freely).
@@ -104,6 +129,14 @@ Your essay starts here. Leave a blank line between paragraphs.
 
 - `date` is written year-month-day. Essays are listed newest first.
 - Add `draft: true` to hide an essay until it's ready.
+- **Optional preview photo:** put a photo in `content/writing/` and add
+  `image: "./photo-name.jpg"` (and `image_alt: "what it shows"`). That
+  photo is used when the essay's link is shared. Without it, the
+  signature photo from `site.yaml` is used.
+- Don't paste the school header (name, teacher, course, date) into the
+  essay. The title and date come from the lines at the top.
+- The file name becomes the web address, so **don't rename an essay file
+  once its link has been shared**. Changing the `title:` line is fine.
 - `## A heading` makes a section heading, `*italic*` and `**bold**` work,
   `> text` makes a block quote, and `---` makes a ❦ section break.
 
@@ -177,9 +210,38 @@ Optional: a few sentences about the trip, shown on the album page.
 ```
 
 Every line is optional. `cover` is the photo shown on the contact sheet
-(it uses the first photo if you leave it out). `date` decides the order on
-the sheet (newest first). `location:` and per-photo `captions:` also work;
-see `sample-color-harbour/album.md` for an example.
+and in link previews (it uses the first photo if you leave it out; the
+`.jpg` on the end is optional). `date` decides the order on the sheet
+(newest first). `location:` also works.
+
+### Captions (optional)
+
+To give photos a caption, add a `captions:` list to `album.md`. Each line
+is the photo's file name (with or without `.jpg`), a colon, and the
+caption in quotation marks. Indent each line with two spaces:
+
+```yaml
+captions:
+  3Taiwan: "Pingxi line, just after the rain"
+  "11Fleet Week": "Blue Angels over the harbour"
+```
+
+(Put quotation marks around a file name that has a space in it.)
+
+Captions show under the photo in the full-screen viewer and are read
+aloud by screen readers. Photos without a caption are described as
+"Photo 7 of 23, Album title".
+
+### What visitors download
+
+Each photo's download button gives a JPG about 2000 pixels on the long
+side (roughly 1920–2000 px for your current albums), saved with a tidy
+name like `italy-bnw-07.jpg`: the album's web address plus the photo's
+number. Full-resolution originals stay on your NAS, linked with
+`album_url`.
+
+Each album page also has a **Copy link** button, which copies the
+album's address so it can be pasted into a message.
 
 ### Step 4: Upload it
 
@@ -243,12 +305,6 @@ per site).
   can't show more detail than that anyway.
 - **Keep the originals on your NAS** and link them with `album_url`.
 
-### The sample albums
-
-`sample-color-harbour`, `sample-color-market` and `sample-bw-streets`
-are generated placeholders, so you can see the layout. **To remove them,
-delete those three folders** in `content/gallery/`. Nothing else
-refers to them.
 
 ---
 

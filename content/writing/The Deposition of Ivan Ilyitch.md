@@ -1,11 +1,11 @@
 ---
-title: "THE DEPOSITION OF IVAN ILLYICH"
+title: "The Deposition of Ivan Illyich"
 date: 2026-05-10
 summary: "An essay from English: Existentialism in Literature"
 ---
 ## Pt. 1: The Death of Ivan Illyich
 
-You've got your passion, you've got your pride But don't you know that only fools are satisfi ed? Dream on, but don't imagine they'll all come true, ooh When will you realize Vienna waits for you? <sup>1</sup>
+You've got your passion, you've got your pride But don't you know that only fools are satisfied? Dream on, but don't imagine they'll all come true, ooh When will you realize Vienna waits for you? <sup>1</sup>
 
 “Be Authentic,” everyone likes to say; being authentic killed poor Ivan Illyich. For the entire course of his death—the novel— Ivan Illyich had not been able to quell his pain for-the-sake of himself. No matter how much he tried. Yet as he lay:
 
