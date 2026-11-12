@@ -2,6 +2,7 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getEssays } from '../../../lib/writing';
 import { getSite } from '../../../lib/site';
 import { buildEpub } from '../../../lib/epub';
+import { essayImages } from '../../../lib/essay-images';
 
 export const getStaticPaths = (async () => {
   const essays = await getEssays();
@@ -18,6 +19,7 @@ export const GET: APIRoute = ({ props, site }) => {
     summary: essay.data.summary,
     html: essay.rendered?.html ?? '',
     site: String(site ?? ''),
+    images: essayImages(essay.body),
   });
   return new Response(bytes, { headers: { 'Content-Type': 'application/epub+zip' } });
 };

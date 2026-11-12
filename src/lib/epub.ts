@@ -1,4 +1,6 @@
 import { zipSync, strToU8 } from 'fflate';
+import fs from 'node:fs';
+import type { EssayImage } from './essay-images';
 
 const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -8,8 +10,18 @@ const NAMED: Record<string, string> = {
   ldquo: '#8220', rdquo: '#8221', copy: '#169', eacute: '#233', middot: '#183',
 };
 
-/** Make Astro's rendered HTML acceptable as XHTML for e-readers. */
-function toXhtml(html: string) {
+const MIME: Record<string, string> = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif' };
+const ext = (f: string) => f.split('.').pop()!.toLowerCase();
+
+/** Make Astro's rendered HTML acceptable as XHTML for e-readers.
+ *  Images are swapped, in order, for copies bundled inside the EPUB. */
+function toXhtml(html: string, images: EssayImage[] = []) {
+  let n = 0;
+  html = html.replace(/<img\b[^>]*>/gi, () => {
+    const img = images[n];
+    n += 1;
+    return img ? `<figure class="img"><img src="images/img${n}.${ext(img.file)}" alt="${esc(img.alt)}" /></figure>` : '';
+  });
   return html
     .replace(/<(br|hr|img|input|meta|link|source|wbr)(\s[^>]*?)?\s*\/?>/gi, (_m, tag, attrs = '') => `<${tag}${attrs} />`)
     .replace(/&([a-z]+);/gi, (m, name) => {
@@ -17,7 +29,7 @@ function toXhtml(html: string) {
       if (['amp', 'lt', 'gt', 'quot', 'apos'].includes(lower)) return m;
       return NAMED[lower] ? `&${NAMED[lower]};` : '';
     })
-    .replace(/<img\b[^>]*>/gi, ''); // images aren't bundled; drop them
+    ;
 }
 
 export function buildEpub(opts: {
@@ -28,8 +40,10 @@ export function buildEpub(opts: {
   summary?: string;
   html: string;
   site: string;
+  images?: EssayImage[];
 }) {
-  const { id, title, author, date, summary, html, site } = opts;
+  const { id, title, author, date, summary, html, site, images = [] } = opts;
+  const bundled = images.filter((i) => MIME[ext(i.file)]);
   const uid = `${site.replace(/\/$/, '')}/writing/${id}/`;
   const modified = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
 
@@ -44,6 +58,8 @@ blockquote { margin: 1.4em 1.5em; font-style: italic; }
 hr { border: 0; text-align: center; margin: 2em 0; }
 hr:after { content: "\\2766"; }
 sup { font-size: 0.7em; }
+figure.img { margin: 1.5em 0; text-align: center; }
+figure.img img { max-width: 100%; height: auto; }
 `;
 
   const chapter = `<?xml version="1.0" encoding="utf-8"?>
@@ -55,7 +71,7 @@ sup { font-size: 0.7em; }
 <h1>${esc(title)}</h1>
 ${summary ? `<p class="sub">${esc(summary)}</p>` : ''}
 <p class="by">${esc(author)}${date ? ` · ${date.getUTCFullYear()}` : ''}</p>
-${toXhtml(html)}
+${toXhtml(html, bundled)}
 </section>
 </body>
 </html>`;
@@ -82,6 +98,7 @@ ${toXhtml(html)}
     <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav" />
     <item id="essay" href="essay.xhtml" media-type="application/xhtml+xml" />
     <item id="css" href="style.css" media-type="text/css" />
+    ${bundled.map((img, i) => `<item id="img${i + 1}" href="images/img${i + 1}.${ext(img.file)}" media-type="${MIME[ext(img.file)]}" />`).join('\n    ')}
   </manifest>
   <spine><itemref idref="essay" /></spine>
 </package>`;
@@ -100,6 +117,9 @@ ${toXhtml(html)}
       'OEBPS/nav.xhtml': strToU8(nav),
       'OEBPS/essay.xhtml': strToU8(chapter),
       'OEBPS/style.css': strToU8(css),
+      ...Object.fromEntries(
+        bundled.map((img, i) => [`OEBPS/images/img${i + 1}.${ext(img.file)}`, [new Uint8Array(fs.readFileSync(img.abs)), { level: 0 }]]),
+      ),
     },
     { level: 9 },
   );
