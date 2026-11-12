@@ -1,5 +1,4 @@
 ---
-# SAMPLE ALBUM — delete this whole folder when you add your own.
 title: "Photos from Chicago"
 date: 2025-11-09
 location: "Chicago"

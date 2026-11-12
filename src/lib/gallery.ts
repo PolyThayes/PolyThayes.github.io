@@ -130,7 +130,13 @@ async function loadAlbums(): Promise<Album[]> {
       caption: captions[it.file],
       index,
     }));
-    const cover = photos.find((p) => p.file === data?.cover) ?? photos[0];
+    // Match the cover with or without its extension ("04-glacier" or "04-glacier.jpg").
+    const want = data?.cover?.trim().toLowerCase();
+    const bare = (f: string) => f.toLowerCase().replace(/\.[^.]+$/, '');
+    const cover =
+      photos.find((p) => p.file.toLowerCase() === want) ??
+      photos.find((p) => want && bare(p.file) === bare(want)) ??
+      photos[0];
     const mode = data?.mode ?? (await detectMode(originalPath(cover)));
     albums.push({
       slug,

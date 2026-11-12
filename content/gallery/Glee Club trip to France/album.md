@@ -1,5 +1,4 @@
 ---
-# SAMPLE ALBUM — delete this whole folder when you add your own.
 title: "France and Barcelona"
 date: 2025-03-17
 location: "Avignon, L'Alba, Barcelona"
