@@ -1,7 +1,7 @@
 ---
 import { getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import SplitText from '../../components/SplitText.astro';
+import FramedTitle from '../../components/FramedTitle.astro';
 import ContactSheet from '../../components/ContactSheet.astro';
 import { getAlbums } from '../../lib/gallery';
 import { formatDate } from '../../lib/writing';
@@ -14,8 +14,7 @@ const total = albums.reduce((n, a) => n + a.photos.length, 0);
 
 <Base title="Gallery" description={intro?.data.lede}>
   <section class="wrap page-head">
-    <p class="eyebrow" data-reveal="fade">{albums.length} albums · {total} photographs</p>
-    <h1><SplitText text={intro?.data.title ?? 'Gallery'} /></h1>
+    <FramedTitle variant="baroque" title={intro?.data.title ?? 'Gallery'} plaque={`${albums.length} albums · ${total} photographs`} />
     {intro?.data.lede && <p class="lede" data-reveal="blur" style="--i:4">{intro.data.lede}</p>}
     {Content && <div class="intro prose" data-reveal style="--i:5"><Content /></div>}
   </section>
@@ -78,14 +77,14 @@ const total = albums.reduce((n, a) => n + a.photos.length, 0);
   }
 
   .row:hover {
-    background: color-mix(in srgb, var(--olive) 40%, transparent);
+    background: color-mix(in srgb, var(--panel) 40%, transparent);
     color: inherit;
   }
 
   .r-num {
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    color: var(--cognac);
+    color: var(--accent);
   }
 
   .r-title {

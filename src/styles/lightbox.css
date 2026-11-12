@@ -1,6 +1,6 @@
 .pswp {
   --pswp-bg: var(--film-base);
-  --pswp-placeholder-bg: var(--walnut);
+  --pswp-placeholder-bg: var(--surface);
   --pswp-icon-color: var(--cream);
   --pswp-icon-color-secondary: var(--film-base);
   --pswp-icon-stroke-color: var(--film-base);
@@ -11,7 +11,7 @@
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.16em;
-  color: var(--cognac);
+  color: var(--accent);
   opacity: 1;
 }
 
@@ -63,7 +63,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--cognac);
+  color: var(--accent);
 }
 
 .pswp__caption-text {

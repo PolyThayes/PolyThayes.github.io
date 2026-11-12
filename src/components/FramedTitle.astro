@@ -1,0 +1,259 @@
+---
+// A page title hung in a picture frame, with a small gilt nameplate.
+//   cassetta — Italian Renaissance flat gilded frame with punchwork
+//   baroque  — carved gilt frame with corner scrolls and a shell crest
+//   ebony    — Dutch 17th-century ebonised ripple frame with a gold slip
+//   oval     — Neoclassical gilt oval with a ribbon bow
+import SplitText from './SplitText.astro';
+
+interface Props {
+  title: string;
+  plaque?: string;
+  variant: 'cassetta' | 'baroque' | 'ebony' | 'oval';
+}
+const { title, plaque, variant } = Astro.props;
+const gid = `gild-${variant}`;
+---
+
+<div class:list={['framed', variant]} data-reveal="scale">
+  <svg class="defs" aria-hidden="true" width="0" height="0">
+    <defs>
+      <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#6f5420" />
+        <stop offset=".25" stop-color="#e4c77e" />
+        <stop offset=".5" stop-color="#9a7834" />
+        <stop offset=".75" stop-color="#f0dc9c" />
+        <stop offset="1" stop-color="#7c5e24" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  {
+    variant === 'oval' && (
+      <svg class="crest bow" viewBox="0 0 120 50" aria-hidden="true">
+        <path fill={`url(#${gid})`} d="M60 22 C 44 2, 18 4, 20 18 C 22 30, 46 30, 60 24 C 74 30, 98 30, 100 18 C 102 4, 76 2, 60 22 Z" />
+        <path fill="none" stroke="#3a2c10" stroke-opacity=".5" stroke-width="1.2" d="M60 22 C 48 10, 30 10, 30 18 M60 22 C 72 10, 90 10, 90 18" />
+        <path fill={`url(#${gid})`} d="M54 24 L 40 48 L 47 44 L 50 50 L 58 28 Z M66 24 L 80 48 L 73 44 L 70 50 L 62 28 Z" />
+        <circle cx="60" cy="23" r="6" fill={`url(#${gid})`} stroke="#3a2c10" stroke-opacity=".4" />
+      </svg>
+    )
+  }
+  {
+    variant === 'baroque' && (
+      <>
+        <svg class="crest shell" viewBox="0 0 80 40" aria-hidden="true">
+          <path fill={`url(#${gid})`} d="M40 38 C 8 38, 2 22, 14 12 C 22 4, 32 2, 40 2 C 48 2, 58 4, 66 12 C 78 22, 72 38, 40 38 Z" />
+          <path fill="none" stroke="#3a2c10" stroke-opacity=".45" stroke-width="1.3" d="M40 36 L40 6 M40 36 L26 9 M40 36 L54 9 M40 36 L15 17 M40 36 L65 17 M40 36 L10 29 M40 36 L70 29" />
+        </svg>
+        {['tl', 'tr', 'br', 'bl'].map((c) => (
+          <svg class={`corner ${c}`} viewBox="0 0 60 60" aria-hidden="true">
+            <path fill="none" stroke={`url(#${gid})`} stroke-width="5" stroke-linecap="round" d="M4 4 H36 C 27 7, 24 13, 26 19 C 28 25, 37 25, 39 18 C 41 12, 35 9, 32 13 M4 4 V36 C 7 27, 13 24, 19 26 C 25 28, 25 37, 18 39 C 12 41, 9 35, 13 32" />
+            <path fill={`url(#${gid})`} d="M4 4 L 26 9 Q 16 16 9 26 Z" />
+            <circle cx="13" cy="13" r="5" fill={`url(#${gid})`} stroke="#3a2c10" stroke-opacity=".35" />
+          </svg>
+        ))}
+      </>
+    )
+  }
+
+  <div class="moulding">
+    <div class="canvas">
+      <h1><SplitText text={title} /></h1>
+    </div>
+  </div>
+  {plaque && <p class="plaque">{plaque}</p>}
+</div>
+
+<style>
+  .framed {
+    --pad: clamp(12px, 2.2vw, 22px);
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    margin: 1.4rem 0 1.6rem;
+    filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.55));
+  }
+
+  .defs {
+    position: absolute;
+  }
+
+  .moulding {
+    position: relative;
+    padding: var(--pad);
+  }
+
+  /* The "painting": deep green varnish */
+  .canvas {
+    position: relative;
+    padding: clamp(1.1rem, 3vw, 2.2rem) clamp(1.6rem, 5vw, 3.8rem);
+    background:
+      radial-gradient(120% 90% at 40% 30%, color-mix(in srgb, var(--panel) 85%, #000) 0%, var(--bg) 85%);
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.6),
+      inset 0 0 50px rgba(0, 0, 0, 0.55);
+  }
+
+  .canvas h1 {
+    margin: 0;
+    font-size: clamp(2.6rem, 1.4rem + 5vw, 6rem);
+    font-weight: 300;
+    line-height: 1;
+    font-variation-settings: 'SOFT' 50, 'WONK' 1;
+    color: var(--cream);
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Gilt nameplate fixed to the bottom rail */
+  .plaque {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--pad) * -0.2);
+    transform: translate(-50%, 50%);
+    margin: 0;
+    padding: 0.35rem 0.9rem;
+    white-space: nowrap;
+    background: var(--gilding);
+    color: #2a1f0b;
+    font-family: var(--font-mono);
+    font-size: clamp(0.56rem, 0.5rem + 0.2vw, 0.66rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 240, 200, 0.4),
+      0 0 0 1px #3a2c10,
+      0 4px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── Cassetta: flat gilded band with punched dots, narrow mouldings ── */
+  .cassetta .moulding {
+    background:
+      radial-gradient(circle, rgba(70, 48, 12, 0.45) 1px, transparent 1.6px) 0 0 / 9px 9px,
+      var(--gilding);
+    box-shadow:
+      0 0 0 1px #2e220b,
+      0 0 0 4px #b9964f,
+      0 0 0 5px #2e220b;
+  }
+
+  .cassetta .canvas {
+    box-shadow:
+      0 0 0 3px #8a6b2e,
+      0 0 0 4px #2e220b,
+      inset 0 0 50px rgba(0, 0, 0, 0.55);
+  }
+
+  /* ── Baroque: richly gilded, beaded inner edge, carved corners ── */
+  .baroque {
+    --pad: clamp(16px, 2.8vw, 28px);
+  }
+
+  .baroque .moulding {
+    background: var(--gilding);
+    border-radius: 3px;
+    box-shadow:
+      inset 0 0 0 2px rgba(255, 236, 180, 0.35),
+      inset 0 0 18px rgba(60, 40, 10, 0.6),
+      0 0 0 1px #2e220b;
+  }
+
+  .baroque .canvas {
+    /* string of pearls (beading) around the sight edge */
+    outline: 5px dotted #e8d08e;
+    outline-offset: 3px;
+    box-shadow:
+      0 0 0 6px #7a5c24,
+      inset 0 0 50px rgba(0, 0, 0, 0.55);
+  }
+
+  .corner {
+    position: absolute;
+    z-index: 2;
+    width: clamp(36px, 5.5vw, 58px);
+    height: clamp(36px, 5.5vw, 58px);
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+  }
+
+  .corner.tl { left: -8px; top: -8px; }
+  .corner.tr { right: -8px; top: -8px; transform: scaleX(-1); }
+  .corner.br { right: -8px; bottom: -8px; transform: scale(-1); }
+  .corner.bl { left: -8px; bottom: -8px; transform: scaleY(-1); }
+
+  .crest {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+  }
+
+  .crest.shell {
+    top: -24px;
+    width: clamp(52px, 7vw, 76px);
+  }
+
+  /* ── Ebony: Dutch ripple moulding with a gold slip ── */
+  .ebony .moulding {
+    background:
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 4px),
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 4px),
+      linear-gradient(135deg, #1a1916, #050504 50%, #1a1916);
+    box-shadow:
+      0 0 0 1px #000,
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      inset 0 0 14px rgba(0, 0, 0, 0.9);
+  }
+
+  .ebony .canvas {
+    box-shadow:
+      0 0 0 4px #b8954d,
+      0 0 0 5px #3a2c10,
+      inset 0 0 50px rgba(0, 0, 0, 0.55);
+  }
+
+  /* ── Oval: gilt ellipse with a ribbon bow ── */
+  .oval {
+    --pad: clamp(12px, 2vw, 18px);
+    margin-top: 2.6rem;
+  }
+
+  .oval .moulding {
+    border-radius: 50%;
+    background: var(--gilding);
+    box-shadow:
+      0 0 0 1px #2e220b,
+      inset 0 0 0 3px rgba(255, 236, 180, 0.3),
+      inset 0 0 14px rgba(60, 40, 10, 0.6);
+  }
+
+  .oval .canvas {
+    border-radius: 50%;
+    padding: clamp(1.6rem, 4vw, 3rem) clamp(2.6rem, 8vw, 6rem);
+    box-shadow:
+      0 0 0 3px #7a5c24,
+      inset 0 0 50px rgba(0, 0, 0, 0.6);
+  }
+
+  .crest.bow {
+    top: -30px;
+    width: clamp(70px, 10vw, 110px);
+  }
+
+  .oval .plaque {
+    bottom: 0;
+  }
+
+  @media (max-width: 560px) {
+    .canvas {
+      padding: 1rem 1.3rem;
+    }
+
+    .oval .canvas {
+      padding: 1.4rem 2.2rem;
+    }
+
+    .canvas h1 {
+      font-size: clamp(2.2rem, 11vw, 3rem);
+    }
+  }
+</style>

@@ -128,30 +128,30 @@ const icon = {
   /* ─── Reading themes (applied to the whole page) ─────────────── */
   :global(html[data-reader='paper']),
   :global(html[data-reader='sepia']) {
-    --espresso: var(--paper-bg);
-    --walnut: var(--paper-bg-2);
-    --walnut-2: color-mix(in srgb, var(--paper-bg-2) 80%, var(--ink-muted));
-    --walnut-3: color-mix(in srgb, var(--paper-bg-2) 65%, var(--ink-muted));
+    --bg: var(--paper-bg);
+    --surface: var(--paper-bg-2);
+    --surface-2: color-mix(in srgb, var(--paper-bg-2) 80%, var(--ink-muted));
+    --surface-3: color-mix(in srgb, var(--paper-bg-2) 65%, var(--ink-muted));
     --cream: var(--ink-text);
     --cream-dim: var(--ink-dim);
     --muted: var(--ink-muted);
-    --cognac: var(--ink-accent);
+    --accent: var(--ink-accent);
     --gold: var(--ink-gold);
-    --cognac-deep: var(--ink-accent);
-    --olive: color-mix(in srgb, var(--paper-bg-2) 70%, #8a7d4a);
+    --accent-deep: var(--ink-accent);
+    --panel: color-mix(in srgb, var(--paper-bg-2) 70%, #8a7d4a);
     --line: color-mix(in srgb, var(--ink-accent) 30%, transparent);
     --line-soft: color-mix(in srgb, var(--ink-text) 12%, transparent);
     color-scheme: light;
   }
 
   :global(html[data-reader='sepia']) {
-    --espresso: var(--sepia-bg);
-    --walnut: var(--sepia-bg-2);
+    --bg: var(--sepia-bg);
+    --surface: var(--sepia-bg-2);
   }
 
   :global(html[data-reader='paper'] body),
   :global(html[data-reader='sepia'] body) {
-    background: var(--espresso);
+    background: var(--bg);
   }
 
   :global(html[data-reader] body::before) {
@@ -182,7 +182,7 @@ const icon = {
   .r-progress span {
     display: block;
     height: 100%;
-    background: linear-gradient(90deg, var(--leather), var(--cognac));
+    background: linear-gradient(90deg, var(--accent-dark), var(--accent));
     transform-origin: left;
     transform: scaleX(var(--p, 0));
   }
@@ -263,7 +263,7 @@ const icon = {
     font-size: 4.6em;
     line-height: 0.82;
     padding: 0.06em 0.12em 0 0;
-    color: var(--cognac);
+    color: var(--accent);
     font-variation-settings: 'SOFT' 100, 'WONK' 1;
     font-weight: 400;
   }
@@ -310,7 +310,7 @@ const icon = {
     margin: 4rem 0 3rem;
     text-align: center;
     font-size: 1.6rem;
-    color: var(--cognac);
+    color: var(--accent);
   }
 
   .takeaway {
@@ -339,13 +339,13 @@ const icon = {
     gap: 0.6rem;
     align-content: start;
     padding: 2rem;
-    background: var(--espresso);
+    background: var(--bg);
     text-decoration: none;
     transition: background 0.5s;
   }
 
   .pg:hover {
-    background: color-mix(in srgb, var(--olive) 45%, var(--espresso));
+    background: color-mix(in srgb, var(--panel) 45%, var(--bg));
     color: inherit;
   }
 
@@ -383,7 +383,7 @@ const icon = {
     padding: 0.35rem 0.4rem 0.35rem 0.4rem;
     border: 1px solid var(--line);
     border-radius: 999px;
-    background: color-mix(in srgb, var(--walnut) 86%, transparent);
+    background: color-mix(in srgb, var(--surface) 86%, transparent);
     backdrop-filter: blur(16px) saturate(1.4);
     -webkit-backdrop-filter: blur(16px) saturate(1.4);
     box-shadow: 0 18px 50px -12px rgba(0, 0, 0, 0.55);
@@ -410,8 +410,8 @@ const icon = {
   .dock-btn:hover,
   .dock-btn[aria-expanded='true'],
   .dock-btn[aria-pressed='true'] {
-    background: var(--cognac);
-    color: var(--espresso);
+    background: var(--accent);
+    color: var(--bg);
   }
 
   .dock-time {
@@ -432,7 +432,7 @@ const icon = {
     padding: 1.2rem;
     border: 1px solid var(--line);
     border-radius: 14px;
-    background: var(--walnut);
+    background: var(--surface);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     box-shadow: 0 24px 60px -16px rgba(0, 0, 0, 0.6);
@@ -479,7 +479,7 @@ const icon = {
   }
 
   .swatches button[aria-checked='true'] {
-    border-color: var(--cognac);
+    border-color: var(--accent);
   }
 
   .sw {
@@ -527,8 +527,8 @@ const icon = {
   }
 
   .dl:hover {
-    border-color: var(--cognac);
-    background: var(--walnut-2);
+    border-color: var(--accent);
+    background: var(--surface-2);
     color: var(--cream);
   }
 

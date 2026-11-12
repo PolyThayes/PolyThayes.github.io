@@ -45,7 +45,7 @@ const pageAnim = {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title={`${site.name} — Writing`} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#1b130d" />
+    <meta name="theme-color" content="#0b1712" />
     <meta property="og:title" content={fullTitle} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:type" content="website" />
@@ -79,8 +79,8 @@ const pageAnim = {
     top: -4rem;
     z-index: 200;
     padding: 0.6rem 1rem;
-    background: var(--cognac);
-    color: var(--espresso);
+    background: var(--accent);
+    color: var(--bg);
     font-family: var(--font-mono);
     font-size: 0.8rem;
     transition: top 0.3s;
@@ -95,7 +95,7 @@ const pageAnim = {
     inset: 0 0 auto 0;
     height: 2px;
     z-index: 150;
-    background: linear-gradient(90deg, var(--leather), var(--cognac), var(--gold));
+    background: linear-gradient(90deg, var(--accent-dark), var(--accent), var(--gold));
     transform: scaleX(0);
     transform-origin: left;
     opacity: 0;

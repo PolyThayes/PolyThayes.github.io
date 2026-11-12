@@ -2,7 +2,7 @@
 import { getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import EssayRow from '../../components/EssayRow.astro';
-import SplitText from '../../components/SplitText.astro';
+import FramedTitle from '../../components/FramedTitle.astro';
 import { getEssays } from '../../lib/writing';
 
 const essays = await getEssays();
@@ -13,8 +13,7 @@ const totalWords = essays.reduce((n, e) => n + e.words, 0);
 
 <Base title="Writing" description={intro?.data.lede}>
   <section class="wrap page-head">
-    <p class="eyebrow" data-reveal="fade">{essays.length} pieces · {totalWords.toLocaleString('en-US')} words</p>
-    <h1><SplitText text={intro?.data.title ?? 'Writing'} /></h1>
+    <FramedTitle variant="cassetta" title={intro?.data.title ?? 'Writing'} plaque={`${essays.length} pieces · ${totalWords.toLocaleString('en-US')} words`} />
     {intro?.data.lede && <p class="lede" data-reveal="blur" style="--i:4">{intro.data.lede}</p>}
     {Content && <div class="intro prose" data-reveal style="--i:5"><Content /></div>}
   </section>

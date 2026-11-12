@@ -107,7 +107,7 @@ const [first, ...rest] = site.name.split(' ');
     height: 38vw;
     left: 70%;
     top: 40%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--cognac) 10%, transparent), transparent 65%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 10%, transparent), transparent 65%);
   }
 
   .aurora span:nth-child(3) {
@@ -115,7 +115,7 @@ const [first, ...rest] = site.name.split(' ');
     height: 34vw;
     left: -8%;
     top: 55%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--olive) 45%, transparent), transparent 65%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--panel) 45%, transparent), transparent 65%);
   }
 
   .hero-inner {
@@ -138,7 +138,7 @@ const [first, ...rest] = site.name.split(' ');
 
   .l2 {
     font-style: italic;
-    color: var(--cognac);
+    color: var(--accent);
     padding-left: clamp(1.5rem, 9vw, 9rem);
     font-variation-settings: 'SOFT' 100, 'WONK' 1;
   }
@@ -172,7 +172,7 @@ const [first, ...rest] = site.name.split(' ');
   .scroll-cue span {
     position: absolute;
     inset: 0;
-    background: var(--cognac);
+    background: var(--accent);
     animation: cue 2.4s var(--ease-in-out) infinite;
   }
 
@@ -218,7 +218,7 @@ const [first, ...rest] = site.name.split(' ');
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--gutter);
     scrollbar-width: thin;
-    scrollbar-color: var(--cognac-deep) transparent;
+    scrollbar-color: var(--accent-deep) transparent;
   }
 
   .frame {
@@ -248,7 +248,7 @@ const [first, ...rest] = site.name.split(' ');
     position: absolute;
     inset: auto 0 0 0;
     padding: 2.5rem 1rem 0.9rem;
-    background: linear-gradient(transparent, color-mix(in srgb, var(--espresso) 85%, transparent));
+    background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 85%, transparent));
     font-family: var(--font-mono);
     font-size: 0.7rem;
     letter-spacing: 0.16em;

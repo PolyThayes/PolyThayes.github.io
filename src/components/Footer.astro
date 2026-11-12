@@ -17,7 +17,6 @@ const year = new Date().getFullYear();
       </nav>
       <div class="links" data-reveal style="--i:2">
         {site.links?.map((l) => <a href={l.url} rel={l.url.startsWith('http') ? 'me noopener' : undefined}>{l.label}</a>)}
-        <a href="/rss.xml">RSS</a>
       </div>
     </div>
     <div class="base">
@@ -71,7 +70,7 @@ const year = new Date().getFullYear();
 
   .links a:hover,
   .top:hover {
-    color: var(--cognac);
+    color: var(--accent);
   }
 
   .base {
