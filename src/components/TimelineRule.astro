@@ -1,0 +1,86 @@
+---
+// A hairline that walks through art history, left to right:
+// gilt moulding → Impressionist dabs → a Mondrian grid → Pollock drips → pixels.
+// Drawn once at build time; no scripts. Designed to read at 3–8px tall.
+interface Props {
+  class?: string;
+  label?: string;
+}
+const { class: cls, label = 'A thin band running from gilded moulding through brushstrokes, a primary-colour grid and paint drips to pixels' } = Astro.props;
+
+function rng(seed: number) {
+  return () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const r = rng(11);
+const W = 1200, H = 8, seg = W / 5;
+const f = (n: number) => n.toFixed(1);
+
+const beads = Array.from({ length: Math.floor(seg / 6) }, (_, i) => 3 + i * 6);
+const dabs = Array.from({ length: 90 }, () => ({
+  x: seg + r() * seg, y: 1 + r() * (H - 2), a: -40 + r() * 30, l: 3 + r() * 5,
+  c: ['#c9b37a', '#8fb39a', '#d9a6a0', '#a3b6d6', '#e8d9a8', '#b49ac8', '#6f9a7c'][(r() * 7) | 0],
+}));
+const blocks: { x: number; w: number; y: number; h: number; c: string }[] = [];
+for (let x = seg * 2; x < seg * 3 - 2; ) {
+  const w = Math.min(seg * 3 - x, 9 + r() * 26);
+  const pal = ['#f3eee2', '#f3eee2', '#f3eee2', '#c82e26', '#1c4696', '#f0c42e'];
+  if (r() < 0.4) {
+    const hh = 2 + r() * 4;
+    blocks.push({ x, w, y: 0, h: hh, c: pal[(r() * 6) | 0] }, { x, w, y: hh, h: H - hh, c: pal[(r() * 6) | 0] });
+  } else blocks.push({ x, w, y: 0, h: H, c: pal[(r() * 6) | 0] });
+  x += w;
+}
+const drips = Array.from({ length: 30 }, () => {
+  let px = seg * 3 + r() * seg, py = r() * H;
+  let d = `M${f(px)} ${f(py)}`;
+  for (let i = 0; i < 4; i++) {
+    const nx = px + (r() - 0.5) * 50, ny = Math.max(0.5, Math.min(H - 0.5, py + (r() - 0.5) * 9));
+    d += ` Q${f(px + (r() - 0.5) * 30)} ${f(r() * H)} ${f(nx)} ${f(ny)}`;
+    px = nx; py = ny;
+  }
+  return { d, w: 0.3 + r() * 0.9, c: ['#141414', '#141414', '#f6f1e6', '#c7a35a', '#c82e26', '#1c4696'][(r() * 6) | 0] };
+});
+const dots = Array.from({ length: 50 }, () => ({
+  x: seg * 3 + r() * seg, y: r() * H, rad: 0.2 + r() ** 2 * 1.1,
+  c: ['#141414', '#f6f1e6', '#c7a35a', '#c82e26'][(r() * 4) | 0],
+}));
+const P = 2; // pixel size
+const pixels: { x: number; y: number; c: string }[] = [];
+for (let cx = 0; cx < seg / P; cx++) {
+  for (let cy = 0; cy < H / P; cy++) {
+    if (r() < 0.45 + (cx / (seg / P)) * 0.5)
+      pixels.push({ x: seg * 4 + cx * P, y: cy * P, c: ['#18e6c8', '#ff3fb4', '#7bff4a', '#3b6bff', '#efe8d4', '#0b1712'][(r() * 6) | 0] });
+  }
+}
+---
+
+<svg class:list={['timeline-rule', cls]} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" {...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' })}>
+  <defs>
+    <linearGradient id="tr-gilt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f0dc9c" /><stop offset=".5" stop-color="#9a7834" /><stop offset="1" stop-color="#e4c77e" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width={seg} height={H} fill="url(#tr-gilt)" />
+  {beads.map((x) => <rect x={x - 1.2} y={H / 2 - 1.2} width="2.4" height="2.4" rx="1.2" fill="#f6e7b4" />)}
+  <rect x={seg} y="0" width={seg} height={H} fill="#d9d2b8" />
+  {dabs.map((d) => <rect x={f(d.x)} y={f(d.y)} width={f(d.l)} height="1.4" rx=".7" fill={d.c} transform={`rotate(${f(d.a)} ${f(d.x)} ${f(d.y)})`} />)}
+  {blocks.map((b) => <rect x={f(b.x)} y={f(b.y)} width={f(b.w)} height={f(b.h)} fill={b.c} stroke="#141414" stroke-width=".8" />)}
+  <rect x={seg * 3} y="0" width={seg} height={H} fill="#ece3cf" />
+  {drips.map((d) => <path d={d.d} fill="none" stroke={d.c} stroke-width={f(d.w)} stroke-linecap="round" />)}
+  {dots.map((d) => <circle cx={f(d.x)} cy={f(d.y)} r={f(d.rad)} fill={d.c} />)}
+  <rect x={seg * 4} y="0" width={seg} height={H} fill="#10241b" />
+  {pixels.map((p) => <rect x={p.x} y={p.y} width={P} height={P} fill={p.c} />)}
+</svg>
+
+<style>
+  .timeline-rule {
+    display: block;
+    width: 100%;
+    height: 4px;
+  }
+</style>

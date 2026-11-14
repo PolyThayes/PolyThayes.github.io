@@ -2,6 +2,8 @@
 title: "West of Eden, in King's Night Shift"
 date: 2025-10-08
 summary: "An essay from English: Terror in Literature"
+# Optional: a short line from this piece, framed on the home page wall.
+wall_quote: "This is the Luciferian Shift — and terror sweeps across the land."
 ---
 
 As Lucifer plunged from the kingdom of heaven, his angel wings ripped from his body, he laughed, screaming equally with delight and malice, transforming through the air into evil incarnate. Religion has always been humanity’s tool to curb fear; to explain that which is unexplainable and therefore scary, to give reason to the cruelty of a so-called ‘good’ world. To explain such things, religious texts rely on assigning their explanatory shortfalls to the presence of ‘evil.’ As such, religious stories depict battles between good and evil, between the good and bad brother, between one's innermost desire and self rationale, between power and loyalty; always framing the believer as morally superior and the winner. Satan--the Christian representation-- is religion's evil catch-all; the killers, tempters, and manipulators are all agents of this devil. As a literary tool, Satan exists to scare followers into living a life free of sin or else suffer eternal damnation in the pits of hell. What is strikingly terrifying about him is neither his evil nor his domain, instead that he was once good; Lucifer, “Lucem ferre,” the light bringer, God's right-hand man, and trusted angel. What is truly terrifying about him, what killed the women in Salem, was the fear that innocent girls could turn, just like him; If God’s angelic creation can, so can you; This is the Luciferian Shift-- and terror sweeps across the land.

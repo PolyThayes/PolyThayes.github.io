@@ -72,6 +72,20 @@ for essays. **Album pages use their own cover photo** automatically.
 Messaging apps remember previews for a while, so a change can take a day
 or so to show in a chat where the link was already shared.
 
+### The home page wall
+
+Beside your name, the home page hangs a small salon wall. It fills itself:
+
+- **Two photographs:** the covers of your favourite albums
+  (`favorite: true` in `album.md`). With no favourites, the newest albums.
+- **Two framed lines of writing:** any essay with a `wall_quote:` line at
+  the top, e.g. `wall_quote: "This is the Luciferian Shift — and terror
+  sweeps across the land."` Keep it to one or two sentences. To change
+  which essays hang, move the `wall_quote:` line to another essay.
+- **The speech:** your newest video piece in Writing.
+
+The line above your name is `eyebrow:` in `site.yaml`.
+
 ## About page → `content/about.md`
 
 Everything below the second `---` is the page text. The `intro:` line at
@@ -133,6 +147,13 @@ Your essay starts here. Leave a blank line between paragraphs.
   `image: "./photo-name.jpg"` (and `image_alt: "what it shows"`). That
   photo is used when the essay's link is shared. Without it, the
   signature photo from `site.yaml` is used.
+- **A poem:** add `kind: poem` at the top. Write it as in your notes: each
+  line on its own line, with a blank line between stanzas. Every line break
+  is kept, and every line starts flush left. The list
+  shows "Poem" instead of a reading time. See `falling.md`.
+- **Keeping a date private:** add `hide_date: true`. The `date:` still
+  decides the order in the list, but it's never shown, not on the page,
+  the list, the feed or the downloads.
 - **A video piece** (a speech, a performance): add `video:` with the
   YouTube link and, if you like, `video_length: "9 min"`. A player appears
   at the top of the page, the list shows "Video" instead of a reading time,

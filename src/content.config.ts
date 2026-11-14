@@ -20,6 +20,12 @@ const writing = defineCollection({
       // A video piece (e.g. a speech): its YouTube link, and its length.
       video: z.string().optional(),
       video_length: z.string().optional(),
+      // A short line from the piece, framed on the home page's wall.
+      wall_quote: z.string().optional(),
+      // "poem" keeps every line break and labels the piece as a poem.
+      kind: z.enum(['essay', 'poem']).optional().default('essay'),
+      // hide_date: true — the date still sets the order, but is never shown.
+      hide_date: z.boolean().optional().default(false),
     }),
 });
 

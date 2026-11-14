@@ -3,3 +3,7 @@ dist/
 .astro/
 .DS_Store
 .claude/
+
+# Finder/iCloud duplicate copies of the site's code ("Header 2.astro") — never commit these.
+# (Only the src folder: photos you name "Trip 2.jpg" are fine.)
+src/**/* [0-9].*

@@ -15,7 +15,7 @@ export const GET: APIRoute = ({ props, site }) => {
     id: essay.id,
     title: essay.title,
     author: getSite().name,
-    date: essay.data.date,
+    date: essay.shownDate,
     summary: essay.data.summary,
     html: essay.rendered?.html ?? '',
     site: String(site ?? ''),

@@ -3,12 +3,14 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import SplitText from '../components/SplitText.astro';
 import EssayRow from '../components/EssayRow.astro';
+import SalonWall from '../components/SalonWall.astro';
 import { getSite } from '../lib/site';
 import { getEssays } from '../lib/writing';
 import { getAlbums } from '../lib/gallery';
 
 const site = getSite();
-const essays = (await getEssays()).slice(0, 3);
+const allEssays = await getEssays();
+const essays = allEssays.slice(0, 3);
 const albums = await getAlbums();
 // A mix from every album: each album's cover, plus one more photo from
 // partway through it, shuffled into a fixed order so neighbours vary.
@@ -32,12 +34,19 @@ while (pool.length) {
 }
 
 const [first, ...rest] = site.name.split(' ');
+
+// The salon wall: favourite albums first, then the newest; essays that have
+// a wall_quote; and the newest video piece (the senior speech).
+const wallPhotos = [...albums.filter((a) => a.favorite), ...albums.filter((a) => !a.favorite)].slice(0, 2);
+const wallQuotes = allEssays.filter((e) => e.data.wall_quote).slice(0, 2);
+const wallVideo = allEssays.find((e) => e.videoId);
 ---
 
 <Base>
   <section class="hero">
     <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="wrap hero-inner">
+      <div class="hero-text">
       <p class="eyebrow" data-reveal="fade">{site.eyebrow}</p>
       <h1>
         <span class="l1"><SplitText text={first} /></span>
@@ -45,9 +54,11 @@ const [first, ...rest] = site.name.split(' ');
       </h1>
       {site.headline && <p class="headline" data-reveal="blur" style="--i:6">{site.headline}</p>}
       <div class="hero-cta" data-reveal style="--i:8">
-        <a class="btn btn--solid" href="/writing/">Read the writing</a>
-        <a class="btn" href="/gallery/">See the photographs</a>
+        <a class="btn btn--solid" href="/gallery/">Enter the gallery</a>
+        <a class="btn" href="/writing/">Read the writing</a>
       </div>
+      </div>
+      <SalonWall photos={wallPhotos} quotes={wallQuotes} video={wallVideo} />
 
     </div>
     <a href="#latest" class="scroll-cue" aria-label="Scroll down"><span></span></a>
@@ -137,14 +148,27 @@ const [first, ...rest] = site.name.split(' ');
     background: radial-gradient(circle, color-mix(in srgb, var(--panel) 45%, transparent), transparent 65%);
   }
 
+  /* name on the left, the salon wall on the right */
   .hero-inner {
     position: relative;
-    padding-block: 4rem 7rem;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+    padding-block: 3rem 6rem;
+  }
+
+  @media (max-width: 860px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      padding-block: 3rem 5rem;
+    }
   }
 
   h1 {
     margin-top: 1.4rem;
-    font-size: clamp(3.6rem, 1rem + 12vw, 11.5rem);
+    font-size: clamp(3.4rem, 1rem + 6.4vw, 8rem);
     font-weight: 300;
     line-height: 0.88;
     letter-spacing: -0.035em;
@@ -158,14 +182,14 @@ const [first, ...rest] = site.name.split(' ');
   .l2 {
     font-style: italic;
     color: var(--accent);
-    padding-left: clamp(1.5rem, 9vw, 9rem);
+    padding-left: clamp(1.5rem, 5vw, 5rem);
     font-variation-settings: 'SOFT' 100, 'WONK' 1;
   }
 
   .headline {
-    max-width: 34ch;
-    margin: 2.4rem 0 0;
-    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+    max-width: 30ch;
+    margin: 2rem 0 0;
+    font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem);
     font-style: italic;
     color: var(--cream-dim);
     line-height: 1.45;

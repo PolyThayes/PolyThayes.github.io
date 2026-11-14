@@ -6,6 +6,9 @@ export type Essay = CollectionEntry<'writing'> & {
   minutes: number;
   /** YouTube video id, for video pieces. */
   videoId?: string;
+  /** The date to show in public, or undefined when it's kept private. */
+  shownDate?: Date;
+  isPoem: boolean;
 };
 
 /** The video id from any YouTube link (youtu.be/…, watch?v=…, embed/…). */
@@ -43,6 +46,8 @@ export async function getEssays(): Promise<Essay[]> {
         words,
         minutes: Math.max(1, Math.round(words / 230)),
         videoId: youtubeId(e.data.video),
+        shownDate: e.data.hide_date ? undefined : e.data.date,
+        isPoem: e.data.kind === 'poem',
       };
     })
     .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
