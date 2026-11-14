@@ -17,6 +17,9 @@ const writing = defineCollection({
       // Optional link-preview photo for this essay (a photo in content/writing/).
       image: image().optional(),
       image_alt: z.string().optional(),
+      // A video piece (e.g. a speech): its YouTube link, and its length.
+      video: z.string().optional(),
+      video_length: z.string().optional(),
     }),
 });
 

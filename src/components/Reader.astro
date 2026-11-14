@@ -17,8 +17,10 @@ interface Props {
   downloads: { epub: { href: string; name: string }; md: { href: string; name: string } };
   newer?: Link;
   older?: Link;
+  /** For a video piece: shown as a player at the top; downloads are hidden. */
+  video?: { id: string; title: string; length?: string };
 }
-const { id, title, author, summary, date, isoDate, minutes, words, downloads, newer, older } = Astro.props;
+const { id, title, author, summary, date, isoDate, minutes, words, downloads, newer, older, video } = Astro.props;
 
 const icon = {
   type: 'M4 19 9.5 5h1L16 19M6.2 14h7.6M15.5 19l3-8 3 8M16.4 16.6h4.2',
@@ -33,15 +35,33 @@ const icon = {
   <header class="r-head">
     <a href="/writing/" class="back" data-reveal="fade">← All writing</a>
     <p class="eyebrow" data-reveal="fade" style="--i:1">
-      Essay{date && <> · <time datetime={isoDate}>{date}</time></>}
+      {video ? 'Video' : 'Essay'}{date && <> · <time datetime={isoDate}>{date}</time></>}
     </p>
     <h1 transition:name={`essay-title-${id}`}>{title}</h1>
     {summary && <p class="summary" data-reveal="blur" style="--i:3">{summary}</p>}
     <p class="byline" data-reveal="fade" style="--i:4">
-      <span>By {author}</span><span>{minutes} min read</span><span>{words.toLocaleString('en-US')} words</span>
+      <span>By {author}</span>
+      {video ? <span>{video.length ? `${video.length} video` : 'Video'}</span> : <><span>{minutes} min read</span><span>{words.toLocaleString('en-US')} words</span></>}
     </p>
     <hr class="rule" data-reveal style="--i:5" />
   </header>
+
+  {
+    video && (
+      <figure class="r-video" data-reveal="scale" style="--i:5">
+        <a class="yt" href={`https://www.youtube.com/watch?v=${video.id}`} data-yt={video.id} data-yt-title={video.title}>
+          <img src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`} alt="" width="480" height="360" />
+          <span class="yt-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+          </span>
+          <span class="sr-only">Play “{video.title}”{video.length && `, ${video.length}`}</span>
+        </a>
+        <figcaption>
+          {video.title}{video.length && ` · ${video.length}`} · <a href={`https://www.youtube.com/watch?v=${video.id}`}>Watch on YouTube</a>
+        </figcaption>
+      </figure>
+    )
+  }
 
   <div class="r-body prose" id="essay-body">
     <slot />
@@ -49,7 +69,7 @@ const icon = {
 
   <footer class="r-end">
     <p class="fin" aria-hidden="true">❦</p>
-    <div class="takeaway" data-reveal>
+    <div class="takeaway" data-reveal hidden={!!video}>
       <p class="eyebrow">Take it with you</p>
       <div class="dl-row">
         <button class="btn" type="button" data-print>Save as PDF</button>
@@ -88,11 +108,11 @@ const icon = {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d={icon.focus} /></svg>
       <span class="sr-only">Focus mode</span>
     </button>
-    <button type="button" class="dock-btn" data-panel="save" aria-expanded="false" aria-controls="panel-save" title="Download">
+    <button type="button" class="dock-btn" data-panel="save" aria-expanded="false" aria-controls="panel-save" title="Download" hidden={!!video}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d={icon.save} /></svg>
       <span class="sr-only">Download</span>
     </button>
-    <span class="dock-time" aria-live="off"><span data-left>{minutes}</span> min left</span>
+    <span class="dock-time" aria-live="off" hidden={!!video}><span data-left>{minutes}</span> min left</span>
   </div>
 
   <div class="panel" id="panel-type" hidden>
@@ -625,9 +645,103 @@ const icon = {
       break-after: avoid;
     }
   }
+
+  .dock-btn[hidden],
+  .dock-time[hidden],
+  .takeaway[hidden] {
+    display: none;
+  }
+
+  /* Video pieces: a still with a play button; the YouTube player loads
+     only when it's pressed (no YouTube cookies until then). */
+  .r-video {
+    width: min(100%, 52rem);
+    margin: 0 auto 2.6rem;
+  }
+
+  .yt,
+  .r-video :global(iframe) {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    background: #000;
+    box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.85);
+  }
+
+  .yt img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.88;
+    transition: opacity 0.4s, transform 1.2s var(--ease-out);
+  }
+
+  .yt-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4.6rem;
+    height: 4.6rem;
+    display: grid;
+    place-items: center;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--gilding, var(--accent));
+    color: #2a1f0b;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .yt-play svg {
+    width: 1.9rem;
+    height: 1.9rem;
+    margin-left: 0.2rem;
+  }
+
+  .yt:hover img,
+  .yt:focus-visible img {
+    opacity: 1;
+  }
+
+  .yt:hover .yt-play,
+  .yt:focus-visible .yt-play {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  .r-video figcaption {
+    margin-top: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media print {
+    .yt-play {
+      display: none;
+    }
+  }
 </style>
 
 <script>
+  // Swap the still for the real player when it's pressed.
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-yt]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube-nocookie.com/embed/${a.dataset.yt}?autoplay=1&rel=0&modestbranding=1`;
+    f.title = a.dataset.ytTitle ?? 'Video';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    a.replaceWith(f);
+    f.focus();
+  });
+
   const SIZES = [0.85, 0.92, 1, 1.08, 1.16, 1.26, 1.38];
   let ctrl: AbortController | undefined;
 

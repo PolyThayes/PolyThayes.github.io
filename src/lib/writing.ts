@@ -4,7 +4,15 @@ export type Essay = CollectionEntry<'writing'> & {
   title: string;
   words: number;
   minutes: number;
+  /** YouTube video id, for video pieces. */
+  videoId?: string;
 };
+
+/** The video id from any YouTube link (youtu.be/…, watch?v=…, embed/…). */
+export function youtubeId(url = '') {
+  const m = url.match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/)([\w-]{11})/);
+  return m?.[1] ?? (/^[\w-]{11}$/.test(url.trim()) ? url.trim() : undefined);
+}
 
 /** Curly quotes and apostrophes for titles typed with straight ones. */
 export function smartQuotes(s = '') {
@@ -34,6 +42,7 @@ export async function getEssays(): Promise<Essay[]> {
         data: { ...e.data, summary: e.data.summary && smartQuotes(e.data.summary) },
         words,
         minutes: Math.max(1, Math.round(words / 230)),
+        videoId: youtubeId(e.data.video),
       };
     })
     .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
