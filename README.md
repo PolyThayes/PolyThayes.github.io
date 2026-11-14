@@ -133,6 +133,11 @@ Your essay starts here. Leave a blank line between paragraphs.
   `image: "./photo-name.jpg"` (and `image_alt: "what it shows"`). That
   photo is used when the essay's link is shared. Without it, the
   signature photo from `site.yaml` is used.
+- **A video piece** (a speech, a performance): add `video:` with the
+  YouTube link and, if you like, `video_length: "9 min"`. A player appears
+  at the top of the page, the list shows "Video" instead of a reading time,
+  and the text downloads are hidden. Anything you write below the top
+  lines appears under the video. See `senior-speech.md`.
 - Don't paste the school header (name, teacher, course, date) into the
   essay. The title and date come from the lines at the top.
 - The file name becomes the web address, so **don't rename an essay file
