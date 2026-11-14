@@ -10,24 +10,10 @@ portrait: "./8N3A6128.jpg"
 portrait_position: "top"
 ---
 
-<!--
-  SAMPLE CONTENT — replace everything below with your own bio.
-  Keep the heading structure if you'd like, or remove it entirely.
--->
+Hi, I'm Nikhil, from Baltimore, now at Williams College in the Berkshires, where I'm considering a double major in Art History and Economics. I love taking photographs. I shoot film on my grandfather's Canon A-1, a camera full of life and imperfections. I also shoot digital on my compact Canon EOS M50.
 
-I'm Nikhil — I take photos, I write sometimes, and this is the corner of the
-internet where both live.
+Away from the camera, I'm a tenor and an actor. At the 2025 Edinburgh Festival Fringe, I played the lead in *The Idiot's Guide to Breaking Your Own Heart*, an original production that earned a four-star BroadwayBaby review and BBC coverage. At Gilman School, I sang with the Glee Club and the Traveling Men, an a cappella group.
 
-Most of my photography happens on trips. I'm usually the one who ends up
-holding the camera at the back of the group, which means I've got a running
-archive of everyone else's vacations. Some of those albums are here, in
-the [Gallery](/gallery/).
+I also write, mostly analytical essays, and won Gilman's Woolsey Prize for best analytical essay.
 
-When I write, it's usually because something didn't leave me alone until I
-put it down. You can find a few pieces in [Writing](/writing/).
-
-The more conventional version of me — the one with a job history — is over
-on the [Résumé](/resume/) page.
-
-If you want to reach me, [swap this line for your actual contact info —
-email, a contact form, whatever you're comfortable sharing publicly].
+See the work in the [Gallery](/gallery/) and [Writing](/writing/), and the details on my [Résumé](/resume/). Reach me at [nikhilsgupta@icloud.com](mailto:nikhilsgupta@icloud.com).

@@ -15,7 +15,7 @@ const { essay, n, i = 0 } = Astro.props;
     <span class="body">
       <span class="meta">
         {essay.data.date && <time datetime={essay.data.date.toISOString()}>{formatDate(essay.data.date)}</time>}
-        <span>{essay.minutes} min read</span>
+        <span>{essay.videoId ? `Video${essay.data.video_length ? ` · ${essay.data.video_length}` : ''}` : `${essay.minutes} min read`}</span>
       </span>
       <span class="title" transition:name={`essay-title-${essay.id}`}>{essay.title}</span>
       {essay.data.summary && <span class="summary">{essay.data.summary}</span>}

@@ -43,6 +43,7 @@ const dl = fileTitle(essay.title);
     date={formatDate(essay.data.date)}
     isoDate={essay.data.date?.toISOString()}
     minutes={essay.minutes}
+    video={essay.videoId ? { id: essay.videoId, title: essay.title, length: essay.data.video_length } : undefined}
     words={essay.words}
     id={essay.id}
     downloads={{
