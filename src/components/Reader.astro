@@ -650,8 +650,7 @@ const icon = {
     }
   }
 
-  /* Poems: verse, not prose — lines left-aligned, stanzas spaced, long
-     lines that wrap on a phone hang indented */
+  /* Poems: verse, not prose — lines flush left, stanzas spaced */
   .is-poem .r-body :global(p) {
     margin: 0 0 1.6em;
     text-align: left;
@@ -660,14 +659,12 @@ const icon = {
   }
 
   .is-poem .r-body {
-    max-width: 34rem;
+    max-width: min(100%, 46rem);
     margin-inline: auto;
   }
 
   .is-poem .r-body :global(.line) {
     display: block;
-    padding-left: 1.6em;
-    text-indent: -1.6em;
   }
 
   .dock-btn[hidden],
