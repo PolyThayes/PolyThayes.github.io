@@ -72,6 +72,20 @@ for essays. **Album pages use their own cover photo** automatically.
 Messaging apps remember previews for a while, so a change can take a day
 or so to show in a chat where the link was already shared.
 
+### The home page wall
+
+Beside your name, the home page hangs a small salon wall. It fills itself:
+
+- **Two photographs:** the covers of your favourite albums
+  (`favorite: true` in `album.md`). With no favourites, the newest albums.
+- **Two framed lines of writing:** any essay with a `wall_quote:` line at
+  the top, e.g. `wall_quote: "This is the Luciferian Shift — and terror
+  sweeps across the land."` Keep it to one or two sentences. To change
+  which essays hang, move the `wall_quote:` line to another essay.
+- **The speech:** your newest video piece in Writing.
+
+The line above your name is `eyebrow:` in `site.yaml`.
+
 ## About page → `content/about.md`
 
 Everything below the second `---` is the page text. The `intro:` line at

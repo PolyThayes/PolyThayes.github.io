@@ -107,7 +107,7 @@ const year = (d?: Date) => (d ? d.getUTCFullYear() : '');
   .wall {
     --sway: 0deg;
     position: relative;
-    height: clamp(32rem, 48vw, 42rem);
+    height: clamp(34rem, 51vw, 44rem);
   }
 
   .rail {
@@ -208,8 +208,8 @@ const year = (d?: Date) => (d ? d.getUTCFullYear() : '');
   .w1 { left: 1%;  top: 54px; width: 36%; --wire: 54px; --ar: 4 / 5; }
   .w2 { left: 41%; top: 30px; width: 28%; --wire: 30px; --ar: 4 / 5; }
   .w3 { left: 74%; top: 66px; width: 24%; --wire: 66px; --ar: 4 / 5; }
-  .w4 { left: 41%; top: 63%;  width: 28%; }
-  .w5 { left: 74%; top: 52%;  width: 25%; --ar: 5 / 6; }
+  .w4 { left: 41%; top: 68%;  width: 28%; }
+  .w5 { left: 74%; top: 50%;  width: 25%; --ar: 5 / 6; }
 
   /* writing: a framed letterpress broadside */
   .ebony {
@@ -341,6 +341,26 @@ const year = (d?: Date) => (d ? d.getUTCFullYear() : '');
 
     .broadside {
       padding: 0.9rem;
+    }
+
+    /* each piece of writing takes the shape of its neighbour */
+    .w5 .broadside {
+      aspect-ratio: 4 / 3;
+    }
+
+    .w5 .broadside .bs-quote {
+      font-size: clamp(0.8rem, 0.5rem + 1.4vw, 1.2rem);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .w5 .broadside {
+      aspect-ratio: 1 / 1;
+    }
+
+    .bs-title {
+      font-size: 0.48rem;
+      letter-spacing: 0.1em;
     }
   }
 

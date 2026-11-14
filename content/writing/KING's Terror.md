@@ -2,7 +2,7 @@
 title: "West of Eden, in King's Night Shift"
 date: 2025-10-08
 summary: "An essay from English: Terror in Literature"
-# A line framed on the home page wall (optional):
+# Optional: a short line from this piece, framed on the home page wall.
 wall_quote: "This is the Luciferian Shift — and terror sweeps across the land."
 ---
 
