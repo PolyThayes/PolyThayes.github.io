@@ -19,8 +19,11 @@ interface Props {
   older?: Link;
   /** For a video piece: shown as a player at the top; downloads are hidden. */
   video?: { id: string; title: string; length?: string };
+  /** "poem" keeps line breaks, drops the reading time and the drop capital. */
+  kind?: 'essay' | 'poem';
 }
-const { id, title, author, summary, date, isoDate, minutes, words, downloads, newer, older, video } = Astro.props;
+const { id, title, author, summary, date, isoDate, minutes, words, downloads, newer, older, video, kind = 'essay' } = Astro.props;
+const poem = kind === 'poem';
 
 const icon = {
   type: 'M4 19 9.5 5h1L16 19M6.2 14h7.6M15.5 19l3-8 3 8M16.4 16.6h4.2',
@@ -31,17 +34,17 @@ const icon = {
 
 <div class="r-progress" aria-hidden="true"><span></span></div>
 
-<article class="reader" data-minutes={minutes}>
+<article class:list={['reader', { 'is-poem': poem }]} data-minutes={minutes}>
   <header class="r-head">
     <a href="/writing/" class="back" data-reveal="fade">← All writing</a>
     <p class="eyebrow" data-reveal="fade" style="--i:1">
-      {video ? 'Video' : 'Essay'}{date && <> · <time datetime={isoDate}>{date}</time></>}
+      {video ? 'Video' : poem ? 'Poem' : 'Essay'}{date && <> · <time datetime={isoDate}>{date}</time></>}
     </p>
     <h1 transition:name={`essay-title-${id}`}>{title}</h1>
     {summary && <p class="summary" data-reveal="blur" style="--i:3">{summary}</p>}
     <p class="byline" data-reveal="fade" style="--i:4">
       <span>By {author}</span>
-      {video ? <span>{video.length ? `${video.length} video` : 'Video'}</span> : <><span>{minutes} min read</span><span>{words.toLocaleString('en-US')} words</span></>}
+      {video ? <span>{video.length ? `${video.length} video` : 'Video'}</span> : poem ? null : <><span>{minutes} min read</span><span>{words.toLocaleString('en-US')} words</span></>}
     </p>
     <hr class="rule" data-reveal style="--i:5" />
   </header>
@@ -647,6 +650,26 @@ const icon = {
     }
   }
 
+  /* Poems: verse, not prose — lines left-aligned, stanzas spaced, long
+     lines that wrap on a phone hang indented */
+  .is-poem .r-body :global(p) {
+    margin: 0 0 1.6em;
+    text-align: left;
+    hyphens: none;
+    line-height: 1.75;
+  }
+
+  .is-poem .r-body {
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+
+  .is-poem .r-body :global(.line) {
+    display: block;
+    padding-left: 1.6em;
+    text-indent: -1.6em;
+  }
+
   .dock-btn[hidden],
   .dock-time[hidden],
   .takeaway[hidden] {
@@ -774,7 +797,8 @@ const icon = {
     const blocks = [...body.children] as HTMLElement[];
 
     // Drop cap on the first real paragraph (skips short header lines).
-    blocks.find((el) => el.tagName === 'P' && (el.textContent ?? '').length > 160)?.classList.add('lead');
+    if (!article.classList.contains('is-poem'))
+      blocks.find((el) => el.tagName === 'P' && (el.textContent ?? '').length > 160)?.classList.add('lead');
 
     // Preferences
     const prefs = load();

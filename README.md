@@ -147,6 +147,13 @@ Your essay starts here. Leave a blank line between paragraphs.
   `image: "./photo-name.jpg"` (and `image_alt: "what it shows"`). That
   photo is used when the essay's link is shared. Without it, the
   signature photo from `site.yaml` is used.
+- **A poem:** add `kind: poem` at the top. Write it as in your notes: each
+  line on its own line, with a blank line between stanzas. Every line break
+  is kept, and on a phone a long line that wraps hangs indented. The list
+  shows "Poem" instead of a reading time. See `falling.md`.
+- **Keeping a date private:** add `hide_date: true`. The `date:` still
+  decides the order in the list, but it's never shown, not on the page,
+  the list, the feed or the downloads.
 - **A video piece** (a speech, a performance): add `video:` with the
   YouTube link and, if you like, `video_length: "9 min"`. A player appears
   at the top of the page, the list shows "Video" instead of a reading time,

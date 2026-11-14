@@ -40,7 +40,7 @@ const year = (d?: Date) => (d ? d.getUTCFullYear() : '');
           <span class="broadside">
             <span class="bs-kicker">An essay</span>
             <span class="bs-quote">{q1.data.wall_quote}</span>
-            <span class="bs-title">{q1.title} · {year(q1.data.date)}</span>
+            <span class="bs-title">{q1.title}{q1.shownDate && ` · ${year(q1.shownDate)}`}</span>
           </span>
         </span>
       </a>
@@ -68,7 +68,7 @@ const year = (d?: Date) => (d ? d.getUTCFullYear() : '');
             </span>
           </span>
         </span>
-        <span class="label"><b>{video.title}</b><span>{year(video.data.date)} · speech{video.data.video_length && `, ${video.data.video_length}`}</span></span>
+        <span class="label"><b>{video.title}</b><span>{video.shownDate && `${year(video.shownDate)} · `}speech{video.data.video_length && `, ${video.data.video_length}`}</span></span>
       </a>
     )
   }
@@ -79,7 +79,7 @@ const year = (d?: Date) => (d ? d.getUTCFullYear() : '');
         <span class="frame">
           <span class="broadside small">
             <span class="bs-quote">{q2.data.wall_quote}</span>
-            <span class="bs-title">{q2.title} · {year(q2.data.date)}</span>
+            <span class="bs-title">{q2.title}{q2.shownDate && ` · ${year(q2.shownDate)}`}</span>
           </span>
         </span>
       </a>

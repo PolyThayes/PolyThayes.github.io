@@ -13,7 +13,7 @@ export const GET: APIRoute = async (context) => {
     items: essays.map((e) => ({
       title: e.title,
       description: e.data.summary,
-      pubDate: e.data.date,
+      pubDate: e.shownDate,
       link: `/writing/${e.id}/`,
     })),
   });

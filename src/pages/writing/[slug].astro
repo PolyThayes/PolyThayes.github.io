@@ -17,13 +17,24 @@ const { essay, newer, older } = Astro.props;
 const { Content } = await render(essay);
 const site = getSite();
 const dl = fileTitle(essay.title);
+
+// Poems: set every line on its own, so a long line that wraps on a phone
+// hangs indented and your line breaks stay clear.
+const poemHtml = essay.isPoem
+  ? (essay.rendered?.html ?? '').replace(/<p>([\s\S]*?)<\/p>/g, (_m, inner: string) =>
+      `<p class="stanza">${inner
+        .split(/<br\s*\/?>\s*/)
+        .map((l) => `<span class="line">${l.trim()}</span>`)
+        .join('')}</p>`,
+    )
+  : '';
 ---
 
 <Base
   title={essay.title}
   description={essay.data.summary}
   type="article"
-  published={essay.data.date}
+  published={essay.shownDate}
   image={essay.data.image}
   imageAlt={essay.data.image_alt}
   bodyClass="reading"
@@ -40,8 +51,9 @@ const dl = fileTitle(essay.title);
     title={essay.title}
     author={site.name}
     summary={essay.data.summary}
-    date={formatDate(essay.data.date)}
-    isoDate={essay.data.date?.toISOString()}
+    date={formatDate(essay.shownDate)}
+    isoDate={essay.shownDate?.toISOString()}
+    kind={essay.isPoem ? 'poem' : 'essay'}
     minutes={essay.minutes}
     video={essay.videoId ? { id: essay.videoId, title: essay.title, length: essay.data.video_length } : undefined}
     words={essay.words}
@@ -53,6 +65,6 @@ const dl = fileTitle(essay.title);
     newer={newer && { href: `/writing/${newer.id}/`, title: newer.title }}
     older={older && { href: `/writing/${older.id}/`, title: older.title }}
   >
-    <Content />
+    {essay.isPoem ? <Fragment set:html={poemHtml} /> : <Content />}
   </Reader>
 </Base>

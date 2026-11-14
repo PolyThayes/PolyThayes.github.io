@@ -15,7 +15,7 @@ export const GET: APIRoute = async ({ props, site }) => {
   const head = [
     `# ${essay.title}`,
     essay.data.summary ? `\n*${essay.data.summary}*` : '',
-    `\n${getSite().name}${essay.data.date ? ` · ${formatDate(essay.data.date)}` : ''}`,
+    `\n${getSite().name}${essay.shownDate ? ` · ${formatDate(essay.shownDate)}` : ''}`,
     '\n---\n',
   ].join('\n');
   // Point pictures at full web addresses so they still show once downloaded.
