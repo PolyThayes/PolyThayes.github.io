@@ -20,6 +20,8 @@ const writing = defineCollection({
       // A video piece (e.g. a speech): its YouTube link, and its length.
       video: z.string().optional(),
       video_length: z.string().optional(),
+      // A short line from the piece, framed on the home page's wall.
+      wall_quote: z.string().optional(),
     }),
 });
 

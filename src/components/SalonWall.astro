@@ -1,0 +1,357 @@
+---
+// The home page's salon wall: two photographs, two framed lines of writing,
+// and the speech, hung from a gilt picture rail.
+//   • Photographs: your favourite albums' covers (favorite: true in album.md).
+//   • Writing: essays with a `wall_quote:` line at the top of the file.
+//   • The speech: the newest video piece in Writing.
+import { Image } from 'astro:assets';
+import type { Album } from '../lib/gallery';
+import type { Essay } from '../lib/writing';
+
+interface Props {
+  photos: Album[];
+  quotes: Essay[];
+  video?: Essay;
+}
+const { photos, quotes, video } = Astro.props;
+const [p1, p2] = photos;
+const [q1, q2] = quotes;
+const year = (d?: Date) => (d ? d.getUTCFullYear() : '');
+---
+
+<div class="wall" data-wall>
+  <span class="rail" aria-hidden="true"></span>
+
+  {
+    p1 && (
+      <a class="work w1" href={`/gallery/${p1.slug}/`} style="--d:0">
+        <span class="wires" aria-hidden="true" />
+        <span class="frame"><span class="mat"><Image src={p1.cover.src} alt={`${p1.title}: cover photograph`} widths={[360, 720]} sizes="(max-width: 860px) 45vw, 300px" loading="eager" /></span></span>
+        <span class="label"><b>{p1.title}</b><span>{year(p1.date)} · photograph</span></span>
+      </a>
+    )
+  }
+
+  {
+    q1 && (
+      <a class="work w2" href={`/writing/${q1.id}/`} style="--d:1">
+        <span class="wires" aria-hidden="true" />
+        <span class="frame ebony">
+          <span class="broadside">
+            <span class="bs-kicker">An essay</span>
+            <span class="bs-quote">{q1.data.wall_quote}</span>
+            <span class="bs-title">{q1.title} · {year(q1.data.date)}</span>
+          </span>
+        </span>
+      </a>
+    )
+  }
+
+  {
+    p2 && (
+      <a class="work w3" href={`/gallery/${p2.slug}/`} style="--d:2">
+        <span class="wires" aria-hidden="true" />
+        <span class="frame"><span class="mat"><Image src={p2.cover.src} alt={`${p2.title}: cover photograph`} widths={[300, 600]} sizes="(max-width: 860px) 45vw, 220px" loading="eager" /></span></span>
+        <span class="label"><b>{p2.title}</b><span>{year(p2.date)} · photograph</span></span>
+      </a>
+    )
+  }
+
+  {
+    video?.videoId && (
+      <a class="work w4" href={`/writing/${video.id}/`} style="--d:3">
+        <span class="frame">
+          <span class="screen">
+            <img src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`} alt={`Still from “${video.title}”`} width="480" height="360" loading="lazy" />
+            <span class="play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+            </span>
+          </span>
+        </span>
+        <span class="label"><b>{video.title}</b><span>{year(video.data.date)} · speech{video.data.video_length && `, ${video.data.video_length}`}</span></span>
+      </a>
+    )
+  }
+
+  {
+    q2 && (
+      <a class="work w5" href={`/writing/${q2.id}/`} style="--d:4">
+        <span class="frame">
+          <span class="broadside small">
+            <span class="bs-quote">{q2.data.wall_quote}</span>
+            <span class="bs-title">{q2.title} · {year(q2.data.date)}</span>
+          </span>
+        </span>
+      </a>
+    )
+  }
+</div>
+
+<script>
+  // Pictures tilt a touch toward the pointer, like frames hung on wires.
+  function init() {
+    const wall = document.querySelector<HTMLElement>('[data-wall]');
+    if (!wall) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover)').matches) return;
+    wall.addEventListener('pointermove', (e) => {
+      const r = wall.getBoundingClientRect();
+      wall.style.setProperty('--sway', `${(((e.clientX - r.left) / r.width - 0.5) * 1.6).toFixed(2)}deg`);
+    });
+    wall.addEventListener('pointerleave', () => wall.style.setProperty('--sway', '0deg'));
+  }
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  .wall {
+    --sway: 0deg;
+    position: relative;
+    height: clamp(32rem, 48vw, 42rem);
+  }
+
+  .rail {
+    position: absolute;
+    top: 0;
+    left: -2%;
+    right: -2%;
+    height: 6px;
+    background: linear-gradient(180deg, #e4c77e, #6f5420);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+  }
+
+  .work {
+    position: absolute;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transform-origin: 50% -40px;
+    transform: rotate(var(--sway));
+    transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* hang one after another when the page opens */
+    animation: hang 1s var(--ease-out) both;
+    animation-delay: calc(0.35s + var(--d, 0) * 0.12s);
+  }
+
+  @keyframes hang {
+    from {
+      opacity: 0;
+      translate: 0 -14px;
+    }
+  }
+
+  .frame {
+    display: block;
+    padding: 7px;
+    background: var(--gilding);
+    box-shadow:
+      0 0 0 1px #2e220b,
+      inset 0 0 0 1px rgba(255, 236, 180, 0.35),
+      0 18px 30px -12px rgba(0, 0, 0, 0.75),
+      0 40px 60px -30px rgba(0, 0, 0, 0.6);
+    transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out);
+  }
+
+  .work:hover .frame,
+  .work:focus-visible .frame {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow:
+      0 0 0 1px #2e220b,
+      inset 0 0 0 1px rgba(255, 236, 180, 0.35),
+      0 30px 50px -14px rgba(0, 0, 0, 0.85);
+  }
+
+  .mat {
+    display: block;
+    padding: clamp(8px, 1.3vw, 15px);
+    background: #efe9d8;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+
+  .mat :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--ar, 4 / 5);
+    object-fit: cover;
+  }
+
+  /* picture wire: two lines from the rail to the frame */
+  .wires {
+    position: absolute;
+    left: 18%;
+    right: 18%;
+    bottom: 100%;
+    height: var(--wire, 40px);
+    background:
+      linear-gradient(to top right, transparent calc(50% - 0.6px), rgba(230, 210, 160, 0.55) 50%, transparent calc(50% + 0.6px)) left / 50% 100% no-repeat,
+      linear-gradient(to top left, transparent calc(50% - 0.6px), rgba(230, 210, 160, 0.55) 50%, transparent calc(50% + 0.6px)) right / 50% 100% no-repeat;
+  }
+
+  .label {
+    display: grid;
+    gap: 0.1rem;
+    margin-top: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .label b {
+    color: var(--cream-dim);
+    font-weight: 400;
+  }
+
+  /* the hang */
+  .w1 { left: 1%;  top: 54px; width: 36%; --wire: 54px; --ar: 4 / 5; }
+  .w2 { left: 41%; top: 30px; width: 28%; --wire: 30px; --ar: 4 / 5; }
+  .w3 { left: 74%; top: 66px; width: 24%; --wire: 66px; --ar: 4 / 5; }
+  .w4 { left: 41%; top: 63%;  width: 28%; }
+  .w5 { left: 74%; top: 52%;  width: 25%; --ar: 5 / 6; }
+
+  /* writing: a framed letterpress broadside */
+  .ebony {
+    padding: 10px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 4px),
+      linear-gradient(135deg, #1a1916, #050504 50%, #1a1916);
+    box-shadow:
+      0 0 0 1px #000,
+      inset 0 0 0 3px #b8954d,
+      0 18px 30px -12px rgba(0, 0, 0, 0.75);
+  }
+
+  .broadside {
+    display: grid;
+    align-content: center;
+    gap: 0.7rem;
+    aspect-ratio: var(--ar, 1 / 1);
+    padding: clamp(0.9rem, 1.8vw, 1.5rem);
+    background: radial-gradient(120% 90% at 30% 20%, #f6f1e3, #e9e1cc);
+    color: #1f1a12;
+    text-align: center;
+  }
+
+  .bs-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #8a2a20;
+  }
+
+  .bs-quote {
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 0.6rem + 0.75vw, 1.2rem);
+    font-style: italic;
+    line-height: 1.3;
+  }
+
+  .broadside.small .bs-quote {
+    font-size: clamp(0.76rem, 0.55rem + 0.55vw, 1rem);
+  }
+
+  .bs-title {
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(31, 26, 18, 0.25);
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #5a4c33;
+  }
+
+  /* the speech: a small framed screen */
+  .screen {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+    transition: opacity 0.4s;
+  }
+
+  .work:hover .screen img {
+    opacity: 1;
+  }
+
+  .play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.6rem;
+    height: 2.6rem;
+    display: grid;
+    place-items: center;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--gilding);
+    color: #2a1f0b;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  }
+
+  .play svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-left: 0.12rem;
+  }
+
+  /* tablets and phones: a tidy two-column wall that keeps the writing */
+  @media (max-width: 860px) {
+    .wall {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.2rem 1.1rem;
+      align-items: start;
+      height: auto;
+      padding-top: 46px;
+    }
+
+    .work {
+      position: relative;
+      inset: auto;
+      width: 100%;
+    }
+
+    .w3 {
+      display: none;
+    }
+
+    .w1 { --wire: 46px; }
+    .w2 { --wire: 46px; }
+
+    .w4 .wires,
+    .w5 .wires {
+      display: none;
+    }
+
+    .bs-quote,
+    .broadside.small .bs-quote {
+      font-size: clamp(0.9rem, 0.6rem + 1.6vw, 1.35rem);
+    }
+
+    .broadside {
+      padding: 0.9rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work {
+      transform: none;
+      animation: none;
+    }
+
+    .frame {
+      transition: none;
+    }
+  }
+</style>

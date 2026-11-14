@@ -2,6 +2,8 @@
 title: "The Deposition of Ivan Ilyich"
 date: 2026-05-10
 summary: "An essay from English: Existentialism in Literature"
+# A line framed on the home page wall (optional):
+wall_quote: "“Be Authentic,” everyone likes to say; being authentic killed poor Ivan Ilyich."
 ---
 
 ## Pt. 1: The Death of Ivan Ilyich

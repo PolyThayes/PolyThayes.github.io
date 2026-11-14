@@ -3,3 +3,7 @@ dist/
 .astro/
 .DS_Store
 .claude/
+
+# Finder/iCloud duplicate copies ("file 2.astro", "photo 3.jpg") — never commit these
+* [0-9].*
+* [0-9]
